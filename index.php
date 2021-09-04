@@ -76,20 +76,20 @@ $dashes_mode_options = [
     <label class="classic" for="entries"><?php echo __('Enable typographic replacements for entries'); ?></label>
   </p>
   <p>
-    <?php echo form::checkbox('comments', 1, $typo_comments); ?>
+    <?php echo form::checkbox('comments', 1, $typo_comments, '', '', false, 'aria-describedby="trackbacks"'); ?>
     <label class="classic" for="comments"><?php echo __('Enable typographic replacements for comments'); ?></label>
   </p>
-  <p class="form-note"><?php echo __('Excluding trackbacks'); ?></p>
+  <p class="form-note" id="trackbacks"><?php echo __('Excluding trackbacks'); ?></p>
 
 <?php
-echo '<div class="fieldset"><h4>' . __('Dashes replacement mode') . '</h4>';
+echo '<fieldset class="fieldset"><legend>' . __('Dashes replacement mode') . '</legend>';
 $i = 0;
 foreach ($dashes_mode_options as $k => $v) {
     echo '<p><label for="dashes_mode-' . $i . '" class="classic">' .
     form::radio(['dashes_mode', 'dashes_mode-' . $i], $k, $typo_dashes_mode == $k) . ' ' . $v . '</label></p>';
     $i++;
 }
-echo '</div>';
+echo '</fieldset>';
 ?>
 
   <p><input type="hidden" name="p" value="typo" />
