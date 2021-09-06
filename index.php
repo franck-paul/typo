@@ -10,8 +10,9 @@
  * @copyright Franck Paul carnet.franck.paul@gmail.com
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-
-if (!defined('DC_CONTEXT_ADMIN')) {exit;}
+if (!defined('DC_CONTEXT_ADMIN')) {
+    exit;
+}
 
 // Getting current parameters
 $typo_active      = (boolean) $core->blog->settings->typo->typo_active;
@@ -21,8 +22,7 @@ $typo_dashes_mode = (integer) $core->blog->settings->typo->typo_dashes_mode;
 
 // Saving new configuration
 if (!empty($_POST['saveconfig'])) {
-    try
-    {
+    try {
         $core->blog->settings->addNamespace('typo');
 
         $typo_active      = (empty($_POST['active'])) ? false : true;
