@@ -23,6 +23,9 @@ $this->registerModule(
         'requires'    => [['core', '2.13']],                        // Dependencies
         'permissions' => 'usage,contentadmin',                      // Permissions
         'type'        => 'plugin',                                  // Type
-        'details'     => 'https://open-time.net/docs/plugins/typo' // Details
+
+        'details'    => 'https://open-time.net/docs/plugins/typo', // Details
+        'support'    => 'https://github.com/franck-paul/typo',
+        'repository' => 'https://raw.githubusercontent.com/franck-paul/typo/main/dcstore.xml'
     ]
 );
