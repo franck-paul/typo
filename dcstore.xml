@@ -6,7 +6,7 @@
     <desc>Brings smart typographic replacements for your blog entries and comments</desc>
     <file>https://github.com/franck-paul/typo/releases/download/1.11/plugin-typo-1.11.zip</file>
     <da:dcmin>2.13</da:dcmin>
-    <da:details>https://open-time.net/?q=typo</da:details>
+    <da:details>https://open-time.net/docs/plugins/typo</da:details>
     <da:support>https://github.com/franck-paul/typo</da:support>
   </module>
 </modules>
