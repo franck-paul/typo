@@ -14,23 +14,22 @@ if (!defined('DC_RC_PATH')) {
     return;
 }
 
-require_once dirname(__FILE__) . '/inc/smartypants.php';
+require_once __DIR__ . '/inc/smartypants.php';
 
 /* Add behavior callback, will be used for all types of posts (standard, page, galery item, ...) */
-$core->addBehavior('coreAfterPostContentFormat', ['xmlrpcTypo', 'updateTypoEntries']);
+dcCore::app()->addBehavior('coreAfterPostContentFormat', ['xmlrpcTypo', 'updateTypoEntries']);
 
 /* Add behavior callbacks, will be used for all comments (not trackbacks) */
-$core->addBehavior('coreBeforeCommentCreate', ['xmlrpcTypo', 'updateTypoComments']);
-$core->addBehavior('coreBeforeCommentUpdate', ['xmlrpcTypo', 'updateTypoComments']);
+dcCore::app()->addBehavior('coreBeforeCommentCreate', ['xmlrpcTypo', 'updateTypoComments']);
+dcCore::app()->addBehavior('coreBeforeCommentUpdate', ['xmlrpcTypo', 'updateTypoComments']);
 
 class xmlrpcTypo
 {
     public static function updateTypoEntries($ref)
     {
-        global $core;
-        if ($core->blog->settings->typo->typo_active && $core->blog->settings->typo->typo_entries) {
+        if (dcCore::app()->blog->settings->typo->typo_active && dcCore::app()->blog->settings->typo->typo_entries) {
             if (@is_array($ref)) {
-                $dashes_mode = (integer) $core->blog->settings->typo->typo_dashes_mode;
+                $dashes_mode = (int) dcCore::app()->blog->settings->typo->typo_dashes_mode;
                 /* Transform typo for excerpt (XHTML) */
                 if (isset($ref['excerpt_xhtml'])) {
                     $excerpt = &$ref['excerpt_xhtml'];
@@ -51,12 +50,11 @@ class xmlrpcTypo
 
     public static function updateTypoComments($blog, $cur)
     {
-        global $core;
-        if ($core->blog->settings->typo->typo_active && $core->blog->settings->typo->typo_comments) {
+        if (dcCore::app()->blog->settings->typo->typo_active && dcCore::app()->blog->settings->typo->typo_comments) {
             /* Transform typo for comment content (XHTML) */
-            if (!(boolean) $cur->comment_trackback) {
+            if (!(bool) $cur->comment_trackback) {
                 if ($cur->comment_content != null) {
-                    $dashes_mode          = (integer) $core->blog->settings->typo->typo_dashes_mode;
+                    $dashes_mode          = (int) dcCore::app()->blog->settings->typo->typo_dashes_mode;
                     $cur->comment_content = SmartyPants($cur->comment_content, ($dashes_mode ?: SMARTYPANTS_ATTR));
                 }
             }

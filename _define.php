@@ -18,14 +18,14 @@ $this->registerModule(
     'Typo',                                                                     // Name
     'Brings smart typographic replacements for your blog entries and comments', // Description
     'Franck Paul and contributors',                                             // Author
-    '1.11',                                                                     // Version
+    '1.12',                                                                     // Version
     [
-        'requires'    => [['core', '2.13']],                        // Dependencies
+        'requires'    => [['core', '2.23']],                        // Dependencies
         'permissions' => 'usage,contentadmin',                      // Permissions
         'type'        => 'plugin',                                  // Type
 
         'details'    => 'https://open-time.net/docs/plugins/typo', // Details
         'support'    => 'https://github.com/franck-paul/typo',
-        'repository' => 'https://raw.githubusercontent.com/franck-paul/typo/master/dcstore.xml'
+        'repository' => 'https://raw.githubusercontent.com/franck-paul/typo/master/dcstore.xml',
     ]
 );

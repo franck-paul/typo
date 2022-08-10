@@ -15,28 +15,28 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 }
 
 // Getting current parameters
-$typo_active      = (boolean) $core->blog->settings->typo->typo_active;
-$typo_entries     = (boolean) $core->blog->settings->typo->typo_entries;
-$typo_comments    = (boolean) $core->blog->settings->typo->typo_comments;
-$typo_dashes_mode = (integer) $core->blog->settings->typo->typo_dashes_mode;
+$typo_active      = (bool) dcCore::app()->blog->settings->typo->typo_active;
+$typo_entries     = (bool) dcCore::app()->blog->settings->typo->typo_entries;
+$typo_comments    = (bool) dcCore::app()->blog->settings->typo->typo_comments;
+$typo_dashes_mode = (int) dcCore::app()->blog->settings->typo->typo_dashes_mode;
 
 // Saving new configuration
 if (!empty($_POST['saveconfig'])) {
     try {
-        $core->blog->settings->addNamespace('typo');
+        dcCore::app()->blog->settings->addNamespace('typo');
 
         $typo_active      = (empty($_POST['active'])) ? false : true;
         $typo_entries     = (empty($_POST['entries'])) ? false : true;
         $typo_comments    = (empty($_POST['comments'])) ? false : true;
-        $typo_dashes_mode = (integer) $_POST['dashes_mode'];
-        $core->blog->settings->typo->put('typo_active', $typo_active, 'boolean');
-        $core->blog->settings->typo->put('typo_entries', $typo_entries, 'boolean');
-        $core->blog->settings->typo->put('typo_comments', $typo_comments, 'boolean');
-        $core->blog->settings->typo->put('typo_dashes_mode', $typo_dashes_mode, 'integer');
-        $core->blog->triggerBlog();
+        $typo_dashes_mode = (int) $_POST['dashes_mode'];
+        dcCore::app()->blog->settings->typo->put('typo_active', $typo_active, 'boolean');
+        dcCore::app()->blog->settings->typo->put('typo_entries', $typo_entries, 'boolean');
+        dcCore::app()->blog->settings->typo->put('typo_comments', $typo_comments, 'boolean');
+        dcCore::app()->blog->settings->typo->put('typo_dashes_mode', $typo_dashes_mode, 'integer');
+        dcCore::app()->blog->triggerBlog();
         $msg = __('Configuration successfully updated.');
     } catch (Exception $e) {
-        $core->error->add($e->getMessage());
+        dcCore::app()->error->add($e->getMessage());
     }
 }
 ?>
@@ -49,9 +49,10 @@ if (!empty($_POST['saveconfig'])) {
 <?php
 echo dcPage::breadcrumb(
     [
-        html::escapeHTML($core->blog->name) => '',
-        __('Typographic replacements')      => ''
-    ]);
+        html::escapeHTML(dcCore::app()->blog->name) => '',
+        __('Typographic replacements')              => '',
+    ]
+);
 
 if (!empty($msg)) {
     dcPage::success($msg);
@@ -60,7 +61,7 @@ if (!empty($msg)) {
 $dashes_mode_options = [
     1 => __('"--" for em-dashes; no en-dash support (default)'),
     2 => __('"---" for em-dashes; "--" for en-dashes'),
-    3 => __('"--" for em-dashes; "---" for en-dashes')
+    3 => __('"--" for em-dashes; "---" for en-dashes'),
 ];
 ?>
 
@@ -93,7 +94,7 @@ echo '</fieldset>';
 ?>
 
   <p><input type="hidden" name="p" value="typo" />
-    <?php echo $core->formNonce(); ?>
+    <?php echo dcCore::app()->formNonce(); ?>
     <input type="submit" name="saveconfig" value="<?php echo __('Save configuration'); ?>" />
   </p>
 </form>
