@@ -18,7 +18,7 @@ $this->registerModule(
     'Typo',                                                                     // Name
     'Brings smart typographic replacements for your blog entries and comments', // Description
     'Franck Paul and contributors',                                             // Author
-    '1.12',                                                                     // Version
+    '1.12.1',
     [
         'requires'    => [['core', '2.23']],                        // Dependencies
         'permissions' => 'usage,contentadmin',                      // Permissions
