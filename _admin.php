@@ -27,7 +27,7 @@ dcCore::app()->addBehavior('coreBeforeCommentCreate', ['adminTypo', 'updateTypoC
 dcCore::app()->addBehavior('coreBeforeCommentUpdate', ['adminTypo', 'updateTypoComments']);
 
 /* Add menu item in extension list */
-$_menu['Blog']->addItem(
+dcCore::app()->menu['Blog']->addItem(
     __('Typographic replacements'),
     'plugin.php?p=typo',
     [urldecode(dcPage::getPF('typo/icon.svg')), urldecode(dcPage::getPF('typo/icon-dark.svg'))],
@@ -215,22 +215,20 @@ class adminTypo
 
     public static function updateTypoEntries($ref)
     {
-        if (dcCore::app()->blog->settings->typo->typo_active && dcCore::app()->blog->settings->typo->typo_entries) {
-            if (@is_array($ref)) {
-                $dashes_mode = (int) dcCore::app()->blog->settings->typo->typo_dashes_mode;
-                /* Transform typo for excerpt (XHTML) */
-                if (isset($ref['excerpt_xhtml'])) {
-                    $excerpt = &$ref['excerpt_xhtml'];
-                    if ($excerpt) {
-                        $excerpt = SmartyPants($excerpt, ($dashes_mode ?: SMARTYPANTS_ATTR));
-                    }
+        if (dcCore::app()->blog->settings->typo->typo_active && dcCore::app()->blog->settings->typo->typo_entries && @is_array($ref)) {
+            $dashes_mode = (int) dcCore::app()->blog->settings->typo->typo_dashes_mode;
+            /* Transform typo for excerpt (XHTML) */
+            if (isset($ref['excerpt_xhtml'])) {
+                $excerpt = &$ref['excerpt_xhtml'];
+                if ($excerpt) {
+                    $excerpt = SmartyPants($excerpt, ($dashes_mode ?: SMARTYPANTS_ATTR));
                 }
-                /* Transform typo for content (XHTML) */
-                if (isset($ref['content_xhtml'])) {
-                    $content = &$ref['content_xhtml'];
-                    if ($content) {
-                        $content = SmartyPants($content, ($dashes_mode ?: SMARTYPANTS_ATTR));
-                    }
+            }
+            /* Transform typo for content (XHTML) */
+            if (isset($ref['content_xhtml'])) {
+                $content = &$ref['content_xhtml'];
+                if ($content) {
+                    $content = SmartyPants($content, ($dashes_mode ?: SMARTYPANTS_ATTR));
                 }
             }
         }
@@ -238,14 +236,10 @@ class adminTypo
 
     public static function updateTypoComments($blog, $cur)
     {
-        if (dcCore::app()->blog->settings->typo->typo_active && dcCore::app()->blog->settings->typo->typo_comments) {
+        if (dcCore::app()->blog->settings->typo->typo_active && dcCore::app()->blog->settings->typo->typo_comments && !(bool) $cur->comment_trackback && $cur->comment_content != null) {
             /* Transform typo for comment content (XHTML) */
-            if (!(bool) $cur->comment_trackback) {
-                if ($cur->comment_content != null) {
-                    $dashes_mode          = (int) dcCore::app()->blog->settings->typo->typo_dashes_mode;
-                    $cur->comment_content = SmartyPants($cur->comment_content, ($dashes_mode ?: SMARTYPANTS_ATTR));
-                }
-            }
+            $dashes_mode          = (int) dcCore::app()->blog->settings->typo->typo_dashes_mode;
+            $cur->comment_content = SmartyPants($cur->comment_content, ($dashes_mode ?: SMARTYPANTS_ATTR));
         }
     }
 }
