@@ -39,11 +39,11 @@ dcCore::app()->menu['Blog']->addItem(
 dcCore::app()->addBehavior('adminDashboardFavorites', ['adminTypo', 'adminDashboardFavorites']);
 
 /* Add behavior callbacks for posts actions */
-dcCore::app()->addBehavior('adminPostsActionsPage', ['adminTypo', 'adminPostsActionsPage']);
-dcCore::app()->addBehavior('adminPagesActionsPage', ['adminTypo', 'adminPagesActionsPage']);
+dcCore::app()->addBehavior('adminPostsActions', ['adminTypo', 'adminPostsActionsPage']);
+dcCore::app()->addBehavior('adminPagesActions', ['adminTypo', 'adminPagesActionsPage']);
 
 /* Add behavior callbacks for comments actions */
-dcCore::app()->addBehavior('adminCommentsActionsPage', ['adminTypo', 'adminCommentsActionsPage']);
+dcCore::app()->addBehavior('adminCommentsActions', ['adminTypo', 'adminCommentsActionsPage']);
 
 class adminTypo
 {
@@ -58,7 +58,7 @@ class adminTypo
         ]);
     }
 
-    public static function adminPostsActionsPage($core, $ap)
+    public static function adminPostsActionsPage(dcPostsActions $ap)
     {
         // Add menuitem in actions dropdown list
         if (dcCore::app()->auth->check('contentadmin', dcCore::app()->blog->id)) {
@@ -69,7 +69,7 @@ class adminTypo
         }
     }
 
-    public static function adminPagesActionsPage($core, $ap)
+    public static function adminPagesActionsPage(dcPagesActions $ap)
     {
         // Add menuitem in actions dropdown list
         if (dcCore::app()->auth->check('contentadmin', dcCore::app()->blog->id)) {
@@ -80,17 +80,17 @@ class adminTypo
         }
     }
 
-    public static function adminPostsDoReplacements($core, dcPostsActionsPage $ap, $post)
+    public static function adminPostsDoReplacements(dcPostsActions $ap, arrayObject $post)
     {
-        self::adminEntriesDoReplacements(dcCore::app(), $ap, $post, 'post');
+        self::adminEntriesDoReplacements($ap, $post, 'post');
     }
 
-    public static function adminPagesDoReplacements($core, dcPostsActionsPage $ap, $post)
+    public static function adminPagesDoReplacements(dcPagesActions $ap, arrayObject $post)
     {
-        self::adminEntriesDoReplacements(dcCore::app(), $ap, $post, 'page');
+        self::adminEntriesDoReplacements($ap, $post, 'page');
     }
 
-    public static function adminEntriesDoReplacements($core, dcPostsActionsPage $ap, $post, $type = 'post')
+    public static function adminEntriesDoReplacements($ap, arrayObject $post, $type = 'post')
     {
         if (!empty($post['full_content'])) {
             // Do replacements
@@ -156,7 +156,7 @@ class adminTypo
         }
     }
 
-    public static function adminCommentsActionsPage($core, $ap)
+    public static function adminCommentsActionsPage(dcCommentsActions $ap)
     {
         // Add menuitem in actions dropdown list
         if (dcCore::app()->auth->check('contentadmin', dcCore::app()->blog->id)) {
@@ -167,7 +167,7 @@ class adminTypo
         }
     }
 
-    public static function adminCommentsDoReplacements($core, dcCommentsActionsPage $ap, $post)
+    public static function adminCommentsDoReplacements(dcCommentsActions $ap, arrayObject $post)
     {
         if (!empty($post['full_content'])) {
             // Do replacements
