@@ -19,63 +19,43 @@ __('Typo') . __('Brings smart typographic replacements for your blog entries and
 
 require_once __DIR__ . '/inc/smartypants.php';
 
-/* Add behavior callback, will be used for all types of posts (standard, page, galery item, ...) */
-dcCore::app()->addBehavior('coreAfterPostContentFormat', ['adminTypo', 'updateTypoEntries']);
-
-/* Add behavior callbacks, will be used for all comments (not trackbacks) */
-dcCore::app()->addBehavior('coreBeforeCommentCreate', ['adminTypo', 'updateTypoComments']);
-dcCore::app()->addBehavior('coreBeforeCommentUpdate', ['adminTypo', 'updateTypoComments']);
-
-/* Add menu item in extension list */
-dcCore::app()->menu['Blog']->addItem(
-    __('Typographic replacements'),
-    'plugin.php?p=typo',
-    [urldecode(dcPage::getPF('typo/icon.svg')), urldecode(dcPage::getPF('typo/icon-dark.svg'))],
-    preg_match('/plugin.php\?p=typo(&.*)?$/', $_SERVER['REQUEST_URI']),
-    dcCore::app()->auth->check('contentadmin', dcCore::app()->blog->id)
-);
-
-/* Register favorite */
-dcCore::app()->addBehavior('adminDashboardFavorites', ['adminTypo', 'adminDashboardFavorites']);
-
-/* Add behavior callbacks for posts actions */
-dcCore::app()->addBehavior('adminPostsActions', ['adminTypo', 'adminPostsActionsPage']);
-dcCore::app()->addBehavior('adminPagesActions', ['adminTypo', 'adminPagesActionsPage']);
-
-/* Add behavior callbacks for comments actions */
-dcCore::app()->addBehavior('adminCommentsActions', ['adminTypo', 'adminCommentsActionsPage']);
-
 class adminTypo
 {
-    public static function adminDashboardFavorites($core, $favs)
+    public static function adminDashboardFavorites($favs)
     {
         $favs->register('Typo', [
             'title'       => __('Typographic replacements'),
             'url'         => 'plugin.php?p=typo',
             'small-icon'  => [urldecode(dcPage::getPF('typo/icon.svg')), urldecode(dcPage::getPF('typo/icon-dark.svg'))],
             'large-icon'  => [urldecode(dcPage::getPF('typo/icon.svg')), urldecode(dcPage::getPF('typo/icon-dark.svg'))],
-            'permissions' => 'contentadmin',
+            'permissions' => dcCore::app()->auth->makePermissions([
+                dcAuth::PERMISSION_CONTENT_ADMIN,
+            ]),
         ]);
     }
 
-    public static function adminPostsActionsPage(dcPostsActions $ap)
+    public static function adminPostsActions(dcPostsActions $ap)
     {
         // Add menuitem in actions dropdown list
-        if (dcCore::app()->auth->check('contentadmin', dcCore::app()->blog->id)) {
+        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
+            dcAuth::PERMISSION_CONTENT_ADMIN,
+        ]), dcCore::app()->blog->id)) {
             $ap->addAction(
                 [__('Typo') => [__('Typographic replacements') => 'typo']],
-                ['adminTypo', 'adminPostsDoReplacements']
+                [self::class, 'adminPostsDoReplacements']
             );
         }
     }
 
-    public static function adminPagesActionsPage(dcPagesActions $ap)
+    public static function adminPagesActions(dcPagesActions $ap)
     {
         // Add menuitem in actions dropdown list
-        if (dcCore::app()->auth->check('contentadmin', dcCore::app()->blog->id)) {
+        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
+            dcAuth::PERMISSION_CONTENT_ADMIN,
+        ]), dcCore::app()->blog->id)) {
             $ap->addAction(
                 [__('Typo') => [__('Typographic replacements') => 'typo']],
-                ['adminTypo', 'adminPagesDoReplacements']
+                [self::class, 'adminPagesDoReplacements']
             );
         }
     }
@@ -100,7 +80,7 @@ class adminTypo
                 while ($posts->fetch()) {
                     if (($posts->post_excerpt_xhtml) || ($posts->post_content_xhtml)) {
                         # Apply typo features to entry
-                        $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'post');
+                        $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcBlog::POST_TABLE_NAME);
 
                         if ($posts->post_excerpt_xhtml) {
                             $cur->post_excerpt_xhtml = SmartyPants($posts->post_excerpt_xhtml, ($dashes_mode ?: SMARTYPANTS_ATTR));
@@ -156,13 +136,15 @@ class adminTypo
         }
     }
 
-    public static function adminCommentsActionsPage(dcCommentsActions $ap)
+    public static function adminCommentsActions(dcCommentsActions $ap)
     {
         // Add menuitem in actions dropdown list
-        if (dcCore::app()->auth->check('contentadmin', dcCore::app()->blog->id)) {
+        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
+            dcAuth::PERMISSION_CONTENT_ADMIN,
+        ]), dcCore::app()->blog->id)) {
             $ap->addAction(
                 [__('Typo') => [__('Typographic replacements') => 'typo']],
-                ['adminTypo', 'adminCommentsDoReplacements']
+                [self::class, 'adminCommentsDoReplacements']
             );
         }
     }
@@ -177,7 +159,7 @@ class adminTypo
                 while ($co->fetch()) {
                     if ($co->comment_content) {
                         # Apply typo features to comment
-                        $cur                  = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'comment');
+                        $cur                  = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcBlog::COMMENT_TABLE_NAME);
                         $cur->comment_content = SmartyPants($co->comment_content, ($dashes_mode ?: SMARTYPANTS_ATTR));
                         $cur->update('WHERE comment_id = ' . (int) $co->comment_id);
                     }
@@ -217,14 +199,14 @@ class adminTypo
     {
         if (dcCore::app()->blog->settings->typo->typo_active && dcCore::app()->blog->settings->typo->typo_entries && @is_array($ref)) {
             $dashes_mode = (int) dcCore::app()->blog->settings->typo->typo_dashes_mode;
-            /* Transform typo for excerpt (XHTML) */
+            /* Transform typo for excerpt (HTML) */
             if (isset($ref['excerpt_xhtml'])) {
                 $excerpt = &$ref['excerpt_xhtml'];
                 if ($excerpt) {
                     $excerpt = SmartyPants($excerpt, ($dashes_mode ?: SMARTYPANTS_ATTR));
                 }
             }
-            /* Transform typo for content (XHTML) */
+            /* Transform typo for content (HTML) */
             if (isset($ref['content_xhtml'])) {
                 $content = &$ref['content_xhtml'];
                 if ($content) {
@@ -237,9 +219,37 @@ class adminTypo
     public static function updateTypoComments($blog, $cur)
     {
         if (dcCore::app()->blog->settings->typo->typo_active && dcCore::app()->blog->settings->typo->typo_comments && !(bool) $cur->comment_trackback && $cur->comment_content != null) {
-            /* Transform typo for comment content (XHTML) */
+            /* Transform typo for comment content (HTML) */
             $dashes_mode          = (int) dcCore::app()->blog->settings->typo->typo_dashes_mode;
             $cur->comment_content = SmartyPants($cur->comment_content, ($dashes_mode ?: SMARTYPANTS_ATTR));
         }
     }
 }
+
+/* Add behavior callback, will be used for all types of posts (standard, page, galery item, ...) */
+dcCore::app()->addBehavior('coreAfterPostContentFormat', [adminTypo::class, 'updateTypoEntries']);
+
+/* Add behavior callbacks, will be used for all comments (not trackbacks) */
+dcCore::app()->addBehavior('coreBeforeCommentCreate', [adminTypo::class, 'updateTypoComments']);
+dcCore::app()->addBehavior('coreBeforeCommentUpdate', [adminTypo::class, 'updateTypoComments']);
+
+/* Add menu item in extension list */
+dcCore::app()->menu[dcAdmin::MENU_BLOG]->addItem(
+    __('Typographic replacements'),
+    'plugin.php?p=typo',
+    [urldecode(dcPage::getPF('typo/icon.svg')), urldecode(dcPage::getPF('typo/icon-dark.svg'))],
+    preg_match('/plugin.php\?p=typo(&.*)?$/', $_SERVER['REQUEST_URI']),
+    dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
+        dcAuth::PERMISSION_CONTENT_ADMIN,
+    ]), dcCore::app()->blog->id)
+);
+
+/* Register favorite */
+dcCore::app()->addBehavior('adminDashboardFavoritesV2', [adminTypo::class, 'adminDashboardFavorites']);
+
+/* Add behavior callbacks for posts actions */
+dcCore::app()->addBehavior('adminPostsActions', [adminTypo::class, 'adminPostsActions']);
+dcCore::app()->addBehavior('adminPagesActions', [adminTypo::class, 'adminPagesActions']);
+
+/* Add behavior callbacks for comments actions */
+dcCore::app()->addBehavior('adminCommentsActions', [adminTypo::class, 'adminCommentsActions']);
