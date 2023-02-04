@@ -226,13 +226,6 @@ class adminTypo
     }
 }
 
-/* Add behavior callback, will be used for all types of posts (standard, page, galery item, ...) */
-dcCore::app()->addBehavior('coreAfterPostContentFormat', [adminTypo::class, 'updateTypoEntries']);
-
-/* Add behavior callbacks, will be used for all comments (not trackbacks) */
-dcCore::app()->addBehavior('coreBeforeCommentCreate', [adminTypo::class, 'updateTypoComments']);
-dcCore::app()->addBehavior('coreBeforeCommentUpdate', [adminTypo::class, 'updateTypoComments']);
-
 /* Add menu item in extension list */
 dcCore::app()->menu[dcAdmin::MENU_BLOG]->addItem(
     __('Typographic replacements'),
@@ -244,12 +237,21 @@ dcCore::app()->menu[dcAdmin::MENU_BLOG]->addItem(
     ]), dcCore::app()->blog->id)
 );
 
-/* Register favorite */
-dcCore::app()->addBehavior('adminDashboardFavoritesV2', [adminTypo::class, 'adminDashboardFavorites']);
+dcCore::app()->addBehaviors([
+    // Add behavior callback, will be used for all types of posts (standard, page, galery item, ...)
+    'coreAfterPostContentFormat' => [adminTypo::class, 'updateTypoEntries'],
 
-/* Add behavior callbacks for posts actions */
-dcCore::app()->addBehavior('adminPostsActions', [adminTypo::class, 'adminPostsActions']);
-dcCore::app()->addBehavior('adminPagesActions', [adminTypo::class, 'adminPagesActions']);
+    // Add behavior callbacks, will be used for all comments (not trackbacks)
+    'coreBeforeCommentCreate'    => [adminTypo::class, 'updateTypoComments'],
+    'coreBeforeCommentUpdate'    => [adminTypo::class, 'updateTypoComments'],
 
-/* Add behavior callbacks for comments actions */
-dcCore::app()->addBehavior('adminCommentsActions', [adminTypo::class, 'adminCommentsActions']);
+    // Register favorite
+    'adminDashboardFavoritesV2'  => [adminTypo::class, 'adminDashboardFavorites'],
+
+    // Add behavior callbacks for posts actions
+    'adminPostsActions'          => [adminTypo::class, 'adminPostsActions'],
+    'adminPagesActions'          => [adminTypo::class, 'adminPagesActions'],
+
+    // Add behavior callbacks for comments actions
+    'adminCommentsActions'       => [adminTypo::class, 'adminCommentsActions'],
+]);

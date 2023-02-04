@@ -10,10 +10,6 @@
  * @copyright Franck Paul carnet.franck.paul@gmail.com
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-if (!defined('DC_RC_PATH')) {
-    return;
-}
-
 $this->registerModule(
     'Typo',
     'Brings smart typographic replacements for your blog entries and comments',
@@ -25,10 +21,10 @@ $this->registerModule(
             dcAuth::PERMISSION_USAGE,
             dcAuth::PERMISSION_CONTENT_ADMIN,
         ]),
-        'type' => 'plugin',
+        'type'        => 'plugin',
 
-        'details'    => 'https://open-time.net/docs/plugins/typo',
-        'support'    => 'https://github.com/franck-paul/typo',
-        'repository' => 'https://raw.githubusercontent.com/franck-paul/typo/master/dcstore.xml',
+        'details'     => 'https://open-time.net/docs/plugins/typo',
+        'support'     => 'https://github.com/franck-paul/typo',
+        'repository'  => 'https://raw.githubusercontent.com/franck-paul/typo/master/dcstore.xml',
     ]
 );

@@ -23,8 +23,6 @@ $typo_dashes_mode = (int) dcCore::app()->blog->settings->typo->typo_dashes_mode;
 // Saving new configuration
 if (!empty($_POST['saveconfig'])) {
     try {
-        dcCore::app()->blog->settings->addNamespace('typo');
-
         $typo_active      = (empty($_POST['active'])) ? false : true;
         $typo_entries     = (empty($_POST['entries'])) ? false : true;
         $typo_comments    = (empty($_POST['comments'])) ? false : true;

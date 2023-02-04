@@ -10,10 +10,6 @@
  * @copyright Franck Paul carnet.franck.paul@gmail.com
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-if (!defined('DC_RC_PATH')) {
-    return;
-}
-
 require_once __DIR__ . '/inc/smartypants.php';
 
 class dcTypo
@@ -37,5 +33,7 @@ class dcTypo
 }
 
 /* Add behavior callback for typo replacement in comments */
-dcCore::app()->addBehavior('coreBeforeCommentCreate', [dcTypo::class, 'updateTypoComments']);
-dcCore::app()->addBehavior('publicBeforeCommentPreview', [dcTypo::class, 'previewTypoComments']);
+dcCore::app()->addBehaviors([
+    'coreBeforeCommentCreate'    => [dcTypo::class, 'updateTypoComments'],
+    'publicBeforeCommentPreview' => [dcTypo::class, 'previewTypoComments'],
+]);
