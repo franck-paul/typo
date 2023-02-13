@@ -10,6 +10,9 @@
  * @copyright Franck Paul carnet.franck.paul@gmail.com
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
+
+use Dotclear\Plugin\pages\BackendActions as PagesBackendActions;
+
 if (!defined('DC_CONTEXT_ADMIN')) {
     return;
 }
@@ -47,7 +50,7 @@ class adminTypo
         }
     }
 
-    public static function adminPagesActions(dcPagesActions $ap)
+    public static function adminPagesActions(PagesBackendActions $ap)
     {
         // Add menuitem in actions dropdown list
         if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
@@ -65,7 +68,7 @@ class adminTypo
         self::adminEntriesDoReplacements($ap, $post, 'post');
     }
 
-    public static function adminPagesDoReplacements(dcPagesActions $ap, arrayObject $post)
+    public static function adminPagesDoReplacements(PagesBackendActions $ap, arrayObject $post)
     {
         self::adminEntriesDoReplacements($ap, $post, 'page');
     }
@@ -242,16 +245,16 @@ dcCore::app()->addBehaviors([
     'coreAfterPostContentFormat' => [adminTypo::class, 'updateTypoEntries'],
 
     // Add behavior callbacks, will be used for all comments (not trackbacks)
-    'coreBeforeCommentCreate'    => [adminTypo::class, 'updateTypoComments'],
-    'coreBeforeCommentUpdate'    => [adminTypo::class, 'updateTypoComments'],
+    'coreBeforeCommentCreate' => [adminTypo::class, 'updateTypoComments'],
+    'coreBeforeCommentUpdate' => [adminTypo::class, 'updateTypoComments'],
 
     // Register favorite
-    'adminDashboardFavoritesV2'  => [adminTypo::class, 'adminDashboardFavorites'],
+    'adminDashboardFavoritesV2' => [adminTypo::class, 'adminDashboardFavorites'],
 
     // Add behavior callbacks for posts actions
-    'adminPostsActions'          => [adminTypo::class, 'adminPostsActions'],
-    'adminPagesActions'          => [adminTypo::class, 'adminPagesActions'],
+    'adminPostsActions' => [adminTypo::class, 'adminPostsActions'],
+    'adminPagesActions' => [adminTypo::class, 'adminPagesActions'],
 
     // Add behavior callbacks for comments actions
-    'adminCommentsActions'       => [adminTypo::class, 'adminCommentsActions'],
+    'adminCommentsActions' => [adminTypo::class, 'adminCommentsActions'],
 ]);
