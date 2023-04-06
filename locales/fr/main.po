@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Dotclear 2 typo module\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-02 10:40+0100\n"
+"POT-Creation-Date: 2023-05-01 13:49+0200\n"
 "PO-Revision-Date: 2012-11-05 17:39+0100\n"
 "Last-Translator: Franck Paul <carnet.franck.paul@gmail.com>\n"
 "Language-Team: \n"
@@ -25,11 +25,17 @@ msgstr "Typo"
 msgid "Typographic replacements"
 msgstr "Remplacements typographiques"
 
+msgid "Pages"
+msgstr ""
+
+msgid "Entries"
+msgstr ""
+
 msgid "Warning! These replacements will not be undoable."
 msgstr "Attention ces remplacements sont irréversibles."
 
-msgid "save"
-msgstr "enregistrer"
+msgid "Save"
+msgstr ""
 
 msgid "\"--\" for em-dashes; no en-dash support (default)"
 msgstr "\"--\" (2) pour les tirets longs (em-dashes) ; pas de support des tirets courts (en-dash, option par défaut)"
@@ -43,6 +49,9 @@ msgstr "\"--\" (2) pour les tirets longs (em-dashes) ; \"---\" (3) pour les tire
 msgid "Enable typographic replacements for this blog"
 msgstr "Activer les remplacements typographiques pour ce blog"
 
+msgid "Options"
+msgstr ""
+
 msgid "Enable typographic replacements for entries"
 msgstr "Activer les remplacements typographiques pour les billets de ce blog"
 
@@ -54,3 +63,6 @@ msgstr "Rétroliens exclus"
 
 msgid "Dashes replacement mode"
 msgstr "Mode de remplacement des tirets multiples"
+
+#~ msgid "save"
+#~ msgstr "enregistrer"

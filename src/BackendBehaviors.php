@@ -10,19 +10,26 @@
  * @copyright Franck Paul carnet.franck.paul@gmail.com
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
+declare(strict_types=1);
 
+namespace Dotclear\Plugin\typo;
+
+use ArrayObject;
+use dcAuth;
+use dcBlog;
+use dcCommentsActions;
+use dcCore;
+use dcPage;
+use dcPostsActions;
+use Dotclear\Helper\Html\Form\Form;
+use Dotclear\Helper\Html\Form\Hidden;
+use Dotclear\Helper\Html\Form\Para;
+use Dotclear\Helper\Html\Form\Submit;
+use Dotclear\Helper\Html\Form\Text;
+use Dotclear\Helper\Html\Html;
 use Dotclear\Plugin\pages\BackendActions as PagesBackendActions;
 
-if (!defined('DC_CONTEXT_ADMIN')) {
-    return;
-}
-
-// dead but useful code, in order to have translations
-__('Typo') . __('Brings smart typographic replacements for your blog entries and comments');
-
-require_once __DIR__ . '/inc/smartypants.php';
-
-class adminTypo
+class BackendBehaviors
 {
     public static function adminDashboardFavorites($favs)
     {
@@ -63,34 +70,34 @@ class adminTypo
         }
     }
 
-    public static function adminPostsDoReplacements(dcPostsActions $ap, arrayObject $post)
+    public static function adminPostsDoReplacements(dcPostsActions $ap, ArrayObject $post)
     {
         self::adminEntriesDoReplacements($ap, $post, 'post');
     }
 
-    public static function adminPagesDoReplacements(PagesBackendActions $ap, arrayObject $post)
+    public static function adminPagesDoReplacements(PagesBackendActions $ap, ArrayObject $post)
     {
         self::adminEntriesDoReplacements($ap, $post, 'page');
     }
 
-    public static function adminEntriesDoReplacements($ap, arrayObject $post, $type = 'post')
+    public static function adminEntriesDoReplacements($ap, ArrayObject $post, $type = 'post')
     {
         if (!empty($post['full_content'])) {
             // Do replacements
             $posts = $ap->getRS();
             if ($posts->rows()) {
-                $dashes_mode = (int) dcCore::app()->blog->settings->typo->typo_dashes_mode;
+                $dashes_mode = dcCore::app()->blog->settings->typo->typo_dashes_mode;
                 while ($posts->fetch()) {
                     if (($posts->post_excerpt_xhtml) || ($posts->post_content_xhtml)) {
                         # Apply typo features to entry
                         $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcBlog::POST_TABLE_NAME);
 
                         if ($posts->post_excerpt_xhtml) {
-                            $cur->post_excerpt_xhtml = SmartyPants($posts->post_excerpt_xhtml, ($dashes_mode ?: SMARTYPANTS_ATTR));
+                            $cur->post_excerpt_xhtml = SmartyPants::transform($posts->post_excerpt_xhtml, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                         }
 
                         if ($posts->post_content_xhtml) {
-                            $cur->post_content_xhtml = SmartyPants($posts->post_content_xhtml, ($dashes_mode ?: SMARTYPANTS_ATTR));
+                            $cur->post_content_xhtml = SmartyPants::transform($posts->post_content_xhtml, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                         }
 
                         $cur->update('WHERE post_id = ' . (int) $posts->post_id);
@@ -106,7 +113,7 @@ class adminTypo
                 $ap->beginPage(
                     dcPage::breadcrumb(
                         [
-                            html::escapeHTML(dcCore::app()->blog->name) => '',
+                            Html::escapeHTML(dcCore::app()->blog->name) => '',
                             __('Pages')                                 => 'plugin.php?p=pages',
                             __('Typographic replacements')              => '',
                         ]
@@ -116,7 +123,7 @@ class adminTypo
                 $ap->beginPage(
                     dcPage::breadcrumb(
                         [
-                            html::escapeHTML(dcCore::app()->blog->name) => '',
+                            Html::escapeHTML(dcCore::app()->blog->name) => '',
                             __('Entries')                               => 'posts.php',
                             __('Typographic replacements')              => '',
                         ]
@@ -127,14 +134,21 @@ class adminTypo
             dcPage::warning(__('Warning! These replacements will not be undoable.'), false, false);
 
             echo
-            '<form action="' . $ap->getURI() . '" method="post">' .
-            $ap->getCheckboxes() .
-            '<p><input type="submit" value="' . __('save') . '" /></p>' .
+            (new Form('ap-entries-typo'))
+            ->action($ap->getURI())
+            ->method('post')
+            ->fields([
+                (new Text(null, $ap->getCheckboxes())),
+                (new Para())->items([
+                    (new Submit('ap-typo-do', __('Save'))),
+                    dcCore::app()->formNonce(false),
+                    ...$ap->hiddenFields(),
+                    (new Hidden(['full_content'], 'true')),
+                    (new Hidden(['action'], 'typo')),
+                ]),
+            ])
+            ->render();
 
-            dcCore::app()->formNonce() . $ap->getHiddenFields() .
-            form::hidden(['full_content'], 'true') .
-            form::hidden(['action'], 'typo') .
-                '</form>';
             $ap->endPage();
         }
     }
@@ -152,18 +166,18 @@ class adminTypo
         }
     }
 
-    public static function adminCommentsDoReplacements(dcCommentsActions $ap, arrayObject $post)
+    public static function adminCommentsDoReplacements(dcCommentsActions $ap, ArrayObject $post)
     {
         if (!empty($post['full_content'])) {
             // Do replacements
             $co = $ap->getRS();
             if ($co->rows()) {
-                $dashes_mode = (int) dcCore::app()->blog->settings->typo->typo_dashes_mode;
+                $dashes_mode = dcCore::app()->blog->settings->typo->typo_dashes_mode;
                 while ($co->fetch()) {
                     if ($co->comment_content) {
                         # Apply typo features to comment
                         $cur                  = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcBlog::COMMENT_TABLE_NAME);
-                        $cur->comment_content = SmartyPants($co->comment_content, ($dashes_mode ?: SMARTYPANTS_ATTR));
+                        $cur->comment_content = SmartyPants::transform($co->comment_content, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                         $cur->update('WHERE comment_id = ' . (int) $co->comment_id);
                     }
                 }
@@ -176,7 +190,7 @@ class adminTypo
             $ap->beginPage(
                 dcPage::breadcrumb(
                     [
-                        html::escapeHTML(dcCore::app()->blog->name) => '',
+                        Html::escapeHTML(dcCore::app()->blog->name) => '',
                         __('Comments')                              => 'comments.php',
                         __('Typographic replacements')              => '',
                     ]
@@ -186,14 +200,21 @@ class adminTypo
             dcPage::warning(__('Warning! These replacements will not be undoable.'), false, false);
 
             echo
-            '<form action="' . $ap->getURI() . '" method="post">' .
-            $ap->getCheckboxes() .
-            '<p><input type="submit" value="' . __('save') . '" /></p>' .
+            (new Form('ap-comments-typo'))
+            ->action($ap->getURI())
+            ->method('post')
+            ->fields([
+                (new Text(null, $ap->getCheckboxes())),
+                (new Para())->items([
+                    (new Submit('ap-typo-do', __('Save'))),
+                    dcCore::app()->formNonce(false),
+                    ...$ap->hiddenFields(),
+                    (new Hidden(['full_content'], 'true')),
+                    (new Hidden(['action'], 'typo')),
+                ]),
+            ])
+            ->render();
 
-            dcCore::app()->formNonce() . $ap->getHiddenFields() .
-            form::hidden(['full_content'], 'true') .
-            form::hidden(['action'], 'typo') .
-                '</form>';
             $ap->endPage();
         }
     }
@@ -201,19 +222,19 @@ class adminTypo
     public static function updateTypoEntries($ref)
     {
         if (dcCore::app()->blog->settings->typo->typo_active && dcCore::app()->blog->settings->typo->typo_entries && @is_array($ref)) {
-            $dashes_mode = (int) dcCore::app()->blog->settings->typo->typo_dashes_mode;
+            $dashes_mode = dcCore::app()->blog->settings->typo->typo_dashes_mode;
             /* Transform typo for excerpt (HTML) */
             if (isset($ref['excerpt_xhtml'])) {
                 $excerpt = &$ref['excerpt_xhtml'];
                 if ($excerpt) {
-                    $excerpt = SmartyPants($excerpt, ($dashes_mode ?: SMARTYPANTS_ATTR));
+                    $excerpt = SmartyPants::transform($excerpt, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                 }
             }
             /* Transform typo for content (HTML) */
             if (isset($ref['content_xhtml'])) {
                 $content = &$ref['content_xhtml'];
                 if ($content) {
-                    $content = SmartyPants($content, ($dashes_mode ?: SMARTYPANTS_ATTR));
+                    $content = SmartyPants::transform($content, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                 }
             }
         }
@@ -223,38 +244,8 @@ class adminTypo
     {
         if (dcCore::app()->blog->settings->typo->typo_active && dcCore::app()->blog->settings->typo->typo_comments && !(bool) $cur->comment_trackback && $cur->comment_content != null) {
             /* Transform typo for comment content (HTML) */
-            $dashes_mode          = (int) dcCore::app()->blog->settings->typo->typo_dashes_mode;
-            $cur->comment_content = SmartyPants($cur->comment_content, ($dashes_mode ?: SMARTYPANTS_ATTR));
+            $dashes_mode          = dcCore::app()->blog->settings->typo->typo_dashes_mode;
+            $cur->comment_content = SmartyPants::transform($cur->comment_content, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
         }
     }
 }
-
-/* Add menu item in extension list */
-dcCore::app()->menu[dcAdmin::MENU_BLOG]->addItem(
-    __('Typographic replacements'),
-    'plugin.php?p=typo',
-    [urldecode(dcPage::getPF('typo/icon.svg')), urldecode(dcPage::getPF('typo/icon-dark.svg'))],
-    preg_match('/plugin.php\?p=typo(&.*)?$/', $_SERVER['REQUEST_URI']),
-    dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
-        dcAuth::PERMISSION_CONTENT_ADMIN,
-    ]), dcCore::app()->blog->id)
-);
-
-dcCore::app()->addBehaviors([
-    // Add behavior callback, will be used for all types of posts (standard, page, galery item, ...)
-    'coreAfterPostContentFormat' => [adminTypo::class, 'updateTypoEntries'],
-
-    // Add behavior callbacks, will be used for all comments (not trackbacks)
-    'coreBeforeCommentCreate' => [adminTypo::class, 'updateTypoComments'],
-    'coreBeforeCommentUpdate' => [adminTypo::class, 'updateTypoComments'],
-
-    // Register favorite
-    'adminDashboardFavoritesV2' => [adminTypo::class, 'adminDashboardFavorites'],
-
-    // Add behavior callbacks for posts actions
-    'adminPostsActions' => [adminTypo::class, 'adminPostsActions'],
-    'adminPagesActions' => [adminTypo::class, 'adminPagesActions'],
-
-    // Add behavior callbacks for comments actions
-    'adminCommentsActions' => [adminTypo::class, 'adminCommentsActions'],
-]);

@@ -14,17 +14,17 @@ $this->registerModule(
     'Typo',
     'Brings smart typographic replacements for your blog entries and comments',
     'Franck Paul and contributors',
-    '2.0',
+    '3.0',
     [
-        'requires'    => [['core', '2.24']],
+        'requires'    => [['core', '2.26']],
         'permissions' => dcCore::app()->auth->makePermissions([
             dcAuth::PERMISSION_USAGE,
             dcAuth::PERMISSION_CONTENT_ADMIN,
         ]),
-        'type'        => 'plugin',
+        'type' => 'plugin',
 
-        'details'     => 'https://open-time.net/docs/plugins/typo',
-        'support'     => 'https://github.com/franck-paul/typo',
-        'repository'  => 'https://raw.githubusercontent.com/franck-paul/typo/master/dcstore.xml',
+        'details'    => 'https://open-time.net/docs/plugins/typo',
+        'support'    => 'https://github.com/franck-paul/typo',
+        'repository' => 'https://raw.githubusercontent.com/franck-paul/typo/master/dcstore.xml',
     ]
 );
