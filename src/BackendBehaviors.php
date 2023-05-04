@@ -36,8 +36,8 @@ class BackendBehaviors
         $favs->register('Typo', [
             'title'       => __('Typographic replacements'),
             'url'         => 'plugin.php?p=typo',
-            'small-icon'  => [urldecode(dcPage::getPF('typo/icon.svg')), urldecode(dcPage::getPF('typo/icon-dark.svg'))],
-            'large-icon'  => [urldecode(dcPage::getPF('typo/icon.svg')), urldecode(dcPage::getPF('typo/icon-dark.svg'))],
+            'small-icon'  => [urldecode(dcPage::getPF(My::id() . '/icon.svg')), urldecode(dcPage::getPF(My::id() . '/icon-dark.svg'))],
+            'large-icon'  => [urldecode(dcPage::getPF(My::id() . '/icon.svg')), urldecode(dcPage::getPF(My::id() . '/icon-dark.svg'))],
             'permissions' => dcCore::app()->auth->makePermissions([
                 dcAuth::PERMISSION_CONTENT_ADMIN,
             ]),

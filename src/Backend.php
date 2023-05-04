@@ -42,7 +42,7 @@ class Backend extends dcNsProcess
         dcCore::app()->menu[dcAdmin::MENU_BLOG]->addItem(
             __('Typographic replacements'),
             'plugin.php?p=typo',
-            [urldecode(dcPage::getPF('typo/icon.svg')), urldecode(dcPage::getPF('typo/icon-dark.svg'))],
+            [urldecode(dcPage::getPF(My::id() . '/icon.svg')), urldecode(dcPage::getPF(My::id() . '/icon-dark.svg'))],
             preg_match('/plugin.php\?p=typo(&.*)?$/', $_SERVER['REQUEST_URI']),
             dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
                 dcAuth::PERMISSION_CONTENT_ADMIN,
