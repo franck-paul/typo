@@ -38,9 +38,7 @@ class Manage extends dcNsProcess
     public static function init(): bool
     {
         // Manageable only by super-admin
-        static::$init = defined('DC_CONTEXT_ADMIN')
-            && dcCore::app()->auth->isSuperAdmin()
-            && My::phpCompliant();
+        static::$init = My::checkContext(My::MANAGE);
 
         return static::$init;
     }
@@ -61,10 +59,12 @@ class Manage extends dcNsProcess
                 $typo_entries     = (empty($_POST['entries'])) ? false : true;
                 $typo_comments    = (empty($_POST['comments'])) ? false : true;
                 $typo_dashes_mode = (int) $_POST['dashes_mode'];
-                dcCore::app()->blog->settings->typo->put('typo_active', $typo_active, 'boolean');
-                dcCore::app()->blog->settings->typo->put('typo_entries', $typo_entries, 'boolean');
-                dcCore::app()->blog->settings->typo->put('typo_comments', $typo_comments, 'boolean');
-                dcCore::app()->blog->settings->typo->put('typo_dashes_mode', $typo_dashes_mode, 'integer');
+
+                $settings = dcCore::app()->blog->settings->get(My::id());
+                $settings->put('active', $typo_active, 'boolean');
+                $settings->put('entries', $typo_entries, 'boolean');
+                $settings->put('comments', $typo_comments, 'boolean');
+                $settings->put('dashes_mode', $typo_dashes_mode, 'integer');
                 dcCore::app()->blog->triggerBlog();
                 dcPage::addSuccessNotice(__('Configuration successfully updated.'));
                 Http::redirect(dcCore::app()->admin->getPageURL());
@@ -86,10 +86,11 @@ class Manage extends dcNsProcess
         }
 
         // Getting current parameters
-        $typo_active      = (bool) dcCore::app()->blog->settings->typo->typo_active;
-        $typo_entries     = (bool) dcCore::app()->blog->settings->typo->typo_entries;
-        $typo_comments    = (bool) dcCore::app()->blog->settings->typo->typo_comments;
-        $typo_dashes_mode = (int) dcCore::app()->blog->settings->typo->typo_dashes_mode;
+        $settings    = dcCore::app()->blog->settings->get(My::id());
+        $active      = (bool) $settings->active;
+        $entries     = (bool) $settings->entries;
+        $comments    = (bool) $settings->comments;
+        $dashes_mode = (int) $settings->dashes_mode;
 
         $dashes_mode_options = [
             (int) SmartyPants::SMARTYPANTS_ATTR_EM2_EN0 => __('"--" for em-dashes; no en-dash support (default)'),
@@ -100,7 +101,7 @@ class Manage extends dcNsProcess
         $i     = 0;
         foreach ($dashes_mode_options as $k => $v) {
             $modes[] = (new Para())->items([
-                (new Radio(['dashes_mode', 'dashes_mode-' . $i], $typo_dashes_mode == $k))
+                (new Radio(['dashes_mode', 'dashes_mode-' . $i], $dashes_mode == $k))
                     ->value($k)
                     ->label((new Label($v, Label::INSIDE_TEXT_AFTER))),
             ]);
@@ -123,7 +124,7 @@ class Manage extends dcNsProcess
         ->method('post')
         ->fields([
             (new Para())->items([
-                (new Checkbox('active', $typo_active))
+                (new Checkbox('active', $active))
                     ->value(1)
                     ->label((new Label(__('Enable typographic replacements for this blog'), Label::INSIDE_TEXT_AFTER))),
             ]),
@@ -131,12 +132,12 @@ class Manage extends dcNsProcess
             ->legend((new Legend(__('Options'))))
             ->fields([
                 (new Para())->items([
-                    (new Checkbox('entries', $typo_entries))
+                    (new Checkbox('entries', $entries))
                         ->value(1)
                         ->label((new Label(__('Enable typographic replacements for entries'), Label::INSIDE_TEXT_AFTER))),
                 ]),
                 (new Para())->items([
-                    (new Checkbox('comments', $typo_comments))
+                    (new Checkbox('comments', $comments))
                         ->value(1)
                         ->label((new Label(__('Enable typographic replacements for comments'), Label::INSIDE_TEXT_AFTER))),
                 ]),

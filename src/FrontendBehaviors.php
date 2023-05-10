@@ -20,17 +20,19 @@ class FrontendBehaviors
 {
     public static function updateTypoComments($blog, $cur)
     {
-        if (dcCore::app()->blog->settings->typo->typo_active && dcCore::app()->blog->settings->typo->typo_comments && !(bool) $cur->comment_trackback && $cur->comment_content != null) {
+        $settings = dcCore::app()->blog->settings->get(My::id());
+        if ($settings->active && $settings->comments && !(bool) $cur->comment_trackback && $cur->comment_content != null) {
             /* Transform typo for comment content (HTML) */
-            $dashes_mode          = (int) dcCore::app()->blog->settings->typo->typo_dashes_mode;
+            $dashes_mode          = (int) $settings->dashes_mode;
             $cur->comment_content = SmartyPants::transform($cur->comment_content, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
         }
     }
     public static function previewTypoComments($prv)
     {
-        if (dcCore::app()->blog->settings->typo->typo_active && dcCore::app()->blog->settings->typo->typo_comments && $prv['content'] != null) {
+        $settings = dcCore::app()->blog->settings->get(My::id());
+        if ($settings->active && $settings->comments && $prv['content'] != null) {
             /* Transform typo for comment content (HTML) */
-            $dashes_mode    = (int) dcCore::app()->blog->settings->typo->typo_dashes_mode;
+            $dashes_mode    = (int) $settings->dashes_mode;
             $prv['content'] = SmartyPants::transform($prv['content'], ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
         }
     }

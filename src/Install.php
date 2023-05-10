@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\typo;
 
 use dcCore;
+use dcNamespace;
 use dcNsProcess;
 use Exception;
 
@@ -22,9 +23,7 @@ class Install extends dcNsProcess
 {
     public static function init(): bool
     {
-        static::$init = defined('DC_CONTEXT_ADMIN')
-            && My::phpCompliant()
-            && dcCore::app()->newVersion(My::id(), dcCore::app()->plugins->moduleInfo(My::id(), 'version'));
+        static::$init = My::checkContext(My::INSTALL);
 
         return static::$init;
     }
@@ -36,12 +35,29 @@ class Install extends dcNsProcess
         }
 
         try {
+            $old_version = dcCore::app()->getVersion(My::id());
+            if (version_compare((string) $old_version, '3.1', '<')) {
+                // Change settings names (remove wc_ prefix in them)
+                $rename = function (string $name, dcNamespace $settings): void {
+                    if ($settings->settingExists('typo_' . $name, true)) {
+                        $settings->rename('typo_' . $name, $name);
+                    }
+                };
+
+                $settings = dcCore::app()->blog->settings->get(My::id());
+
+                $rename('active', $settings);
+                $rename('entries', $settings);
+                $rename('comments', $settings);
+                $rename('dashes_mode', $settings);
+            }
+
             // Default state is active for entries content and inactive for comments
-            $settings = dcCore::app()->blog->settings->typo;
-            $settings->put('typo_active', true, 'boolean', 'Active', false, true);
-            $settings->put('typo_entries', true, 'boolean', 'Apply on entries', false, true);
-            $settings->put('typo_comments', false, 'boolean', 'Apply on comments', false, true);
-            $settings->put('typo_dashes_mode', (int) SmartyPants::SMARTYPANTS_ATTR, 'integer', 'Dashes replacement mode', false, true);
+            $settings = dcCore::app()->blog->settings->get(My::id());
+            $settings->put('active', true, 'boolean', 'Active', false, true);
+            $settings->put('entries', true, 'boolean', 'Apply on entries', false, true);
+            $settings->put('comments', false, 'boolean', 'Apply on comments', false, true);
+            $settings->put('dashes_mode', (int) SmartyPants::SMARTYPANTS_ATTR, 'integer', 'Dashes replacement mode', false, true);
 
             return true;
         } catch (Exception $e) {

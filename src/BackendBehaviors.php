@@ -35,11 +35,11 @@ class BackendBehaviors
     {
         $favs->register('Typo', [
             'title'       => __('Typographic replacements'),
-            'url'         => 'plugin.php?p=typo',
-            'small-icon'  => [urldecode(dcPage::getPF(My::id() . '/icon.svg')), urldecode(dcPage::getPF(My::id() . '/icon-dark.svg'))],
-            'large-icon'  => [urldecode(dcPage::getPF(My::id() . '/icon.svg')), urldecode(dcPage::getPF(My::id() . '/icon-dark.svg'))],
+            'url'         => My::makeUrl(),
+            'small-icon'  => My::icons(),
+            'large-icon'  => My::icons(),
             'permissions' => dcCore::app()->auth->makePermissions([
-                dcAuth::PERMISSION_CONTENT_ADMIN,
+                dcAuth::PERMISSION_ADMIN,
             ]),
         ]);
     }
@@ -86,7 +86,8 @@ class BackendBehaviors
             // Do replacements
             $posts = $ap->getRS();
             if ($posts->rows()) {
-                $dashes_mode = dcCore::app()->blog->settings->typo->typo_dashes_mode;
+                $settings    = dcCore::app()->blog->settings->get(My::id());
+                $dashes_mode = $settings->dashes_mode;
                 while ($posts->fetch()) {
                     if (($posts->post_excerpt_xhtml) || ($posts->post_content_xhtml)) {
                         # Apply typo features to entry
@@ -172,7 +173,8 @@ class BackendBehaviors
             // Do replacements
             $co = $ap->getRS();
             if ($co->rows()) {
-                $dashes_mode = dcCore::app()->blog->settings->typo->typo_dashes_mode;
+                $settings    = dcCore::app()->blog->settings->get(My::id());
+                $dashes_mode = $settings->dashes_mode;
                 while ($co->fetch()) {
                     if ($co->comment_content) {
                         # Apply typo features to comment
@@ -221,8 +223,9 @@ class BackendBehaviors
 
     public static function updateTypoEntries($ref)
     {
-        if (dcCore::app()->blog->settings->typo->typo_active && dcCore::app()->blog->settings->typo->typo_entries && @is_array($ref)) {
-            $dashes_mode = dcCore::app()->blog->settings->typo->typo_dashes_mode;
+        $settings = dcCore::app()->blog->settings->get(My::id());
+        if ($settings->active && $settings->entries && @is_array($ref)) {
+            $dashes_mode = $settings->dashes_mode;
             /* Transform typo for excerpt (HTML) */
             if (isset($ref['excerpt_xhtml'])) {
                 $excerpt = &$ref['excerpt_xhtml'];
@@ -242,9 +245,10 @@ class BackendBehaviors
 
     public static function updateTypoComments($blog, $cur)
     {
-        if (dcCore::app()->blog->settings->typo->typo_active && dcCore::app()->blog->settings->typo->typo_comments && !(bool) $cur->comment_trackback && $cur->comment_content != null) {
+        $settings = dcCore::app()->blog->settings->get(My::id());
+        if ($settings->active && $settings->comments && !(bool) $cur->comment_trackback && $cur->comment_content != null) {
             /* Transform typo for comment content (HTML) */
-            $dashes_mode          = dcCore::app()->blog->settings->typo->typo_dashes_mode;
+            $dashes_mode          = $settings->dashes_mode;
             $cur->comment_content = SmartyPants::transform($cur->comment_content, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
         }
     }
