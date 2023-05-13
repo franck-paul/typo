@@ -115,7 +115,7 @@ class BackendBehaviors
                     dcPage::breadcrumb(
                         [
                             Html::escapeHTML(dcCore::app()->blog->name) => '',
-                            __('Pages')                                 => 'plugin.php?p=pages',
+                            __('Pages')                                 => dcCore::app()->adminurl->get('admin.plugin.pages'),
                             __('Typographic replacements')              => '',
                         ]
                     )
@@ -125,7 +125,7 @@ class BackendBehaviors
                     dcPage::breadcrumb(
                         [
                             Html::escapeHTML(dcCore::app()->blog->name) => '',
-                            __('Entries')                               => 'posts.php',
+                            __('Entries')                               => dcCore::app()->adminurl->get('admin.posts'),
                             __('Typographic replacements')              => '',
                         ]
                     )
