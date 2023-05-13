@@ -58,8 +58,6 @@ class Install extends dcNsProcess
             $settings->put('entries', true, 'boolean', 'Apply on entries', false, true);
             $settings->put('comments', false, 'boolean', 'Apply on comments', false, true);
             $settings->put('dashes_mode', (int) SmartyPants::SMARTYPANTS_ATTR, 'integer', 'Dashes replacement mode', false, true);
-
-            return true;
         } catch (Exception $e) {
             dcCore::app()->error->add($e->getMessage());
         }
