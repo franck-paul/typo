@@ -32,6 +32,12 @@ class Frontend extends dcNsProcess
             return false;
         }
 
+        // Don't do things in frontend if plugin disabled
+        $settings = dcCore::app()->blog->settings->get(My::id());
+        if (!(bool) $settings->active) {
+            return false;
+        }
+
         /* Add behavior callback for typo replacement in comments */
         dcCore::app()->addBehaviors([
             'coreBeforeCommentCreate'    => [FrontendBehaviors::class, 'updateTypoComments'],
