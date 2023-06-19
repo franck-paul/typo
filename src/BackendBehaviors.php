@@ -193,7 +193,7 @@ class BackendBehaviors
                 dcPage::breadcrumb(
                     [
                         Html::escapeHTML(dcCore::app()->blog->name) => '',
-                        __('Comments')                              => 'comments.php',
+                        __('Comments')                              => dcCore::app()->adminurl->get('admin.comments'),
                         __('Typographic replacements')              => '',
                     ]
                 )
