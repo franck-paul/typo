@@ -27,7 +27,6 @@ use Dotclear\Helper\Html\Form\Radio;
 use Dotclear\Helper\Html\Form\Submit;
 use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Html;
-use Dotclear\Helper\Network\Http;
 use Exception;
 
 class Manage extends dcNsProcess
@@ -67,7 +66,7 @@ class Manage extends dcNsProcess
                 $settings->put('dashes_mode', $typo_dashes_mode, 'integer');
                 dcCore::app()->blog->triggerBlog();
                 dcPage::addSuccessNotice(__('Configuration successfully updated.'));
-                Http::redirect(dcCore::app()->admin->getPageURL());
+                dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
             }
