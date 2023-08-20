@@ -15,8 +15,9 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\typo;
 
 use dcCore;
-use dcNsProcess;
-use dcPage;
+use Dotclear\Core\Backend\Notices;
+use Dotclear\Core\Backend\Page;
+use Dotclear\Core\Process;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Fieldset;
 use Dotclear\Helper\Html\Form\Form;
@@ -29,18 +30,15 @@ use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Html;
 use Exception;
 
-class Manage extends dcNsProcess
+class Manage extends Process
 {
-    protected static $init = false; /** @deprecated since 2.27 */
     /**
      * Initializes the page.
      */
     public static function init(): bool
     {
         // Manageable only by super-admin
-        static::$init = My::checkContext(My::MANAGE);
-
-        return static::$init;
+        return self::status(My::checkContext(My::MANAGE));
     }
 
     /**
@@ -48,7 +46,7 @@ class Manage extends dcNsProcess
      */
     public static function process(): bool
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return false;
         }
 
@@ -66,8 +64,8 @@ class Manage extends dcNsProcess
                 $settings->put('comments', $typo_comments, 'boolean');
                 $settings->put('dashes_mode', $typo_dashes_mode, 'integer');
                 dcCore::app()->blog->triggerBlog();
-                dcPage::addSuccessNotice(__('Configuration successfully updated.'));
-                dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
+                Notices::addSuccessNotice(__('Configuration successfully updated.'));
+                dcCore::app()->admin->url->redirect('admin.plugin.' . My::id());
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
             }
@@ -81,7 +79,7 @@ class Manage extends dcNsProcess
      */
     public static function render(): void
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return;
         }
 
@@ -108,15 +106,15 @@ class Manage extends dcNsProcess
             $i++;
         }
 
-        dcPage::openModule(__('Typo'));
+        Page::openModule(__('Typo'));
 
-        echo dcPage::breadcrumb(
+        echo Page::breadcrumb(
             [
                 Html::escapeHTML(dcCore::app()->blog->name) => '',
                 __('Typographic replacements')              => '',
             ]
         );
-        echo dcPage::notices();
+        echo Notices::getNotices();
 
         echo
         (new Form('typo'))
@@ -157,6 +155,6 @@ class Manage extends dcNsProcess
         ])
         ->render();
 
-        dcPage::closeModule();
+        Page::closeModule();
     }
 }

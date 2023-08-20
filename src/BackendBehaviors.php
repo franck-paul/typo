@@ -19,8 +19,8 @@ use dcAuth;
 use dcBlog;
 use dcCommentsActions;
 use dcCore;
-use dcPage;
-use dcPostsActions;
+use Dotclear\Core\Backend\Action\ActionsPosts;
+use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Html\Form\Form;
 use Dotclear\Helper\Html\Form\Hidden;
 use Dotclear\Helper\Html\Form\Para;
@@ -35,7 +35,7 @@ class BackendBehaviors
     {
         $favs->register('Typo', [
             'title'       => __('Typographic replacements'),
-            'url'         => My::makeUrl(),
+            'url'         => My::manageUrl(),
             'small-icon'  => My::icons(),
             'large-icon'  => My::icons(),
             'permissions' => dcCore::app()->auth->makePermissions([
@@ -44,7 +44,7 @@ class BackendBehaviors
         ]);
     }
 
-    public static function adminPostsActions(dcPostsActions $ap)
+    public static function adminPostsActions(ActionsPosts $ap)
     {
         // Add menuitem in actions dropdown list
         if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
@@ -52,7 +52,7 @@ class BackendBehaviors
         ]), dcCore::app()->blog->id)) {
             $ap->addAction(
                 [__('Typo') => [__('Typographic replacements') => 'typo']],
-                [self::class, 'adminPostsDoReplacements']
+                self::adminPostsDoReplacements(...)
             );
         }
     }
@@ -65,12 +65,12 @@ class BackendBehaviors
         ]), dcCore::app()->blog->id)) {
             $ap->addAction(
                 [__('Typo') => [__('Typographic replacements') => 'typo']],
-                [self::class, 'adminPagesDoReplacements']
+                self::adminPagesDoReplacements(...)
             );
         }
     }
 
-    public static function adminPostsDoReplacements(dcPostsActions $ap, ArrayObject $post)
+    public static function adminPostsDoReplacements(ActionsPosts $ap, ArrayObject $post)
     {
         self::adminEntriesDoReplacements($ap, $post, 'post');
     }
@@ -112,27 +112,27 @@ class BackendBehaviors
             // Ask confirmation for replacements
             if ($type == 'page') {
                 $ap->beginPage(
-                    dcPage::breadcrumb(
+                    Page::breadcrumb(
                         [
                             Html::escapeHTML(dcCore::app()->blog->name) => '',
-                            __('Pages')                                 => dcCore::app()->adminurl->get('admin.plugin.pages'),
+                            __('Pages')                                 => dcCore::app()->admin->url->get('admin.plugin.pages'),
                             __('Typographic replacements')              => '',
                         ]
                     )
                 );
             } else {
                 $ap->beginPage(
-                    dcPage::breadcrumb(
+                    Page::breadcrumb(
                         [
                             Html::escapeHTML(dcCore::app()->blog->name) => '',
-                            __('Entries')                               => dcCore::app()->adminurl->get('admin.posts'),
+                            __('Entries')                               => dcCore::app()->admin->url->get('admin.posts'),
                             __('Typographic replacements')              => '',
                         ]
                     )
                 );
             }
 
-            dcPage::warning(__('Warning! These replacements will not be undoable.'), false, false);
+            Page::warning(__('Warning! These replacements will not be undoable.'), false, false);
 
             echo
             (new Form('ap-entries-typo'))
@@ -162,7 +162,7 @@ class BackendBehaviors
         ]), dcCore::app()->blog->id)) {
             $ap->addAction(
                 [__('Typo') => [__('Typographic replacements') => 'typo']],
-                [self::class, 'adminCommentsDoReplacements']
+                self::adminCommentsDoReplacements(...)
             );
         }
     }
@@ -190,16 +190,16 @@ class BackendBehaviors
         } else {
             // Ask confirmation for replacements
             $ap->beginPage(
-                dcPage::breadcrumb(
+                Page::breadcrumb(
                     [
                         Html::escapeHTML(dcCore::app()->blog->name) => '',
-                        __('Comments')                              => dcCore::app()->adminurl->get('admin.comments'),
+                        __('Comments')                              => dcCore::app()->admin->url->get('admin.comments'),
                         __('Typographic replacements')              => '',
                     ]
                 )
             );
 
-            dcPage::warning(__('Warning! These replacements will not be undoable.'), false, false);
+            Page::warning(__('Warning! These replacements will not be undoable.'), false, false);
 
             echo
             (new Form('ap-comments-typo'))
