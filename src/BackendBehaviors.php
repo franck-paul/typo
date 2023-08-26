@@ -22,7 +22,6 @@ use dcCore;
 use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Html\Form\Form;
-use Dotclear\Helper\Html\Form\Hidden;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Submit;
 use Dotclear\Helper\Html\Form\Text;
@@ -86,7 +85,7 @@ class BackendBehaviors
             // Do replacements
             $posts = $ap->getRS();
             if ($posts->rows()) {
-                $settings    = dcCore::app()->blog->settings->get(My::id());
+                $settings    = My::settings();
                 $dashes_mode = $settings->dashes_mode;
                 while ($posts->fetch()) {
                     if (($posts->post_excerpt_xhtml) || ($posts->post_content_xhtml)) {
@@ -142,10 +141,11 @@ class BackendBehaviors
                 (new Text(null, $ap->getCheckboxes())),
                 (new Para())->items([
                     (new Submit('ap-typo-do', __('Save'))),
-                    dcCore::app()->formNonce(false),
                     ...$ap->hiddenFields(),
-                    (new Hidden(['full_content'], 'true')),
-                    (new Hidden(['action'], 'typo')),
+                    ... My::hiddenFields([
+                        'full_content' => 'true',
+                        'action'       => 'typo',
+                    ]),
                 ]),
             ])
             ->render();
@@ -173,7 +173,7 @@ class BackendBehaviors
             // Do replacements
             $co = $ap->getRS();
             if ($co->rows()) {
-                $settings    = dcCore::app()->blog->settings->get(My::id());
+                $settings    = My::settings();
                 $dashes_mode = $settings->dashes_mode;
                 while ($co->fetch()) {
                     if ($co->comment_content) {
@@ -209,10 +209,11 @@ class BackendBehaviors
                 (new Text(null, $ap->getCheckboxes())),
                 (new Para())->items([
                     (new Submit('ap-typo-do', __('Save'))),
-                    dcCore::app()->formNonce(false),
                     ...$ap->hiddenFields(),
-                    (new Hidden(['full_content'], 'true')),
-                    (new Hidden(['action'], 'typo')),
+                    ... My::hiddenFields([
+                        'full_content' => 'true',
+                        'action'       => 'typo',
+                    ]),
                 ]),
             ])
             ->render();
@@ -223,7 +224,7 @@ class BackendBehaviors
 
     public static function updateTypoEntries($ref)
     {
-        $settings = dcCore::app()->blog->settings->get(My::id());
+        $settings = My::settings();
         if ($settings->active && $settings->entries && @is_array($ref)) {
             $dashes_mode = $settings->dashes_mode;
             /* Transform typo for excerpt (HTML) */
@@ -245,7 +246,7 @@ class BackendBehaviors
 
     public static function updateTypoComments($blog, $cur)
     {
-        $settings = dcCore::app()->blog->settings->get(My::id());
+        $settings = My::settings();
         if ($settings->active && $settings->comments && !(bool) $cur->comment_trackback && $cur->comment_content != null) {
             /* Transform typo for comment content (HTML) */
             $dashes_mode          = $settings->dashes_mode;

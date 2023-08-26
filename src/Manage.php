@@ -58,13 +58,14 @@ class Manage extends Process
                 $typo_comments    = (empty($_POST['comments'])) ? false : true;
                 $typo_dashes_mode = (int) $_POST['dashes_mode'];
 
-                $settings = dcCore::app()->blog->settings->get(My::id());
+                $settings = My::settings();
                 $settings->put('active', $typo_active, 'boolean');
                 $settings->put('entries', $typo_entries, 'boolean');
                 $settings->put('comments', $typo_comments, 'boolean');
                 $settings->put('dashes_mode', $typo_dashes_mode, 'integer');
                 dcCore::app()->blog->triggerBlog();
                 Notices::addSuccessNotice(__('Configuration successfully updated.'));
+                My::redirect();
                 dcCore::app()->admin->url->redirect('admin.plugin.' . My::id());
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
@@ -84,7 +85,7 @@ class Manage extends Process
         }
 
         // Getting current parameters
-        $settings    = dcCore::app()->blog->settings->get(My::id());
+        $settings    = My::settings();
         $active      = (bool) $settings->active;
         $entries     = (bool) $settings->entries;
         $comments    = (bool) $settings->comments;
@@ -106,7 +107,7 @@ class Manage extends Process
             $i++;
         }
 
-        Page::openModule(__('Typo'));
+        Page::openModule(My::name());
 
         echo Page::breadcrumb(
             [
@@ -149,7 +150,7 @@ class Manage extends Process
             (new Para())->items([
                 (new Submit(['saveconfig'], __('Save configuration')))
                     ->accesskey('s'),
-                dcCore::app()->formNonce(false),
+                ... My::hiddenFields(),
             ]),
 
         ])

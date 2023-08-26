@@ -42,7 +42,7 @@ class Install extends Process
                     }
                 };
 
-                $settings = dcCore::app()->blog->settings->get(My::id());
+                $settings = My::settings();
 
                 $rename('active', $settings);
                 $rename('entries', $settings);
@@ -51,7 +51,7 @@ class Install extends Process
             }
 
             // Default state is active for entries content and inactive for comments
-            $settings = dcCore::app()->blog->settings->get(My::id());
+            $settings = My::settings();
             $settings->put('active', true, 'boolean', 'Active', false, true);
             $settings->put('entries', true, 'boolean', 'Apply on entries', false, true);
             $settings->put('comments', false, 'boolean', 'Apply on comments', false, true);

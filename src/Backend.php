@@ -35,13 +35,7 @@ class Backend extends Process
         }
 
         /* Add menu item in extension list */
-        dcCore::app()->admin->menus[Menus::MENU_BLOG]->addItem(
-            __('Typographic replacements'),
-            My::manageUrl(),
-            My::icons(),
-            preg_match(My::urlScheme(), $_SERVER['REQUEST_URI']),
-            My::checkContext(My::MENU)
-        );
+        My::addBackendMenuItem(Menus::MENU_BLOG);
 
         if (My::checkContext(My::MENU)) {
             dcCore::app()->addBehaviors([

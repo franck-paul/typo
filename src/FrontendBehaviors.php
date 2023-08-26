@@ -14,13 +14,11 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\typo;
 
-use dcCore;
-
 class FrontendBehaviors
 {
     public static function updateTypoComments($blog, $cur)
     {
-        $settings = dcCore::app()->blog->settings->get(My::id());
+        $settings = My::settings();
         if ($settings->active && $settings->comments && !(bool) $cur->comment_trackback && $cur->comment_content != null) {
             /* Transform typo for comment content (HTML) */
             $dashes_mode          = (int) $settings->dashes_mode;
@@ -29,7 +27,7 @@ class FrontendBehaviors
     }
     public static function previewTypoComments($prv)
     {
-        $settings = dcCore::app()->blog->settings->get(My::id());
+        $settings = My::settings();
         if ($settings->active && $settings->comments && $prv['content'] != null) {
             /* Transform typo for comment content (HTML) */
             $dashes_mode    = (int) $settings->dashes_mode;
