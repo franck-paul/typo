@@ -22,6 +22,7 @@ use dcCore;
 use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Html\Form\Form;
+use Dotclear\Helper\Html\Form\Hidden;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Submit;
 use Dotclear\Helper\Html\Form\Text;
@@ -142,10 +143,10 @@ class BackendBehaviors
                 (new Para())->items([
                     (new Submit('ap-typo-do', __('Save'))),
                     ...$ap->hiddenFields(),
-                    ... My::hiddenFields([
-                        'full_content' => 'true',
-                        'action'       => 'typo',
-                    ]),
+                    (new Hidden(['full_content'], 'true')),
+                    (new Hidden(['action'], 'typo')),
+                    (new Hidden(['process'], ($type === 'post' ? 'Posts' : 'Plugin'))),
+                    dcCore::app()->formNonce(false),
                 ]),
             ])
             ->render();
