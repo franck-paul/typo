@@ -17,10 +17,12 @@ namespace Dotclear\Plugin\typo;
 use ArrayObject;
 use dcAuth;
 use dcBlog;
-use dcCommentsActions;
 use dcCore;
+use Dotclear\Core\Backend\Action\ActionsComments;
 use Dotclear\Core\Backend\Action\ActionsPosts;
+use Dotclear\Core\Backend\Favorites;
 use Dotclear\Core\Backend\Page;
+use Dotclear\Database\Cursor;
 use Dotclear\Helper\Html\Form\Form;
 use Dotclear\Helper\Html\Form\Hidden;
 use Dotclear\Helper\Html\Form\Para;
@@ -31,7 +33,7 @@ use Dotclear\Plugin\pages\BackendActions as PagesBackendActions;
 
 class BackendBehaviors
 {
-    public static function adminDashboardFavorites($favs)
+    public static function adminDashboardFavorites(Favorites $favs): string
     {
         $favs->register('Typo', [
             'title'       => __('Typographic replacements'),
@@ -42,9 +44,11 @@ class BackendBehaviors
                 dcAuth::PERMISSION_ADMIN,
             ]),
         ]);
+
+        return '';
     }
 
-    public static function adminPostsActions(ActionsPosts $ap)
+    public static function adminPostsActions(ActionsPosts $ap): string
     {
         // Add menuitem in actions dropdown list
         if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
@@ -55,9 +59,11 @@ class BackendBehaviors
                 self::adminPostsDoReplacements(...)
             );
         }
+
+        return '';
     }
 
-    public static function adminPagesActions(PagesBackendActions $ap)
+    public static function adminPagesActions(PagesBackendActions $ap): string
     {
         // Add menuitem in actions dropdown list
         if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
@@ -68,19 +74,34 @@ class BackendBehaviors
                 self::adminPagesDoReplacements(...)
             );
         }
+
+        return '';
     }
 
-    public static function adminPostsDoReplacements(ActionsPosts $ap, ArrayObject $post)
+    /**
+     * @param      ActionsPosts                 $ap     Actions
+     * @param      ArrayObject<string, mixed>   $post   The post
+     */
+    public static function adminPostsDoReplacements(ActionsPosts $ap, ArrayObject $post): void
     {
         self::adminEntriesDoReplacements($ap, $post, 'post');
     }
 
-    public static function adminPagesDoReplacements(PagesBackendActions $ap, ArrayObject $post)
+    /**
+     * @param      PagesBackendActions          $ap     Actions
+     * @param      ArrayObject<string, mixed>   $post   The post
+     */
+    public static function adminPagesDoReplacements(PagesBackendActions $ap, ArrayObject $post): void
     {
         self::adminEntriesDoReplacements($ap, $post, 'page');
     }
 
-    public static function adminEntriesDoReplacements($ap, ArrayObject $post, $type = 'post')
+    /**
+     * @param      ActionsPosts|PagesBackendActions     $ap     Actions
+     * @param      ArrayObject<string, mixed>           $post   The post
+     * @param      string                               $type   The type
+     */
+    public static function adminEntriesDoReplacements(ActionsPosts|PagesBackendActions $ap, ArrayObject $post, string $type = 'post'): void
     {
         if (!empty($post['full_content'])) {
             // Do replacements
@@ -155,7 +176,7 @@ class BackendBehaviors
         }
     }
 
-    public static function adminCommentsActions(dcCommentsActions $ap)
+    public static function adminCommentsActions(ActionsComments $ap): void
     {
         // Add menuitem in actions dropdown list
         if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
@@ -168,7 +189,11 @@ class BackendBehaviors
         }
     }
 
-    public static function adminCommentsDoReplacements(dcCommentsActions $ap, ArrayObject $post)
+    /**
+     * @param      ActionsComments              $ap     Actions
+     * @param      ArrayObject<string, mixed>   $post   The post
+     */
+    public static function adminCommentsDoReplacements(ActionsComments $ap, ArrayObject $post): void
     {
         if (!empty($post['full_content'])) {
             // Do replacements
@@ -223,7 +248,12 @@ class BackendBehaviors
         }
     }
 
-    public static function updateTypoEntries($ref)
+    /**
+     * @param      array<string, string>|ArrayObject<string, string>  $ref    The preview data
+     *
+     * @return     string
+     */
+    public static function updateTypoEntries(array|ArrayObject $ref): string
     {
         $settings = My::settings();
         if ($settings->active && $settings->entries && @is_array($ref)) {
@@ -243,9 +273,11 @@ class BackendBehaviors
                 }
             }
         }
+
+        return '';
     }
 
-    public static function updateTypoComments($blog, $cur)
+    public static function updateTypoComments(dcBlog $blog, Cursor $cur): string
     {
         $settings = My::settings();
         if ($settings->active && $settings->comments && !(bool) $cur->comment_trackback && $cur->comment_content != null) {
@@ -253,5 +285,7 @@ class BackendBehaviors
             $dashes_mode          = $settings->dashes_mode;
             $cur->comment_content = SmartyPants::transform($cur->comment_content, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
         }
+
+        return '';
     }
 }

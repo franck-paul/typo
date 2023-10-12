@@ -18,7 +18,7 @@ namespace Dotclear\Plugin\typo;
 
 class SmartyPants
 {
-    public static $init = false;
+    public static bool $init = false;
 
     // SMARTYPANTS_VERSION              = '1.5.1f-php7' - Sun 23 Jan 2013
     // SMARTYPANTSTYPOGRAPHER_VERSION   = '1.0.1-php7'  - Sun 23 Jan 2013
@@ -37,13 +37,13 @@ class SmartyPants
 
     public const SMARTYPANTS_ATTR = self::SMARTYPANTS_ATTR_EM2_EN0;
 
-    public static function transform($text, $attr = self::SMARTYPANTS_ATTR)
+    public static function transform(string $text, string $attr = self::SMARTYPANTS_ATTR): string
     {
         // Transform text using parser.
         return (new SmartyPantsTypographerParser($attr))->transform($text);
     }
 
-    public static function transformQuotes($text, $attr = self::SMARTYPANTS_ATTR)
+    public static function transformQuotes(string $text, string $attr = self::SMARTYPANTS_ATTR): string
     {
         switch ($attr) {
             case self::SMARTYPANTS_ATTR_EM0_EN0:  return $text;
@@ -58,7 +58,7 @@ class SmartyPants
         return self::transform($text, $attr);
     }
 
-    public static function transformDashes($text, $attr = self::SMARTYPANTS_ATTR)
+    public static function transformDashes(string $text, string $attr = self::SMARTYPANTS_ATTR): string
     {
         switch ($attr) {
             case self::SMARTYPANTS_ATTR_EM0_EN0:  return $text;
@@ -76,7 +76,7 @@ class SmartyPants
         return self::transform($text, $attr);
     }
 
-    public static function transformEllipsis($text, $attr = self::SMARTYPANTS_ATTR)
+    public static function transformEllipsis(string $text, string $attr = self::SMARTYPANTS_ATTR): string
     {
         switch ($attr) {
             case self::SMARTYPANTS_ATTR_EM0_EN0:  return $text;

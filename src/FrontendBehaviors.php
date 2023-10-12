@@ -14,9 +14,19 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\typo;
 
+use ArrayObject;
+use dcBlog;
+use Dotclear\Database\Cursor;
+
 class FrontendBehaviors
 {
-    public static function updateTypoComments($blog, $cur)
+    /**
+     * @param      dcBlog   $blog   The blog
+     * @param      Cursor   $cur    The current
+     *
+     * @return     string
+     */
+    public static function updateTypoComments(dcBlog $blog, Cursor $cur): string
     {
         $settings = My::settings();
         if ($settings->active && $settings->comments && !(bool) $cur->comment_trackback && $cur->comment_content != null) {
@@ -24,8 +34,16 @@ class FrontendBehaviors
             $dashes_mode          = (int) $settings->dashes_mode;
             $cur->comment_content = SmartyPants::transform($cur->comment_content, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
         }
+
+        return '';
     }
-    public static function previewTypoComments($prv)
+
+    /**
+     * @param      array<string, string>|ArrayObject<string, string>  $prv    The preview data
+     *
+     * @return     string
+     */
+    public static function previewTypoComments(array|ArrayObject $prv): string
     {
         $settings = My::settings();
         if ($settings->active && $settings->comments && $prv['content'] != null) {
@@ -33,5 +51,7 @@ class FrontendBehaviors
             $dashes_mode    = (int) $settings->dashes_mode;
             $prv['content'] = SmartyPants::transform($prv['content'], ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
         }
+
+        return '';
     }
 }

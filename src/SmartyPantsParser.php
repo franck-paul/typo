@@ -19,13 +19,13 @@ namespace Dotclear\Plugin\typo;
 class SmartyPantsParser
 {
     # Options to specify which transformations to make:
-    public $do_nothing   = 0;
-    public $do_quotes    = 0;
-    public $do_backticks = 0;
-    public $do_dashes    = 0;
-    public $do_ellipses  = 0;
-    public $do_stupefy   = 0;
-    public $convert_quot = 0; # should we translate &quot; entities into normal quotes?
+    public int $do_nothing   = 0;
+    public int $do_quotes    = 0;
+    public int $do_backticks = 0;
+    public int $do_dashes    = 0;
+    public int $do_ellipses  = 0;
+    public int $do_stupefy   = 0;
+    public int $convert_quot = 0; # should we translate &quot; entities into normal quotes?
 
     # SmartyPants will not alter the content of these tags:
     private const SMARTYPANTS_TAGS_TO_SKIP = 'pre|code|kbd|script|style|math';
@@ -99,7 +99,7 @@ class SmartyPantsParser
         }
     }
 
-    public function transform($text)
+    public function transform(string $text): string
     {
         if ($this->do_nothing) {
             return $text;
@@ -137,12 +137,12 @@ class SmartyPantsParser
         return $result;
     }
 
-    public function educate($t, $prev_token_last_char)
+    public function educate(string $t, string $prev_token_last_char): string
     {
         $t = $this->processEscapes($t);
 
         if ($this->convert_quot) {
-            $t = preg_replace('/&quot;/', '"', $t);
+            $t = (string) preg_replace('/&quot;/', '"', $t);
         }
 
         if ($this->do_dashes) {
@@ -197,7 +197,7 @@ class SmartyPantsParser
         return $t;
     }
 
-    public function educateQuotes($_)
+    public function educateQuotes(string $_): string
     {
         #
         #   Parameter:  String.
@@ -213,7 +213,7 @@ class SmartyPantsParser
 
         # Special case if the very first character is a quote
         # followed by punctuation at a non-word-break. Close the quotes by brute force:
-        $_ = preg_replace(
+        $_ = (string) preg_replace(
             ["/^'(?=$punct_class\\B)/", "/^\"(?=$punct_class\\B)/"],
             ['&#8217;',                 '&#8221;'],
             $_
@@ -221,20 +221,20 @@ class SmartyPantsParser
 
         # Special case for double sets of quotes, e.g.:
         #   <p>He said, "'Quoted' words in a larger quote."</p>
-        $_ = preg_replace(
+        $_ = (string) preg_replace(
             ["/\"'(?=\w)/",    "/'\"(?=\w)/"],
             ['&#8220;&#8216;', '&#8216;&#8220;'],
             $_
         );
 
         # Special case for decade abbreviations (the '80s):
-        $_ = preg_replace("/'(?=\\d{2}s)/", '&#8217;', $_);
+        $_ = (string) preg_replace("/'(?=\\d{2}s)/", '&#8217;', $_);
 
         $close_class = '[^\ \t\r\n\[\{\(\-]';
         $dec_dashes  = '&\#8211;|&\#8212;';
 
         # Get most opening single quotes:
-        $_ = preg_replace("{
+        $_ = (string) preg_replace("{
 			(
 				\\s          |   # a whitespace char, or
 				&nbsp;      |   # a non-breaking space entity, or
@@ -247,7 +247,7 @@ class SmartyPantsParser
 			(?=\\w)              # followed by a word character
 			}x", '\1&#8216;', $_);
         # Single closing quotes:
-        $_ = preg_replace("{
+        $_ = (string) preg_replace("{
 			($close_class)?
 			'
 			(?(1)|          # If $1 captured, then do nothing;
@@ -261,7 +261,7 @@ class SmartyPantsParser
         $_ = str_replace("'", '&#8216;', $_);
 
         # Get most opening double quotes:
-        $_ = preg_replace("{
+        $_ = (string) preg_replace("{
 			(
 				\\s          |   # a whitespace char, or
 				&nbsp;      |   # a non-breaking space entity, or
@@ -275,7 +275,7 @@ class SmartyPantsParser
 			}x", '\1&#8220;', $_);
 
         # Double closing quotes:
-        $_ = preg_replace("{
+        $_ = (string) preg_replace("{
 			($close_class)?
 			\"
 			(?(1)|(?=\\s))   # If $1 captured, then do nothing;
@@ -288,7 +288,7 @@ class SmartyPantsParser
         return $_;
     }
 
-    public function educateBackticks($_)
+    public function educateBackticks(string $_): string
     {
         #
         #   Parameter:  String.
@@ -308,7 +308,7 @@ class SmartyPantsParser
         return $_;
     }
 
-    public function educateSingleBackticks($_)
+    public function educateSingleBackticks(string $_): string
     {
         #
         #   Parameter:  String.
@@ -328,7 +328,7 @@ class SmartyPantsParser
         return $_;
     }
 
-    public function educateDashes($_)
+    public function educateDashes(string $_): string
     {
         #
         #   Parameter:  String.
@@ -342,7 +342,7 @@ class SmartyPantsParser
         return $_;
     }
 
-    public function educateDashesOldSchool($_)
+    public function educateDashesOldSchool(string $_): string
     {
         #
         #   Parameter:  String.
@@ -362,7 +362,7 @@ class SmartyPantsParser
         return $_;
     }
 
-    public function educateDashesOldSchoolInverted($_)
+    public function educateDashesOldSchoolInverted(string $_): string
     {
         #
         #   Parameter:  String.
@@ -389,7 +389,7 @@ class SmartyPantsParser
         return $_;
     }
 
-    public function educateEllipses($_)
+    public function educateEllipses(string $_): string
     {
         #
         #   Parameter:  String.
@@ -406,7 +406,7 @@ class SmartyPantsParser
         return $_;
     }
 
-    public function stupefyEntities($_)
+    public function stupefyEntities(string $_): string
     {
         #
         #   Parameter:  String.
@@ -435,7 +435,7 @@ class SmartyPantsParser
         return $_;
     }
 
-    public function processEscapes($_)
+    public function processEscapes(string $_): string
     {
         #
         #   Parameter:  String.
@@ -461,7 +461,12 @@ class SmartyPantsParser
         return $_;
     }
 
-    public function tokenizeHTML($str)
+    /**
+     * @param      string  $str    The string
+     *
+     * @return     array<int<0, max>, array{'tag'|'text', string}>
+     */
+    public function tokenizeHTML(string $str): array
     {
         #
         #   Parameter:  String containing HTML markup.
