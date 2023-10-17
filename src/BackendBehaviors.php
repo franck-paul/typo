@@ -136,7 +136,7 @@ class BackendBehaviors
                     Page::breadcrumb(
                         [
                             Html::escapeHTML(dcCore::app()->blog->name) => '',
-                            __('Pages')                                 => dcCore::app()->admin->url->get('admin.plugin.pages'),
+                            __('Pages')                                 => dcCore::app()->adminurl->get('admin.plugin.pages'),
                             __('Typographic replacements')              => '',
                         ]
                     )
@@ -146,7 +146,7 @@ class BackendBehaviors
                     Page::breadcrumb(
                         [
                             Html::escapeHTML(dcCore::app()->blog->name) => '',
-                            __('Entries')                               => dcCore::app()->admin->url->get('admin.posts'),
+                            __('Entries')                               => dcCore::app()->adminurl->get('admin.posts'),
                             __('Typographic replacements')              => '',
                         ]
                     )
@@ -219,7 +219,7 @@ class BackendBehaviors
                 Page::breadcrumb(
                     [
                         Html::escapeHTML(dcCore::app()->blog->name) => '',
-                        __('Comments')                              => dcCore::app()->admin->url->get('admin.comments'),
+                        __('Comments')                              => dcCore::app()->adminurl->get('admin.comments'),
                         __('Typographic replacements')              => '',
                     ]
                 )
