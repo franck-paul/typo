@@ -75,26 +75,28 @@ class SmartyPantsParser
             $this->do_stupefy = 1;
         } else {
             $chars = preg_split('//', $attr);
-            foreach ($chars as $c) {
-                if ($c == 'q') {
-                    $this->do_quotes = 1;
-                } elseif ($c == 'b') {
-                    $this->do_backticks = 1;
-                } elseif ($c == 'B') {
-                    $this->do_backticks = 2;
-                } elseif ($c == 'd') {
-                    $this->do_dashes = 1;
-                } elseif ($c == 'D') {
-                    $this->do_dashes = 2;
-                } elseif ($c == 'i') {
-                    $this->do_dashes = 3;
-                } elseif ($c == 'e') {
-                    $this->do_ellipses = 1;
-                } elseif ($c == 'w') {
-                    $this->convert_quot = 1;
-                }
+            if ($chars !== false) {
+                foreach ($chars as $c) {
+                    if ($c == 'q') {
+                        $this->do_quotes = 1;
+                    } elseif ($c == 'b') {
+                        $this->do_backticks = 1;
+                    } elseif ($c == 'B') {
+                        $this->do_backticks = 2;
+                    } elseif ($c == 'd') {
+                        $this->do_dashes = 1;
+                    } elseif ($c == 'D') {
+                        $this->do_dashes = 2;
+                    } elseif ($c == 'i') {
+                        $this->do_dashes = 3;
+                    } elseif ($c == 'e') {
+                        $this->do_ellipses = 1;
+                    } elseif ($c == 'w') {
+                        $this->convert_quot = 1;
+                    }
 
-                # Unknown attribute option, ignore.
+                    # Unknown attribute option, ignore.
+                }
             }
         }
     }
@@ -492,11 +494,13 @@ class SmartyPantsParser
 
         $parts = preg_split("{($match)}", $str, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-        foreach ($parts as $part) {
-            if (++$index % 2 && $part != '') {
-                $tokens[] = ['text', $part];
-            } else {
-                $tokens[] = ['tag', $part];
+        if ($parts !== false) {
+            foreach ($parts as $part) {
+                if (++$index % 2 && $part != '') {
+                    $tokens[] = ['text', $part];
+                } else {
+                    $tokens[] = ['tag', $part];
+                }
             }
         }
 

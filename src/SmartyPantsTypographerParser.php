@@ -133,38 +133,40 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
             $this->do_stupefy = 1;
         } else {
             $chars = preg_split('//', $attr);
-            foreach ($chars as $c) {
-                if ($c == 'c') {
-                    $current = & $this->do_comma_quotes;
-                } elseif ($c == 'g') {
-                    $current = & $this->do_guillemets;
-                } elseif ($c == ':') {
-                    $current = & $this->do_space_colon;
-                } elseif ($c == ';') {
-                    $current = & $this->do_space_semicolon;
-                } elseif ($c == 'm') {
-                    $current = & $this->do_space_marks;
-                } elseif ($c == 'h') {
-                    $current = & $this->do_space_emdash;
-                } elseif ($c == 'H') {
-                    $current = & $this->do_space_endash;
-                } elseif ($c == 'f') {
-                    $current = & $this->do_space_frenchquote;
-                } elseif ($c == 't') {
-                    $current = & $this->do_space_thousand;
-                } elseif ($c == 'u') {
-                    $current = & $this->do_space_unit;
-                } elseif ($c == '+') {
-                    $current = 2;
-                    unset($current);
-                } elseif ($c == '-') {
-                    $current = -1;
-                    unset($current);
+            if ($chars !== false) {
+                foreach ($chars as $c) {
+                    if ($c == 'c') {
+                        $current = & $this->do_comma_quotes;
+                    } elseif ($c == 'g') {
+                        $current = & $this->do_guillemets;
+                    } elseif ($c == ':') {
+                        $current = & $this->do_space_colon;
+                    } elseif ($c == ';') {
+                        $current = & $this->do_space_semicolon;
+                    } elseif ($c == 'm') {
+                        $current = & $this->do_space_marks;
+                    } elseif ($c == 'h') {
+                        $current = & $this->do_space_emdash;
+                    } elseif ($c == 'H') {
+                        $current = & $this->do_space_endash;
+                    } elseif ($c == 'f') {
+                        $current = & $this->do_space_frenchquote;
+                    } elseif ($c == 't') {
+                        $current = & $this->do_space_thousand;
+                    } elseif ($c == 'u') {
+                        $current = & $this->do_space_unit;
+                    } elseif ($c == '+') {
+                        $current = 2;
+                        unset($current);
+                    } elseif ($c == '-') {
+                        $current = -1;
+                        unset($current);
+                    }
+
+                    # Unknown attribute option, ignore.
+
+                    $current = 1;
                 }
-
-                # Unknown attribute option, ignore.
-
-                $current = 1;
             }
         }
     }
