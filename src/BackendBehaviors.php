@@ -18,6 +18,7 @@ use ArrayObject;
 use dcAuth;
 use dcBlog;
 use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Backend\Action\ActionsComments;
 use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Core\Backend\Favorites;
@@ -53,7 +54,7 @@ class BackendBehaviors
         // Add menuitem in actions dropdown list
         if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
             dcAuth::PERMISSION_CONTENT_ADMIN,
-        ]), dcCore::app()->blog->id)) {
+        ]), App::blog()->id())) {
             $ap->addAction(
                 [__('Typo') => [__('Typographic replacements') => 'typo']],
                 self::adminPostsDoReplacements(...)
@@ -68,7 +69,7 @@ class BackendBehaviors
         // Add menuitem in actions dropdown list
         if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
             dcAuth::PERMISSION_CONTENT_ADMIN,
-        ]), dcCore::app()->blog->id)) {
+        ]), App::blog()->id())) {
             $ap->addAction(
                 [__('Typo') => [__('Typographic replacements') => 'typo']],
                 self::adminPagesDoReplacements(...)
@@ -135,9 +136,9 @@ class BackendBehaviors
                 $ap->beginPage(
                     Page::breadcrumb(
                         [
-                            Html::escapeHTML(dcCore::app()->blog->name) => '',
-                            __('Pages')                                 => dcCore::app()->adminurl->get('admin.plugin.pages'),
-                            __('Typographic replacements')              => '',
+                            Html::escapeHTML(App::blog()->name()) => '',
+                            __('Pages')                           => dcCore::app()->adminurl->get('admin.plugin.pages'),
+                            __('Typographic replacements')        => '',
                         ]
                     )
                 );
@@ -145,9 +146,9 @@ class BackendBehaviors
                 $ap->beginPage(
                     Page::breadcrumb(
                         [
-                            Html::escapeHTML(dcCore::app()->blog->name) => '',
-                            __('Entries')                               => dcCore::app()->adminurl->get('admin.posts'),
-                            __('Typographic replacements')              => '',
+                            Html::escapeHTML(App::blog()->name()) => '',
+                            __('Entries')                         => dcCore::app()->adminurl->get('admin.posts'),
+                            __('Typographic replacements')        => '',
                         ]
                     )
                 );
@@ -181,7 +182,7 @@ class BackendBehaviors
         // Add menuitem in actions dropdown list
         if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
             dcAuth::PERMISSION_CONTENT_ADMIN,
-        ]), dcCore::app()->blog->id)) {
+        ]), App::blog()->id())) {
             $ap->addAction(
                 [__('Typo') => [__('Typographic replacements') => 'typo']],
                 self::adminCommentsDoReplacements(...)
@@ -218,9 +219,9 @@ class BackendBehaviors
             $ap->beginPage(
                 Page::breadcrumb(
                     [
-                        Html::escapeHTML(dcCore::app()->blog->name) => '',
-                        __('Comments')                              => dcCore::app()->adminurl->get('admin.comments'),
-                        __('Typographic replacements')              => '',
+                        Html::escapeHTML(App::blog()->name()) => '',
+                        __('Comments')                        => dcCore::app()->adminurl->get('admin.comments'),
+                        __('Typographic replacements')        => '',
                     ]
                 )
             );

@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\typo;
 
 use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Process;
@@ -63,7 +64,7 @@ class Manage extends Process
                 $settings->put('entries', $typo_entries, 'boolean');
                 $settings->put('comments', $typo_comments, 'boolean');
                 $settings->put('dashes_mode', $typo_dashes_mode, 'integer');
-                dcCore::app()->blog->triggerBlog();
+                App::blog()->triggerBlog();
                 Notices::addSuccessNotice(__('Configuration successfully updated.'));
                 My::redirect();
                 dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
@@ -111,8 +112,8 @@ class Manage extends Process
 
         echo Page::breadcrumb(
             [
-                Html::escapeHTML(dcCore::app()->blog->name) => '',
-                __('Typographic replacements')              => '',
+                Html::escapeHTML(App::blog()->name()) => '',
+                __('Typographic replacements')        => '',
             ]
         );
         echo Notices::getNotices();
