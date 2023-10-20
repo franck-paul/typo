@@ -14,9 +14,9 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\typo;
 
-use dcCore;
-use dcNamespace;
+use Dotclear\App;
 use Dotclear\Core\Process;
+use Dotclear\Interface\Core\BlogWorkspaceInterface;
 use Exception;
 
 class Install extends Process
@@ -33,10 +33,10 @@ class Install extends Process
         }
 
         try {
-            $old_version = dcCore::app()->getVersion(My::id());
+            $old_version = App::version()->getVersion(My::id());
             if (version_compare((string) $old_version, '3.1', '<')) {
                 // Change settings names (remove wc_ prefix in them)
-                $rename = function (string $name, dcNamespace $settings): void {
+                $rename = function (string $name, BlogWorkspaceInterface $settings): void {
                     if ($settings->settingExists('typo_' . $name, true)) {
                         $settings->rename('typo_' . $name, $name);
                     }
@@ -57,7 +57,7 @@ class Install extends Process
             $settings->put('comments', false, 'boolean', 'Apply on comments', false, true);
             $settings->put('dashes_mode', (int) SmartyPants::SMARTYPANTS_ATTR, 'integer', 'Dashes replacement mode', false, true);
         } catch (Exception $e) {
-            dcCore::app()->error->add($e->getMessage());
+            App::error()->add($e->getMessage());
         }
 
         return true;

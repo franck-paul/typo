@@ -15,13 +15,11 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\typo;
 
 use ArrayObject;
-use dcAuth;
-use dcBlog;
-use dcCore;
 use Dotclear\App;
 use Dotclear\Core\Backend\Action\ActionsComments;
 use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Core\Backend\Favorites;
+use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Database\Cursor;
 use Dotclear\Helper\Html\Form\Form;
@@ -30,6 +28,7 @@ use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Submit;
 use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Html;
+use Dotclear\Interface\Core\BlogInterface;
 use Dotclear\Plugin\pages\BackendActions as PagesBackendActions;
 
 class BackendBehaviors
@@ -41,8 +40,8 @@ class BackendBehaviors
             'url'         => My::manageUrl(),
             'small-icon'  => My::icons(),
             'large-icon'  => My::icons(),
-            'permissions' => dcCore::app()->auth->makePermissions([
-                dcAuth::PERMISSION_ADMIN,
+            'permissions' => App::auth()->makePermissions([
+                App::auth()::PERMISSION_ADMIN,
             ]),
         ]);
 
@@ -52,8 +51,8 @@ class BackendBehaviors
     public static function adminPostsActions(ActionsPosts $ap): string
     {
         // Add menuitem in actions dropdown list
-        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
-            dcAuth::PERMISSION_CONTENT_ADMIN,
+        if (App::auth()->check(App::auth()->makePermissions([
+            App::auth()::PERMISSION_CONTENT_ADMIN,
         ]), App::blog()->id())) {
             $ap->addAction(
                 [__('Typo') => [__('Typographic replacements') => 'typo']],
@@ -67,8 +66,8 @@ class BackendBehaviors
     public static function adminPagesActions(PagesBackendActions $ap): string
     {
         // Add menuitem in actions dropdown list
-        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
-            dcAuth::PERMISSION_CONTENT_ADMIN,
+        if (App::auth()->check(App::auth()->makePermissions([
+            App::auth()::PERMISSION_CONTENT_ADMIN,
         ]), App::blog()->id())) {
             $ap->addAction(
                 [__('Typo') => [__('Typographic replacements') => 'typo']],
@@ -113,7 +112,7 @@ class BackendBehaviors
                 while ($posts->fetch()) {
                     if (($posts->post_excerpt_xhtml) || ($posts->post_content_xhtml)) {
                         # Apply typo features to entry
-                        $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcBlog::POST_TABLE_NAME);
+                        $cur = App::con()->openCursor(App::con()->prefix() . BlogInterface::POST_TABLE_NAME);
 
                         if ($posts->post_excerpt_xhtml) {
                             $cur->post_excerpt_xhtml = SmartyPants::transform($posts->post_excerpt_xhtml, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
@@ -137,7 +136,7 @@ class BackendBehaviors
                     Page::breadcrumb(
                         [
                             Html::escapeHTML(App::blog()->name()) => '',
-                            __('Pages')                           => dcCore::app()->adminurl->get('admin.plugin.pages'),
+                            __('Pages')                           => App::backend()->url()->get('admin.plugin.pages'),
                             __('Typographic replacements')        => '',
                         ]
                     )
@@ -147,14 +146,14 @@ class BackendBehaviors
                     Page::breadcrumb(
                         [
                             Html::escapeHTML(App::blog()->name()) => '',
-                            __('Entries')                         => dcCore::app()->adminurl->get('admin.posts'),
+                            __('Entries')                         => App::backend()->url()->get('admin.posts'),
                             __('Typographic replacements')        => '',
                         ]
                     )
                 );
             }
 
-            Page::warning(__('Warning! These replacements will not be undoable.'), false, false);
+            Notices::warning(__('Warning! These replacements will not be undoable.'), false, false);
 
             echo
             (new Form('ap-entries-typo'))
@@ -168,7 +167,7 @@ class BackendBehaviors
                     (new Hidden(['full_content'], 'true')),
                     (new Hidden(['action'], 'typo')),
                     (new Hidden(['process'], ($type === 'post' ? 'Posts' : 'Plugin'))),
-                    dcCore::app()->formNonce(false),
+                    App::nonce()->formNonce(),
                 ]),
             ])
             ->render();
@@ -180,8 +179,8 @@ class BackendBehaviors
     public static function adminCommentsActions(ActionsComments $ap): void
     {
         // Add menuitem in actions dropdown list
-        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
-            dcAuth::PERMISSION_CONTENT_ADMIN,
+        if (App::auth()->check(App::auth()->makePermissions([
+            App::auth()::PERMISSION_CONTENT_ADMIN,
         ]), App::blog()->id())) {
             $ap->addAction(
                 [__('Typo') => [__('Typographic replacements') => 'typo']],
@@ -205,7 +204,7 @@ class BackendBehaviors
                 while ($co->fetch()) {
                     if ($co->comment_content) {
                         # Apply typo features to comment
-                        $cur                  = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcBlog::COMMENT_TABLE_NAME);
+                        $cur                  = App::con()->openCursor(App::con()->prefix() . BlogInterface::COMMENT_TABLE_NAME);
                         $cur->comment_content = SmartyPants::transform($co->comment_content, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                         $cur->update('WHERE comment_id = ' . (int) $co->comment_id);
                     }
@@ -220,13 +219,13 @@ class BackendBehaviors
                 Page::breadcrumb(
                     [
                         Html::escapeHTML(App::blog()->name()) => '',
-                        __('Comments')                        => dcCore::app()->adminurl->get('admin.comments'),
+                        __('Comments')                        => App::backend()->url()->get('admin.comments'),
                         __('Typographic replacements')        => '',
                     ]
                 )
             );
 
-            Page::warning(__('Warning! These replacements will not be undoable.'), false, false);
+            Notices::warning(__('Warning! These replacements will not be undoable.'), false, false);
 
             echo
             (new Form('ap-comments-typo'))
@@ -278,7 +277,7 @@ class BackendBehaviors
         return '';
     }
 
-    public static function updateTypoComments(dcBlog $blog, Cursor $cur): string
+    public static function updateTypoComments(BlogInterface $blog, Cursor $cur): string
     {
         $settings = My::settings();
         if ($settings->active && $settings->comments && !(bool) $cur->comment_trackback && $cur->comment_content != null) {

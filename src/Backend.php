@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\typo;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Backend\Menus;
 use Dotclear\Core\Process;
 
@@ -38,13 +38,13 @@ class Backend extends Process
         My::addBackendMenuItem(Menus::MENU_BLOG);
 
         if (My::checkContext(My::MENU)) {
-            dcCore::app()->addBehaviors([
+            App::behavior()->addBehaviors([
                 // Register favorite
                 'adminDashboardFavoritesV2' => BackendBehaviors::adminDashboardFavorites(...),
             ]);
         }
 
-        dcCore::app()->addBehaviors([
+        App::behavior()->addBehaviors([
             // Add behavior callback, will be used for all types of posts (standard, page, galery item, ...)
             'coreAfterPostContentFormat' => BackendBehaviors::updateTypoEntries(...),
 

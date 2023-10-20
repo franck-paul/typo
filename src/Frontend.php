@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\typo;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Process;
 
 class Frontend extends Process
@@ -37,7 +37,7 @@ class Frontend extends Process
         }
 
         /* Add behavior callback for typo replacement in comments */
-        dcCore::app()->addBehaviors([
+        App::behavior()->addBehaviors([
             'coreBeforeCommentCreate'    => FrontendBehaviors::updateTypoComments(...),
             'publicBeforeCommentPreview' => FrontendBehaviors::previewTypoComments(...),
         ]);

@@ -15,18 +15,18 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\typo;
 
 use ArrayObject;
-use dcBlog;
 use Dotclear\Database\Cursor;
+use Dotclear\Interface\Core\BlogInterface;
 
 class FrontendBehaviors
 {
     /**
-     * @param      dcBlog   $blog   The blog
-     * @param      Cursor   $cur    The current
+     * @param      BlogInterface    $blog   The blog
+     * @param      Cursor           $cur    The current
      *
      * @return     string
      */
-    public static function updateTypoComments(dcBlog $blog, Cursor $cur): string
+    public static function updateTypoComments(BlogInterface $blog, Cursor $cur): string
     {
         $settings = My::settings();
         if ($settings->active && $settings->comments && !(bool) $cur->comment_trackback && $cur->comment_content != null) {

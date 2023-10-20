@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\typo;
 
-use dcCore;
 use Dotclear\App;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Backend\Page;
@@ -67,9 +66,8 @@ class Manage extends Process
                 App::blog()->triggerBlog();
                 Notices::addSuccessNotice(__('Configuration successfully updated.'));
                 My::redirect();
-                dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
             } catch (Exception $e) {
-                dcCore::app()->error->add($e->getMessage());
+                App::error()->add($e->getMessage());
             }
         }
 
@@ -120,7 +118,7 @@ class Manage extends Process
 
         echo
         (new Form('typo'))
-        ->action(dcCore::app()->admin->getPageURL())
+        ->action(App::backend()->getPageURL())
         ->method('post')
         ->fields([
             (new Para())->items([
