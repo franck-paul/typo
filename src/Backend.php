@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\typo;
 
 use Dotclear\App;
-use Dotclear\Core\Backend\Menus;
 use Dotclear\Core\Process;
 
 class Backend extends Process
@@ -35,7 +34,7 @@ class Backend extends Process
         }
 
         /* Add menu item in extension list */
-        My::addBackendMenuItem(Menus::MENU_BLOG);
+        My::addBackendMenuItem(App::backend()->menus()::MENU_BLOG);
 
         if (My::checkContext(My::MENU)) {
             App::behavior()->addBehaviors([
