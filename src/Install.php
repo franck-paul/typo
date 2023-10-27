@@ -36,7 +36,7 @@ class Install extends Process
             $old_version = App::version()->getVersion(My::id());
             if (version_compare((string) $old_version, '3.1', '<')) {
                 // Change settings names (remove wc_ prefix in them)
-                $rename = function (string $name, BlogWorkspaceInterface $settings): void {
+                $rename = static function (string $name, BlogWorkspaceInterface $settings) : void {
                     if ($settings->settingExists('typo_' . $name, true)) {
                         $settings->rename('typo_' . $name, $name);
                     }
@@ -56,8 +56,8 @@ class Install extends Process
             $settings->put('entries', true, 'boolean', 'Apply on entries', false, true);
             $settings->put('comments', false, 'boolean', 'Apply on comments', false, true);
             $settings->put('dashes_mode', (int) SmartyPants::SMARTYPANTS_ATTR, 'integer', 'Dashes replacement mode', false, true);
-        } catch (Exception $e) {
-            App::error()->add($e->getMessage());
+        } catch (Exception $exception) {
+            App::error()->add($exception->getMessage());
         }
 
         return true;

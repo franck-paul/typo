@@ -125,6 +125,7 @@ class BackendBehaviors
                         $cur->update('WHERE post_id = ' . (int) $posts->post_id);
                     }
                 }
+
                 $ap->redirect(true, ['upd' => 1]);
             } else {
                 $ap->redirect();
@@ -209,6 +210,7 @@ class BackendBehaviors
                         $cur->update('WHERE comment_id = ' . (int) $co->comment_id);
                     }
                 }
+
                 $ap->redirect(true, ['upd' => 1]);
             } else {
                 $ap->redirect();
@@ -261,14 +263,15 @@ class BackendBehaviors
             /* Transform typo for excerpt (HTML) */
             if (isset($ref['excerpt_xhtml'])) {
                 $excerpt = &$ref['excerpt_xhtml'];
-                if ($excerpt) {
+                if ($excerpt !== '' && $excerpt !== '0') {
                     $excerpt = SmartyPants::transform($excerpt, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                 }
             }
+
             /* Transform typo for content (HTML) */
             if (isset($ref['content_xhtml'])) {
                 $content = &$ref['content_xhtml'];
-                if ($content) {
+                if ($content !== '' && $content !== '0') {
                     $content = SmartyPants::transform($content, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                 }
             }

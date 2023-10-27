@@ -53,9 +53,9 @@ class Manage extends Process
         // Saving new configuration
         if (!empty($_POST['saveconfig'])) {
             try {
-                $typo_active      = (empty($_POST['active'])) ? false : true;
-                $typo_entries     = (empty($_POST['entries'])) ? false : true;
-                $typo_comments    = (empty($_POST['comments'])) ? false : true;
+                $typo_active      = !empty($_POST['active']);
+                $typo_entries     = !empty($_POST['entries']);
+                $typo_comments    = !empty($_POST['comments']);
                 $typo_dashes_mode = (int) $_POST['dashes_mode'];
 
                 $settings = My::settings();
@@ -103,7 +103,7 @@ class Manage extends Process
                     ->value($k)
                     ->label((new Label($v, Label::INSIDE_TEXT_AFTER))),
             ]);
-            $i++;
+            ++$i;
         }
 
         Page::openModule(My::name());

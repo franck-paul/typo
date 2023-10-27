@@ -32,7 +32,7 @@ class FrontendBehaviors
         if ($settings->active && $settings->comments && !(bool) $cur->comment_trackback && $cur->comment_content != null) {
             /* Transform typo for comment content (HTML) */
             $dashes_mode          = (int) $settings->dashes_mode;
-            $cur->comment_content = SmartyPants::transform($cur->comment_content, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
+            $cur->comment_content = SmartyPants::transform($cur->comment_content, ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
         }
 
         return '';
@@ -49,7 +49,7 @@ class FrontendBehaviors
         if ($settings->active && $settings->comments && $prv['content'] != null) {
             /* Transform typo for comment content (HTML) */
             $dashes_mode    = (int) $settings->dashes_mode;
-            $prv['content'] = SmartyPants::transform($prv['content'], ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
+            $prv['content'] = SmartyPants::transform($prv['content'], ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
         }
 
         return '';
