@@ -22,6 +22,6 @@ $this->registerModule(
 
         'details'    => 'https://open-time.net/docs/plugins/typo',
         'support'    => 'https://github.com/franck-paul/typo',
-        'repository' => 'https://raw.githubusercontent.com/franck-paul/typo/master/dcstore.xml',
+        'repository' => 'https://raw.githubusercontent.com/franck-paul/typo/main/dcstore.xml',
     ]
 );
