@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This class implements Smarty Pants.
  *
@@ -128,37 +129,37 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
             $this->do_space_frenchquote = 1;
             $this->do_space_thousand    = 1;
             $this->do_space_unit        = 1;
-        } elseif ($attr == '-1') {
+        } elseif ($attr === '-1') {
             # Special "stupefy" mode.
             $this->do_stupefy = 1;
         } else {
             $chars = preg_split('//', $attr);
             if ($chars !== false) {
                 foreach ($chars as $c) {
-                    if ($c == 'c') {
+                    if ($c === 'c') {
                         $current = & $this->do_comma_quotes;
-                    } elseif ($c == 'g') {
+                    } elseif ($c === 'g') {
                         $current = & $this->do_guillemets;
-                    } elseif ($c == ':') {
+                    } elseif ($c === ':') {
                         $current = & $this->do_space_colon;
-                    } elseif ($c == ';') {
+                    } elseif ($c === ';') {
                         $current = & $this->do_space_semicolon;
-                    } elseif ($c == 'm') {
+                    } elseif ($c === 'm') {
                         $current = & $this->do_space_marks;
-                    } elseif ($c == 'h') {
+                    } elseif ($c === 'h') {
                         $current = & $this->do_space_emdash;
-                    } elseif ($c == 'H') {
+                    } elseif ($c === 'H') {
                         $current = & $this->do_space_endash;
-                    } elseif ($c == 'f') {
+                    } elseif ($c === 'f') {
                         $current = & $this->do_space_frenchquote;
-                    } elseif ($c == 't') {
+                    } elseif ($c === 't') {
                         $current = & $this->do_space_thousand;
-                    } elseif ($c == 'u') {
+                    } elseif ($c === 'u') {
                         $current = & $this->do_space_unit;
-                    } elseif ($c == '+') {
+                    } elseif ($c === '+') {
                         $current = 2;
                         unset($current);
-                    } elseif ($c == '-') {
+                    } elseif ($c === '-') {
                         $current = -1;
                         unset($current);
                     }
@@ -175,35 +176,35 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
     {
         $t = parent::educate($t, $prev_token_last_char);
 
-        if ($this->do_comma_quotes) {
+        if ($this->do_comma_quotes !== 0) {
             $t = $this->educateCommaQuotes($t);
         }
-        if ($this->do_guillemets) {
+        if ($this->do_guillemets !== 0) {
             $t = $this->educateGuillemets($t);
         }
 
-        if ($this->do_space_emdash) {
+        if ($this->do_space_emdash !== 0) {
             $t = $this->spaceEmDash($t);
         }
-        if ($this->do_space_endash) {
+        if ($this->do_space_endash !== 0) {
             $t = $this->spaceEnDash($t);
         }
-        if ($this->do_space_colon) {
+        if ($this->do_space_colon !== 0) {
             $t = $this->spaceColon($t);
         }
-        if ($this->do_space_semicolon) {
+        if ($this->do_space_semicolon !== 0) {
             $t = $this->spaceSemicolon($t);
         }
-        if ($this->do_space_marks) {
+        if ($this->do_space_marks !== 0) {
             $t = $this->spaceMarks($t);
         }
-        if ($this->do_space_frenchquote) {
+        if ($this->do_space_frenchquote !== 0) {
             $t = $this->spaceFrenchQuotes($t);
         }
-        if ($this->do_space_thousand) {
+        if ($this->do_space_thousand !== 0) {
             $t = $this->spaceThousandSeparator($t);
         }
-        if ($this->do_space_unit) {
+        if ($this->do_space_unit !== 0) {
             $t = $this->spaceUnit($t);
         }
 
@@ -335,9 +336,8 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         #   Example output: &#8222; Isn't this fun? &#8222;
         #
         $_ = (string) preg_replace('/(?:<|&lt;){2}/', '&#171;', $_);
-        $_ = (string) preg_replace('/(?:>|&gt;){2}/', '&#187;', $_);
 
-        return $_;
+        return (string) preg_replace('/(?:>|&gt;){2}/', '&#187;', $_);
     }
 
     public function spaceFrenchQuotes(string $_): string
@@ -361,13 +361,12 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
             "\\1\\2$chr",
             $_
         );
-        $_ = (string) preg_replace(
+
+        return (string) preg_replace(
             "/$this->space$opt(&#187;|»|&#8249;|›)($outside_char|$)/",
             "$chr\\1\\2",
             $_
         );
-
-        return $_;
     }
 
     public function spaceColon(string $_): string
@@ -383,13 +382,11 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         $opt = ($this->do_space_colon == 2 ? '?' : '');
         $chr = ($this->do_space_colon != -1 ? $this->space_colon : '');
 
-        $_ = (string) preg_replace(
+        return (string) preg_replace(
             "/$this->space$opt(:)(\\s|$)/m",
             "$chr\\1\\2",
             $_
         );
-
-        return $_;
     }
 
     public function spaceSemicolon(string $_): string
@@ -410,14 +407,13 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
             ' \\1',
             $_
         );
-        $_ = (string) preg_replace(
+
+        return (string) preg_replace(
             '/((?:^|\\s)(?>[^&;\\s]+|&#?[a-zA-Z0-9]+;)*)' .
                           " $opt(;)(?=\\s|$)/m",
             "\\1$chr\\2",
             $_
         );
-
-        return $_;
     }
 
     public function spaceMarks(string $_): string
@@ -438,9 +434,8 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
 
         // Inverted marks.
         $imarks = '(?:¡|&iexcl;|&#161;|&#x[Aa]1;|¿|&iquest;|&#191;|&#x[Bb][Ff];)';
-        $_      = (string) preg_replace("/($imarks+)$this->space$opt/", "\\1$chr", $_);
 
-        return $_;
+        return (string) preg_replace("/($imarks+)$this->space$opt/", "\\1$chr", $_);
     }
 
     public function spaceEmDash(string $_): string
@@ -457,13 +452,12 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         #
         $opt = ($this->do_space_emdash == 2 ? '?' : '');
         $chr = ($this->do_space_emdash != -1 ? $this->space_emdash : '');
-        $_   = (string) preg_replace(
+
+        return (string) preg_replace(
             "/$this->space$opt(&#8212;|—)$this->space$opt/",
             "$chr\\1$chr",
             $_
         );
-
-        return $_;
     }
 
     public function spaceEnDash(string $_): string
@@ -480,13 +474,12 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         #
         $opt = ($this->do_space_endash == 2 ? '?' : '');
         $chr = ($this->do_space_endash != -1 ? $this->space_endash : '');
-        $_   = (string) preg_replace(
+
+        return (string) preg_replace(
             "/$this->space$opt(&#8211;|–)$this->space$opt/",
             "$chr\\1$chr",
             $_
         );
-
-        return $_;
     }
 
     public function spaceThousandSeparator(string $_): string
@@ -500,9 +493,8 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         #	Example output: Il y a 10_000 insectes amusants dans ton jardin.
         #
         $chr = ($this->do_space_thousand != -1 ? $this->space_thousand : '');
-        $_   = (string) preg_replace('/([0-9]) ([0-9])/', "\\1$chr\\2", $_);
 
-        return $_;
+        return (string) preg_replace('/(\d) (\d)/', "\\1$chr\\2", $_);
     }
 
     public string $units = '
@@ -544,7 +536,7 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         $opt = ($this->do_space_unit == 2 ? '?' : '');
         $chr = ($this->do_space_unit != -1 ? $this->space_unit : '');
 
-        $_ = (string) preg_replace(
+        return (string) preg_replace(
             '/
 			(?:([0-9])[ ]' . $opt . ') # Number followed by space.
 			(' . $this->units . ')     # Unit.
@@ -553,8 +545,6 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
             "\\1$chr\\2",
             $_
         );
-
-        return $_;
     }
 
     /* Block in comment on 11/13/2021 by Franck Paul
@@ -592,9 +582,7 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         #
         $_ = parent::stupefyEntities($_);
 
-        $_ = str_replace(['&#8222;', '&#171;', '&#187'], '"', $_);
-
-        return $_;
+        return str_replace(['&#8222;', '&#171;', '&#187'], '"', $_);
     }
 
     public function processEscapes(string $_): string
@@ -610,12 +598,10 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         #
         $_ = parent::processEscapes($_);
 
-        $_ = str_replace(
+        return str_replace(
             ['\,',    '\<',    '\>',    '\&lt;', '\&gt;'],
             ['&#44;', '&#60;', '&#62;', '&#60;', '&#62;'],
             $_
         );
-
-        return $_;
     }
 }

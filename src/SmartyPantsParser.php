@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This class implements Smarty Pants.
  *
@@ -77,21 +78,21 @@ class SmartyPantsParser
             $chars = preg_split('//', $attr);
             if ($chars !== false) {
                 foreach ($chars as $c) {
-                    if ($c == 'q') {
+                    if ($c === 'q') {
                         $this->do_quotes = 1;
-                    } elseif ($c == 'b') {
+                    } elseif ($c === 'b') {
                         $this->do_backticks = 1;
-                    } elseif ($c == 'B') {
+                    } elseif ($c === 'B') {
                         $this->do_backticks = 2;
-                    } elseif ($c == 'd') {
+                    } elseif ($c === 'd') {
                         $this->do_dashes = 1;
-                    } elseif ($c == 'D') {
+                    } elseif ($c === 'D') {
                         $this->do_dashes = 2;
-                    } elseif ($c == 'i') {
+                    } elseif ($c === 'i') {
                         $this->do_dashes = 3;
-                    } elseif ($c == 'e') {
+                    } elseif ($c === 'e') {
                         $this->do_ellipses = 1;
-                    } elseif ($c == 'w') {
+                    } elseif ($c === 'w') {
                         $this->convert_quot = 1;
                     }
 
@@ -103,7 +104,7 @@ class SmartyPantsParser
 
     public function transform(string $text): string
     {
-        if ($this->do_nothing) {
+        if ($this->do_nothing !== 0) {
             return $text;
         }
 
@@ -123,12 +124,12 @@ class SmartyPantsParser
                 # Don't mess with quotes inside tags.
                 $result .= $cur_token[1];
                 if (preg_match('@<(/?)(?:' . self::SMARTYPANTS_TAGS_TO_SKIP . ')[\s>]@', $cur_token[1], $matches)) {
-                    $in_pre = $matches[1] == '/' ? 0 : 1;
+                    $in_pre = $matches[1] === '/' ? 0 : 1;
                 }
             } else {
                 $t         = $cur_token[1];
                 $last_char = substr($t, -1); # Remember last char of this token before processing.
-                if (! $in_pre) {
+                if ($in_pre === 0) {
                     $t = $this->educate($t, $prev_token_last_char);
                 }
                 $prev_token_last_char = $last_char;
@@ -143,11 +144,11 @@ class SmartyPantsParser
     {
         $t = $this->processEscapes($t);
 
-        if ($this->convert_quot) {
+        if ($this->convert_quot !== 0) {
             $t = (string) preg_replace('/&quot;/', '"', $t);
         }
 
-        if ($this->do_dashes) {
+        if ($this->do_dashes !== 0) {
             if ($this->do_dashes == 1) {
                 $t = $this->educateDashes($t);
             }
@@ -159,40 +160,32 @@ class SmartyPantsParser
             }
         }
 
-        if ($this->do_ellipses) {
+        if ($this->do_ellipses !== 0) {
             $t = $this->educateEllipses($t);
         }
 
         # Note: backticks need to be processed before quotes.
-        if ($this->do_backticks) {
+        if ($this->do_backticks !== 0) {
             $t = $this->educateBackticks($t);
             if ($this->do_backticks == 2) {
                 $t = $this->educateSingleBackticks($t);
             }
         }
 
-        if ($this->do_quotes) {
+        if ($this->do_quotes !== 0) {
             if ($t == "'") {
                 # Special case: single-character ' token
-                if (preg_match('/\S/', $prev_token_last_char)) {
-                    $t = '&#8217;';
-                } else {
-                    $t = '&#8216;';
-                }
+                $t = preg_match('/\S/', $prev_token_last_char) ? '&#8217;' : '&#8216;';
             } elseif ($t == '"') {
                 # Special case: single-character " token
-                if (preg_match('/\S/', $prev_token_last_char)) {
-                    $t = '&#8221;';
-                } else {
-                    $t = '&#8220;';
-                }
+                $t = preg_match('/\S/', $prev_token_last_char) ? '&#8221;' : '&#8220;';
             } else {
                 # Normal case:
                 $t = $this->educateQuotes($t);
             }
         }
 
-        if ($this->do_stupefy) {
+        if ($this->do_stupefy !== 0) {
             $t = $this->stupefyEntities($t);
         }
 
@@ -432,9 +425,7 @@ class SmartyPantsParser
         # double quote         open       close
         $_ = str_replace(['&#8220;', '&#8221;'], '"', $_);
 
-        $_ = str_replace('&#8230;', '...', $_); # ellipsis
-
-        return $_;
+        return str_replace('&#8230;', '...', $_); # ellipsis
     }
 
     public function processEscapes(string $_): string
@@ -496,11 +487,7 @@ class SmartyPantsParser
 
         if ($parts !== false) {
             foreach ($parts as $part) {
-                if (++$index % 2 && $part != '') {
-                    $tokens[] = ['text', $part];
-                } else {
-                    $tokens[] = ['tag', $part];
-                }
+                $tokens[] = ++$index % 2 && $part !== '' ? ['text', $part] : ['tag', $part];
             }
         }
 

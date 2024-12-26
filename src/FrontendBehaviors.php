@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief typo, a plugin for Dotclear 2
  *
@@ -23,8 +24,6 @@ class FrontendBehaviors
     /**
      * @param      BlogInterface    $blog   The blog
      * @param      Cursor           $cur    The current
-     *
-     * @return     string
      */
     public static function updateTypoComments(BlogInterface $blog, Cursor $cur): string
     {
@@ -40,8 +39,6 @@ class FrontendBehaviors
 
     /**
      * @param      array<string, string>|ArrayObject<string, string>  $prv    The preview data
-     *
-     * @return     string
      */
     public static function previewTypoComments(array|ArrayObject $prv): string
     {

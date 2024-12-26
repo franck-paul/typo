@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief typo, a plugin for Dotclear 2
  *
@@ -132,7 +133,7 @@ class BackendBehaviors
             }
         } else {
             // Ask confirmation for replacements
-            if ($type == 'page') {
+            if ($type === 'page') {
                 $ap->beginPage(
                     Page::breadcrumb(
                         [
@@ -252,8 +253,6 @@ class BackendBehaviors
 
     /**
      * @param      array<string, string>|ArrayObject<string, string>  $ref    The preview data
-     *
-     * @return     string
      */
     public static function updateTypoEntries(array|ArrayObject $ref): string
     {
