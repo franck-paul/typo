@@ -165,9 +165,10 @@ class BackendBehaviors
                 (new Text(null, $ap->getCheckboxes())),
                 (new Para())->items([
                     (new Submit('ap-typo-do', __('Save'))),
-                    ...$ap->hiddenFields(),
-                    (new Hidden(['full_content'], 'true')),
-                    (new Hidden(['action'], 'typo')),
+                    App::nonce()->formNonce(),
+                    ... $ap->hiddenFields(),
+                    (new Hidden('full_content', 'true')),
+                    (new Hidden('action', 'typo')),
                     (new Hidden(['process'], ($type === 'post' ? 'Posts' : 'Plugin'))),
                     App::nonce()->formNonce(),
                 ]),
@@ -238,11 +239,11 @@ class BackendBehaviors
                 (new Text(null, $ap->getCheckboxes())),
                 (new Para())->items([
                     (new Submit('ap-typo-do', __('Save'))),
+                    App::nonce()->formNonce(),
                     ...$ap->hiddenFields(),
-                    ... My::hiddenFields([
-                        'full_content' => 'true',
-                        'action'       => 'typo',
-                    ]),
+                    (new Hidden('full_content', 'true')),
+                    (new Hidden('action', 'typo')),
+                    (new Hidden(['process'], 'Comments')),
                 ]),
             ])
             ->render();
