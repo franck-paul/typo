@@ -148,7 +148,7 @@ class Manage extends Process
                     (new Text(null, __('Excluding trackbacks'))),
                 ]),
                 (new Para())->items([
-                    (new Checkbox('categories', $comments))
+                    (new Checkbox('categories', $categories))
                         ->value(1)
                         ->label((new Label(__('Enable typographic replacements for categories'), Label::INSIDE_TEXT_AFTER))),
                 ]),
