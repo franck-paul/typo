@@ -10,8 +10,8 @@
 
 use Dotclear\Helper\L10n;
 
-L10n::$locales['Brings smart typographic replacements for your blog entries and comments'] = '';
 L10n::$locales['Typo'] = '';
+L10n::$locales['Brings smart typographic replacements for your blog entries and comments'] = '';
 L10n::$locales['Typographic replacements'] = '';
 L10n::$locales['Pages'] = '';
 L10n::$locales['Entries'] = '';
@@ -25,4 +25,6 @@ L10n::$locales['Options'] = '';
 L10n::$locales['Enable typographic replacements for entries'] = '';
 L10n::$locales['Enable typographic replacements for comments'] = '';
 L10n::$locales['Excluding trackbacks'] = '';
+L10n::$locales['Enable typographic replacements for categories'] = '';
+L10n::$locales['Dotclear 2.34+ only'] = '';
 L10n::$locales['Dashes replacement mode'] = '';
