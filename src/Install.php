@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief typo, a plugin for Dotclear 2
  *
@@ -36,7 +37,7 @@ class Install extends Process
             $old_version = App::version()->getVersion(My::id());
             if (version_compare((string) $old_version, '3.1', '<')) {
                 // Change settings names (remove wc_ prefix in them)
-                $rename = static function (string $name, BlogWorkspaceInterface $settings) : void {
+                $rename = static function (string $name, BlogWorkspaceInterface $settings): void {
                     if ($settings->settingExists('typo_' . $name, true)) {
                         $settings->rename('typo_' . $name, $name);
                     }
@@ -47,6 +48,7 @@ class Install extends Process
                 $rename('active', $settings);
                 $rename('entries', $settings);
                 $rename('comments', $settings);
+                $rename('categories', $settings);
                 $rename('dashes_mode', $settings);
             }
 

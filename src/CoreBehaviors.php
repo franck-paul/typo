@@ -28,8 +28,7 @@ class CoreBehaviors
         $do       = match ($context) {
             'post'     => $settings->entries,
             'comment'  => $settings->comments,
-            'category' => true, // $settings->categories,
-            ''         => true,
+            'category' => $settings->categories,
             default    => true,
         };
         if ($do) {

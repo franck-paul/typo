@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief typo, a plugin for Dotclear 2
  *

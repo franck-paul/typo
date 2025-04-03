@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief typo, a plugin for Dotclear 2
  *
@@ -23,6 +24,7 @@ use Dotclear\Helper\Html\Form\Fieldset;
 use Dotclear\Helper\Html\Form\Form;
 use Dotclear\Helper\Html\Form\Label;
 use Dotclear\Helper\Html\Form\Legend;
+use Dotclear\Helper\Html\Form\Note;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Radio;
 use Dotclear\Helper\Html\Form\Submit;
@@ -56,12 +58,14 @@ class Manage extends Process
                 $typo_active      = !empty($_POST['active']);
                 $typo_entries     = !empty($_POST['entries']);
                 $typo_comments    = !empty($_POST['comments']);
+                $typo_categories  = !empty($_POST['categories']);
                 $typo_dashes_mode = (int) $_POST['dashes_mode'];
 
                 $settings = My::settings();
                 $settings->put('active', $typo_active, 'boolean');
                 $settings->put('entries', $typo_entries, 'boolean');
                 $settings->put('comments', $typo_comments, 'boolean');
+                $settings->put('categories', $typo_categories, 'boolean');
                 $settings->put('dashes_mode', $typo_dashes_mode, 'integer');
                 App::blog()->triggerBlog();
                 Notices::addSuccessNotice(__('Configuration successfully updated.'));
@@ -88,6 +92,7 @@ class Manage extends Process
         $active      = (bool) $settings->active;
         $entries     = (bool) $settings->entries;
         $comments    = (bool) $settings->comments;
+        $categories  = (bool) $settings->categories;
         $dashes_mode = (int) $settings->dashes_mode;
 
         $dashes_mode_options = [
@@ -142,6 +147,14 @@ class Manage extends Process
                 (new Para('trackbacks'))->class('form-note')->items([
                     (new Text(null, __('Excluding trackbacks'))),
                 ]),
+                (new Para())->items([
+                    (new Checkbox('categories', $comments))
+                        ->value(1)
+                        ->label((new Label(__('Enable typographic replacements for categories'), Label::INSIDE_TEXT_AFTER))),
+                ]),
+                (new Note())
+                    ->class('form-note')
+                    ->text(__('Dotclear 2.34+ only')),
             ]),
             (new Fieldset())
             ->legend(new Legend(__('Dashes replacement mode')))
