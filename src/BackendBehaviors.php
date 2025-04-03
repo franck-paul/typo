@@ -254,16 +254,18 @@ class BackendBehaviors
 
     /**
      * @param      array<string, string>|ArrayObject<string, string>  $ref    The preview data
+     *
+     * @deprecated since 2.34
      */
     public static function updateTypoEntries(array|ArrayObject $ref): string
     {
         $settings = My::settings();
-        if ($settings->active && $settings->entries && @is_array($ref)) {
+        if ($settings->active && $settings->entries) {
             $dashes_mode = $settings->dashes_mode;
             /* Transform typo for excerpt (HTML) */
             if (isset($ref['excerpt_xhtml'])) {
                 $excerpt = &$ref['excerpt_xhtml'];
-                if ($excerpt !== '' && $excerpt !== '0') {
+                if ($excerpt !== '') {
                     $excerpt = SmartyPants::transform($excerpt, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                 }
             }
@@ -271,7 +273,7 @@ class BackendBehaviors
             /* Transform typo for content (HTML) */
             if (isset($ref['content_xhtml'])) {
                 $content = &$ref['content_xhtml'];
-                if ($content !== '' && $content !== '0') {
+                if ($content !== '') {
                     $content = SmartyPants::transform($content, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                 }
             }
@@ -280,6 +282,9 @@ class BackendBehaviors
         return '';
     }
 
+    /**
+     * @deprecated since 2.34
+     */
     public static function updateTypoComments(BlogInterface $blog, Cursor $cur): string
     {
         $settings = My::settings();

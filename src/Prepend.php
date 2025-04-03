@@ -18,11 +18,11 @@ namespace Dotclear\Plugin\typo;
 use Dotclear\App;
 use Dotclear\Core\Process;
 
-class Frontend extends Process
+class Prepend extends Process
 {
     public static function init(): bool
     {
-        return self::status(My::checkContext(My::FRONTEND));
+        return self::status(My::checkContext(My::PREPEND));
     }
 
     public static function process(): bool
@@ -31,17 +31,12 @@ class Frontend extends Process
             return false;
         }
 
-        // Don't do things in frontend if plugin disabled
         $settings = My::settings();
-        if (!(bool) $settings->active) {
-            return false;
+        if ($settings->active) {
+            App::behavior()->addBehaviors([
+                'coreContentFilter' => CoreBehaviors::coreContentFilter(...),
+            ]);
         }
-
-        /* Add behavior callback for typo replacement in comments */
-        App::behavior()->addBehaviors([
-            'coreBeforeCommentCreate'    => FrontendBehaviors::updateTypoComments(...),
-            'publicBeforeCommentPreview' => FrontendBehaviors::previewTypoComments(...),
-        ]);
 
         return true;
     }

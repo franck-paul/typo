@@ -24,6 +24,8 @@ class FrontendBehaviors
     /**
      * @param      BlogInterface    $blog   The blog
      * @param      Cursor           $cur    The current
+     *
+     * @deprecated since 2.34
      */
     public static function updateTypoComments(BlogInterface $blog, Cursor $cur): string
     {
@@ -39,6 +41,8 @@ class FrontendBehaviors
 
     /**
      * @param      array<string, string>|ArrayObject<string, string>  $prv    The preview data
+     *
+     * @deprecated since 2.34
      */
     public static function previewTypoComments(array|ArrayObject $prv): string
     {
