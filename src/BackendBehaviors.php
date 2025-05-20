@@ -22,14 +22,12 @@ use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Core\Backend\Favorites;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Backend\Page;
-use Dotclear\Database\Cursor;
 use Dotclear\Helper\Html\Form\Form;
 use Dotclear\Helper\Html\Form\Hidden;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Submit;
 use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Html;
-use Dotclear\Interface\Core\BlogInterface;
 use Dotclear\Plugin\pages\BackendActions as PagesBackendActions;
 
 class BackendBehaviors
@@ -253,45 +251,32 @@ class BackendBehaviors
     }
 
     /**
-     * @param      array<string, string>|ArrayObject<string, string>  $ref    The preview data
+     * @param      array<int, array{0:string, 1:string}>|ArrayObject<int, array{0:string, 1:string}>  $contents The content data
      *
-     * @deprecated since 2.34
+     * Each item of $contents should be as:
+     *  $content[0]: current HTML content
+     *  $content[1]: content format (html, text, …)
+     *
+     * @since 2.34
      */
-    public static function updateTypoEntries(array|ArrayObject $ref): string
+    public static function coreContentFilter(string $type, array|ArrayObject $contents): string
     {
         $settings = My::settings();
         if ($settings->active && $settings->entries) {
-            $dashes_mode = $settings->dashes_mode;
-            /* Transform typo for excerpt (HTML) */
-            if (isset($ref['excerpt_xhtml'])) {
-                $excerpt = &$ref['excerpt_xhtml'];
-                if ($excerpt !== '') {
-                    $excerpt = SmartyPants::transform($excerpt, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
+            $dashes_mode        = $settings->dashes_mode;
+            $supported_syntaxes = ['html', 'xhtml'];
+
+            foreach ($contents as $content) {
+                /*
+                 */
+                if (!is_array($content) || count($content) < 2) {   // @phpstan-ignore-line PHPDoc should be certain but maybe…
+                    continue;
+                }
+                if ($content[0] !== '' && in_array($content[1], $supported_syntaxes)) {
+                    $pointer = &$content[0];
+                    $pointer = SmartyPants::transform($pointer, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                 }
             }
-
-            /* Transform typo for content (HTML) */
-            if (isset($ref['content_xhtml'])) {
-                $content = &$ref['content_xhtml'];
-                if ($content !== '') {
-                    $content = SmartyPants::transform($content, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
-                }
-            }
-        }
-
-        return '';
-    }
-
-    /**
-     * @deprecated since 2.34
-     */
-    public static function updateTypoComments(BlogInterface $blog, Cursor $cur): string
-    {
-        $settings = My::settings();
-        if ($settings->active && $settings->comments && !(bool) $cur->comment_trackback && $cur->comment_content != null) {
-            /* Transform typo for comment content (HTML) */
-            $dashes_mode          = $settings->dashes_mode;
-            $cur->comment_content = SmartyPants::transform($cur->comment_content, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
         }
 
         return '';

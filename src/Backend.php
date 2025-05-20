@@ -47,11 +47,8 @@ class Backend extends Process
 
         App::behavior()->addBehaviors([
             // Add behavior callback, will be used for all types of posts (standard, page, galery item, ...)
-            'coreAfterPostContentFormat' => BackendBehaviors::updateTypoEntries(...),
-
-            // Add behavior callbacks, will be used for all comments (not trackbacks)
-            'coreBeforeCommentCreate' => BackendBehaviors::updateTypoComments(...),
-            'coreBeforeCommentUpdate' => BackendBehaviors::updateTypoComments(...),
+            // 'coreAfterPostContentFormat' => BackendBehaviors::updateTypoEntries(...),
+            'coreContentFilter' => BackendBehaviors::coreContentFilter(...),
 
             // Add behavior callbacks for posts actions
             'adminPostsActions' => BackendBehaviors::adminPostsActions(...),
