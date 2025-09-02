@@ -251,7 +251,7 @@ class BackendBehaviors
     }
 
     /**
-     * @param      array<int, array{0:string, 1:string}>|ArrayObject<int, array{0:string, 1:string}>  $contents The content data
+     * @param      array<int, list{0:mixed, 1:string}>|ArrayObject<int, list{0:mixed, 1:string}>  $contents The content data
      *
      * Each item of $contents should be as:
      *  $content[0]: current HTML content
@@ -267,14 +267,13 @@ class BackendBehaviors
             $supported_syntaxes = ['html', 'xhtml'];
 
             foreach ($contents as $content) {
-                /*
-                 */
                 if (!is_array($content) || count($content) < 2) {   // @phpstan-ignore-line PHPDoc should be certain but maybe…
                     continue;
                 }
                 if ($content[0] !== '' && in_array($content[1], $supported_syntaxes)) {
-                    $pointer = &$content[0];
-                    $pointer = SmartyPants::transform($pointer, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
+                    $pointer    = (string) $content[0];
+                    $pointer    = SmartyPants::transform($pointer, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
+                    $content[0] = $pointer;
                 }
             }
         }
