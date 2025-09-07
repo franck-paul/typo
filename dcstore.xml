@@ -1,12 +1,12 @@
 <modules xmlns:da="http://dotaddict.org/da/">
   <module id="typo">
     <name>Typo</name>
-    <version>7.1</version>
+    <version>8.0</version>
     <author>Franck Paul and contributors</author>
     <desc>Brings smart typographic replacements for your blog entries and comments</desc>
-    <date>2025-09-02T15:25:43+0200</date>
-    <file>https://github.com/franck-paul/typo/releases/download/7.1/plugin-typo-7.1.zip</file>
-    <da:dcmin>2.34</da:dcmin>
+    <date>2025-09-07T15:42:30+0200</date>
+    <file>https://github.com/franck-paul/typo/releases/download/8.0/plugin-typo-8.0.zip</file>
+    <da:dcmin>2.36</da:dcmin>
     <da:details>https://open-time.net/docs/plugins/typo</da:details>
     <da:support>https://github.com/franck-paul/typo</da:support>
   </module>
