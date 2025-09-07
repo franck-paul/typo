@@ -111,7 +111,7 @@ class BackendBehaviors
                 while ($posts->fetch()) {
                     if (($posts->post_excerpt_xhtml) || ($posts->post_content_xhtml)) {
                         # Apply typo features to entry
-                        $cur = App::con()->openCursor(App::con()->prefix() . App::blog()::POST_TABLE_NAME);
+                        $cur = App::db()->con()->openCursor(App::db()->con()->prefix() . App::blog()::POST_TABLE_NAME);
 
                         if ($posts->post_excerpt_xhtml) {
                             $cur->post_excerpt_xhtml = SmartyPants::transform($posts->post_excerpt_xhtml, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
@@ -205,7 +205,7 @@ class BackendBehaviors
                 while ($co->fetch()) {
                     if ($co->comment_content) {
                         # Apply typo features to comment
-                        $cur                  = App::con()->openCursor(App::con()->prefix() . App::blog()::COMMENT_TABLE_NAME);
+                        $cur                  = App::db()->con()->openCursor(App::db()->con()->prefix() . App::blog()::COMMENT_TABLE_NAME);
                         $cur->comment_content = SmartyPants::transform($co->comment_content, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                         $cur->update('WHERE comment_id = ' . (int) $co->comment_id);
                     }
