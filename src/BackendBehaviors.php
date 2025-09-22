@@ -20,8 +20,6 @@ use Dotclear\App;
 use Dotclear\Core\Backend\Action\ActionsComments;
 use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Core\Backend\Favorites;
-use Dotclear\Core\Backend\Notices;
-use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Html\Form\Form;
 use Dotclear\Helper\Html\Form\Hidden;
 use Dotclear\Helper\Html\Form\Para;
@@ -133,7 +131,7 @@ class BackendBehaviors
             // Ask confirmation for replacements
             if ($type === 'page') {
                 $ap->beginPage(
-                    Page::breadcrumb(
+                    App::backend()->page()->breadcrumb(
                         [
                             Html::escapeHTML(App::blog()->name()) => '',
                             __('Pages')                           => App::backend()->url()->get('admin.plugin.pages'),
@@ -143,7 +141,7 @@ class BackendBehaviors
                 );
             } else {
                 $ap->beginPage(
-                    Page::breadcrumb(
+                    App::backend()->page()->breadcrumb(
                         [
                             Html::escapeHTML(App::blog()->name()) => '',
                             __('Entries')                         => App::backend()->url()->get('admin.posts'),
@@ -153,7 +151,7 @@ class BackendBehaviors
                 );
             }
 
-            Notices::warning(__('Warning! These replacements will not be undoable.'), false, false);
+            App::backend()->notices()->warning(__('Warning! These replacements will not be undoable.'), false, false);
 
             echo
             (new Form('ap-entries-typo'))
@@ -218,7 +216,7 @@ class BackendBehaviors
         } else {
             // Ask confirmation for replacements
             $ap->beginPage(
-                Page::breadcrumb(
+                App::backend()->page()->breadcrumb(
                     [
                         Html::escapeHTML(App::blog()->name()) => '',
                         __('Comments')                        => App::backend()->url()->get('admin.comments'),
@@ -227,7 +225,7 @@ class BackendBehaviors
                 )
             );
 
-            Notices::warning(__('Warning! These replacements will not be undoable.'), false, false);
+            App::backend()->notices()->warning(__('Warning! These replacements will not be undoable.'), false, false);
 
             echo
             (new Form('ap-comments-typo'))
