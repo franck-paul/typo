@@ -104,7 +104,7 @@ class Manage
         $i     = 0;
         foreach ($dashes_mode_options as $k => $v) {
             $modes[] = (new Para())->items([
-                (new Radio(['dashes_mode', 'dashes_mode-' . $i], $dashes_mode == $k))
+                (new Radio(['dashes_mode', 'dashes_mode-' . $i], $dashes_mode === $k))
                     ->value($k)
                     ->label((new Label($v, Label::INSIDE_TEXT_AFTER))),
             ]);

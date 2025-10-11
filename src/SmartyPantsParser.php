@@ -149,13 +149,13 @@ class SmartyPantsParser
         }
 
         if ($this->do_dashes !== 0) {
-            if ($this->do_dashes == 1) {
+            if ($this->do_dashes === 1) {
                 $t = $this->educateDashes($t);
             }
-            if ($this->do_dashes == 2) {
+            if ($this->do_dashes === 2) {
                 $t = $this->educateDashesOldSchool($t);
             }
-            if ($this->do_dashes == 3) {
+            if ($this->do_dashes === 3) {
                 $t = $this->educateDashesOldSchoolInverted($t);
             }
         }
@@ -167,7 +167,7 @@ class SmartyPantsParser
         # Note: backticks need to be processed before quotes.
         if ($this->do_backticks !== 0) {
             $t = $this->educateBackticks($t);
-            if ($this->do_backticks == 2) {
+            if ($this->do_backticks === 2) {
                 $t = $this->educateSingleBackticks($t);
             }
         }

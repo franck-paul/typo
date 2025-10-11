@@ -117,7 +117,7 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         # Initialize inherited SmartyPants parser.
         parent::__construct($attr);
 
-        if ($attr === SmartyPants::SMARTYPANTS_ATTR_EM2_EN0 || $attr === SmartyPants::SMARTYPANTS_ATTR_EM3_EN2 || $attr === SmartyPants::SMARTYPANTS_ATTR_EM2_EN3) {
+        if (in_array($attr, [SmartyPants::SMARTYPANTS_ATTR_EM2_EN0, SmartyPants::SMARTYPANTS_ATTR_EM3_EN2, SmartyPants::SMARTYPANTS_ATTR_EM2_EN3], true)) {
             # Do everything, turn all options on.
             $this->do_comma_quotes      = 1;
             $this->do_guillemets        = 1;
@@ -350,8 +350,8 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         #	Example input:  Quotes in « French », »German« and »Finnish» style.
         #	Example output: Quotes in «_French_», »German« and »Finnish» style.
         #
-        $opt = ($this->do_space_frenchquote == 2 ? '?' : '');
-        $chr = ($this->do_space_frenchquote != -1 ? $this->space_frenchquote : '');
+        $opt = ($this->do_space_frenchquote === 2 ? '?' : '');
+        $chr = ($this->do_space_frenchquote !== -1 ? $this->space_frenchquote : '');
 
         # Characters allowed immediatly outside quotes.
         $outside_char = $this->space . '|\s|[.,:;!?\[\](){}|@*~=+-]|¡|¿';
@@ -379,8 +379,8 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         #	Example input:  Ingredients : fun.
         #	Example output: Ingredients_: fun.
         #
-        $opt = ($this->do_space_colon == 2 ? '?' : '');
-        $chr = ($this->do_space_colon != -1 ? $this->space_colon : '');
+        $opt = ($this->do_space_colon === 2 ? '?' : '');
+        $chr = ($this->do_space_colon !== -1 ? $this->space_colon : '');
 
         return (string) preg_replace(
             "/$this->space$opt(:)(\\s|$)/m",
@@ -399,8 +399,8 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         #	Example input:  There he goes ; there she goes.
         #	Example output: There he goes_; there she goes.
         #
-        $opt = ($this->do_space_semicolon == 2 ? '?' : '');
-        $chr = ($this->do_space_semicolon != -1 ? $this->space_semicolon : '');
+        $opt = ($this->do_space_semicolon === 2 ? '?' : '');
+        $chr = ($this->do_space_semicolon !== -1 ? $this->space_semicolon : '');
 
         $_ = (string) preg_replace(
             "/$this->space(;)(?=\\s|$)/m",
@@ -426,8 +426,8 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         #	Example input:  ¡ Holà ! What ?
         #	Example output: ¡_Holà_! What_?
         #
-        $opt = ($this->do_space_marks == 2 ? '?' : '');
-        $chr = ($this->do_space_marks != -1 ? $this->space_marks : '');
+        $opt = ($this->do_space_marks === 2 ? '?' : '');
+        $chr = ($this->do_space_marks !== -1 ? $this->space_marks : '');
 
         // Regular marks.
         $_ = (string) preg_replace("/$this->space$opt([?!]+)/", "$chr\\1", $_);
@@ -450,8 +450,8 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         #	Example input:  Then — without any plan — the fun happend.
         #	Example output: Then_—_without any plan_—_the fun happend.
         #
-        $opt = ($this->do_space_emdash == 2 ? '?' : '');
-        $chr = ($this->do_space_emdash != -1 ? $this->space_emdash : '');
+        $opt = ($this->do_space_emdash === 2 ? '?' : '');
+        $chr = ($this->do_space_emdash !== -1 ? $this->space_emdash : '');
 
         return (string) preg_replace(
             "/$this->space$opt(&#8212;|—)$this->space$opt/",
@@ -472,8 +472,8 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         #	Example input:  Then — without any plan — the fun happend.
         #	Example output: Then_—_without any plan_—_the fun happend.
         #
-        $opt = ($this->do_space_endash == 2 ? '?' : '');
-        $chr = ($this->do_space_endash != -1 ? $this->space_endash : '');
+        $opt = ($this->do_space_endash === 2 ? '?' : '');
+        $chr = ($this->do_space_endash !== -1 ? $this->space_endash : '');
 
         return (string) preg_replace(
             "/$this->space$opt(&#8211;|–)$this->space$opt/",
@@ -492,7 +492,7 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         #	Example input:  Il y a 10 000 insectes amusants dans ton jardin.
         #	Example output: Il y a 10_000 insectes amusants dans ton jardin.
         #
-        $chr = ($this->do_space_thousand != -1 ? $this->space_thousand : '');
+        $chr = ($this->do_space_thousand !== -1 ? $this->space_thousand : '');
 
         return (string) preg_replace('/(\d) (\d)/', "\\1$chr\\2", $_);
     }
@@ -533,8 +533,8 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         #	Example input:  Get 3 mol of fun for 3 $.
         #	Example output: Get 3_mol of fun for 3_$.
         #
-        $opt = ($this->do_space_unit == 2 ? '?' : '');
-        $chr = ($this->do_space_unit != -1 ? $this->space_unit : '');
+        $opt = ($this->do_space_unit === 2 ? '?' : '');
+        $chr = ($this->do_space_unit !== -1 ? $this->space_unit : '');
 
         return (string) preg_replace(
             '/
