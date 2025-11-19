@@ -203,7 +203,6 @@ class SmartyPantsParser
         #   Example output: &#8220;Isn&#8217;t this fun?&#8221;
         #
         # Make our own "punctuation" character class, because the POSIX-style
-        # [:PUNCT:] is only available in Perl 5.6 or later:
         $punct_class = "[!\"#\\$\\%'()*+,-.\\/:;<=>?\\@\\[\\\\\]\\^_`{|}~]";
 
         # Special case if the very first character is a quote

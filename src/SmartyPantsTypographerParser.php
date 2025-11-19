@@ -538,6 +538,7 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
 
         return (string) preg_replace(
             '/
+            (?!&\#?[0-9a-zA-Z]{0,8})   # Negative lookahead for unterminated entity
 			(?:([0-9])[ ]' . $opt . ') # Number followed by space.
 			(' . $this->units . ')     # Unit.
 			(?![a-zA-Z0-9])  # Negative lookahead for other unit characters.
