@@ -75,7 +75,7 @@ msgid "Entry contents"
 msgstr "Les contenus des entrées"
 
 msgid "Comment contents"
-msgstr "Le contenu des commentaires"
+msgstr "Les contenus des commentaires"
 
 msgid "Excluding trackbacks"
 msgstr "Rétroliens exclus"
