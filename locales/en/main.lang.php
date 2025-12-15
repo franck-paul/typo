@@ -25,6 +25,7 @@ L10n::$locales['Enable typographic replacements for this blog'] = '';
 L10n::$locales['Enable typographic replacements for'] = '';
 L10n::$locales['Entry titles'] = '';
 L10n::$locales['Entry contents'] = '';
+L10n::$locales['Comment contents'] = '';
 L10n::$locales['Excluding trackbacks'] = '';
 L10n::$locales['Category titles'] = '';
 L10n::$locales['Category descriptions'] = '';

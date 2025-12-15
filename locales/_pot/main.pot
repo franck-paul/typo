@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Dotclear 2 typo module\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-15 15:24+0100\n"
+"POT-Creation-Date: 2025-12-15 15:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -85,6 +85,10 @@ msgstr ""
 
 #: ../git-plugins/typo/src/Manage.php:165
 msgid "Entry contents"
+msgstr ""
+
+#: ../git-plugins/typo/src/Manage.php:171
+msgid "Comment contents"
 msgstr ""
 
 #: ../git-plugins/typo/src/Manage.php:175

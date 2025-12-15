@@ -168,7 +168,7 @@ class Manage
                                     ->items([
                                         (new Checkbox('typo_comments', $comments))
                                             ->value(1)
-                                            ->label((new Label(__('Comments'), Label::INSIDE_TEXT_AFTER))),
+                                            ->label((new Label(__('Comment contents'), Label::INSIDE_TEXT_AFTER))),
                                     ]),
                                 (new Note())
                                     ->class('form-note')
