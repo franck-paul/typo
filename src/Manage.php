@@ -61,6 +61,7 @@ class Manage
                 $typo_comments          = !empty($_POST['typo_comments']);
                 $typo_categories        = !empty($_POST['typo_categories']);
                 $typo_categories_titles = !empty($_POST['typo_categories_titles']);
+                $typo_medias            = !empty($_POST['typo_medias']);
                 $typo_simplemenu        = !empty($_POST['typo_simplemenu']);
                 $typo_blogroll          = !empty($_POST['typo_blogroll']);
                 $typo_dashes_mode       = (int) $_POST['typo_dashes_mode'];
@@ -72,6 +73,7 @@ class Manage
                 $settings->put('comments', $typo_comments, 'boolean');
                 $settings->put('categories', $typo_categories, 'boolean');
                 $settings->put('categories_titles', $typo_categories_titles, 'boolean');
+                $settings->put('medias', $typo_medias, 'boolean');
                 $settings->put('simplemenu', $typo_simplemenu, 'boolean');
                 $settings->put('blogroll', $typo_blogroll, 'boolean');
                 $settings->put('dashes_mode', $typo_dashes_mode, 'integer');
@@ -103,6 +105,7 @@ class Manage
         $comments          = (bool) $settings->comments;
         $categories        = (bool) $settings->categories;
         $categories_titles = (bool) $settings->categories_titles;
+        $medias            = (bool) $settings->medias;
         $simplemenu        = (bool) $settings->simplemenu;
         $blogroll          = (bool) $settings->blogroll;
         $dashes_mode       = (int) $settings->dashes_mode;
@@ -184,6 +187,12 @@ class Manage
                                         (new Checkbox('typo_categories', $categories))
                                             ->value(1)
                                             ->label((new Label(__('Category descriptions'), Label::INSIDE_TEXT_AFTER))),
+                                    ]),
+                                (new Para())
+                                    ->items([
+                                        (new Checkbox('typo_medias', $medias))
+                                            ->value(1)
+                                            ->label((new Label(__('Media titles, alternate texts and descriptions'), Label::INSIDE_TEXT_AFTER))),
                                     ]),
                                 (new Para())
                                     ->items([

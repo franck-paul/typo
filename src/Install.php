@@ -62,6 +62,7 @@ class Install
             $settings->put('comments', false, 'boolean', 'Apply on comments', false, true);
             $settings->put('categories', false, 'boolean', 'Apply on category descriptions', false, true);
             $settings->put('categories_titles', false, 'boolean', 'Apply on category titles', false, true);
+            $settings->put('medias', false, 'boolean', 'Apply on media titles, alternate texts and descriptions', false, true);
             $settings->put('simplemenu', false, 'boolean', 'Apply on simpleMenu labels and descriptions', false, true);
             $settings->put('blogroll', false, 'boolean', 'Apply on blogroll titles, descriptions and categories', false, true);
             $settings->put('dashes_mode', (int) SmartyPants::SMARTYPANTS_ATTR, 'integer', 'Dashes replacement mode', false, true);

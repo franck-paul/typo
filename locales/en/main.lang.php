@@ -29,6 +29,7 @@ L10n::$locales['Comment contents'] = '';
 L10n::$locales['Excluding trackbacks'] = '';
 L10n::$locales['Category titles'] = '';
 L10n::$locales['Category descriptions'] = '';
+L10n::$locales['Media titles, alternate texts and descriptions'] = '';
 L10n::$locales['Simple menu item labels and descriptions'] = '';
 L10n::$locales['Blogroll titles, descriptions and categories'] = '';
 L10n::$locales['Dashes replacement mode'] = '';

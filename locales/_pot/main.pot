@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Dotclear 2 typo module\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-15 15:30+0100\n"
+"POT-Creation-Date: 2025-12-15 15:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,7 +31,7 @@ msgstr ""
 #: ../git-plugins/typo/src/BackendBehaviors.php:280
 #: ../git-plugins/typo/src/BackendBehaviors.php:319
 #: ../git-plugins/typo/src/BackendBehaviors.php:358
-#: ../git-plugins/typo/src/Manage.php:134
+#: ../git-plugins/typo/src/Manage.php:137
 msgid "Typographic replacements"
 msgstr ""
 
@@ -59,58 +59,62 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:111
+#: ../git-plugins/typo/src/Manage.php:114
 msgid "\"--\" for em-dashes; no en-dash support (default)"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:112
+#: ../git-plugins/typo/src/Manage.php:115
 msgid "\"---\" for em-dashes; \"--\" for en-dashes"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:113
+#: ../git-plugins/typo/src/Manage.php:116
 msgid "\"--\" for em-dashes; \"---\" for en-dashes"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:147
+#: ../git-plugins/typo/src/Manage.php:150
 msgid "Enable typographic replacements for this blog"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:153
+#: ../git-plugins/typo/src/Manage.php:156
 msgid "Enable typographic replacements for"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:159
+#: ../git-plugins/typo/src/Manage.php:162
 msgid "Entry titles"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:165
+#: ../git-plugins/typo/src/Manage.php:168
 msgid "Entry contents"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:171
+#: ../git-plugins/typo/src/Manage.php:174
 msgid "Comment contents"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:175
+#: ../git-plugins/typo/src/Manage.php:178
 msgid "Excluding trackbacks"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:180
+#: ../git-plugins/typo/src/Manage.php:183
 msgid "Category titles"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:186
+#: ../git-plugins/typo/src/Manage.php:189
 msgid "Category descriptions"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:192
+#: ../git-plugins/typo/src/Manage.php:195
+msgid "Media titles, alternate texts and descriptions"
+msgstr ""
+
+#: ../git-plugins/typo/src/Manage.php:201
 msgid "Simple menu item labels and descriptions"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:198
+#: ../git-plugins/typo/src/Manage.php:207
 msgid "Blogroll titles, descriptions and categories"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:202
+#: ../git-plugins/typo/src/Manage.php:211
 msgid "Dashes replacement mode"
 msgstr ""
