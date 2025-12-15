@@ -25,7 +25,6 @@ use Dotclear\Helper\Html\Form\Note;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Radio;
 use Dotclear\Helper\Html\Form\Submit;
-use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Process\TraitProcess;
 use Exception;
@@ -121,51 +120,52 @@ class Manage
         );
         echo App::backend()->notices()->getNotices();
 
-        echo
-        (new Form('typo'))
-        ->action(App::backend()->getPageURL())
-        ->method('post')
-        ->fields([
-            (new Para())->items([
-                (new Checkbox('active', $active))
-                    ->value(1)
-                    ->label((new Label(__('Enable typographic replacements for this blog'), Label::INSIDE_TEXT_AFTER))),
-            ]),
-            (new Fieldset())
-            ->legend((new Legend(__('Options'))))
+        echo (new Form('typo'))
+            ->action(App::backend()->getPageURL())
+            ->method('post')
             ->fields([
-                (new Para())->items([
-                    (new Checkbox('entries', $entries))
-                        ->value(1)
-                        ->label((new Label(__('Enable typographic replacements for entries'), Label::INSIDE_TEXT_AFTER))),
-                ]),
-                (new Para())->items([
-                    (new Checkbox('comments', $comments))
-                        ->value(1)
-                        ->label((new Label(__('Enable typographic replacements for comments'), Label::INSIDE_TEXT_AFTER))),
-                ]),
-                (new Para('trackbacks'))->class('form-note')->items([
-                    (new Text(null, __('Excluding trackbacks'))),
-                ]),
-                (new Para())->items([
-                    (new Checkbox('categories', $categories))
-                        ->value(1)
-                        ->label((new Label(__('Enable typographic replacements for categories'), Label::INSIDE_TEXT_AFTER))),
-                ]),
-                (new Note())
-                    ->class('form-note')
-                    ->text(__('Dotclear 2.34+ only')),
-            ]),
-            (new Fieldset())
-            ->legend(new Legend(__('Dashes replacement mode')))
-            ->fields($modes),
-            (new Para())->items([
-                (new Submit(['saveconfig'], __('Save configuration')))
-                    ->accesskey('s'),
-                ... My::hiddenFields(),
-            ]),
+                (new Para())
+                    ->items([
+                        (new Checkbox('active', $active))
+                            ->value(1)
+                            ->label((new Label(__('Enable typographic replacements for this blog'), Label::INSIDE_TEXT_AFTER))),
+                    ]),
+                (new Fieldset())
+                    ->legend((new Legend(__('Options'))))
+                    ->fields([
+                        (new Para())
+                            ->items([
+                                (new Checkbox('entries', $entries))
+                                    ->value(1)
+                                    ->label((new Label(__('Enable typographic replacements for entries'), Label::INSIDE_TEXT_AFTER))),
+                            ]),
+                        (new Para())
+                            ->items([
+                                (new Checkbox('comments', $comments))
+                                    ->value(1)
+                                    ->label((new Label(__('Enable typographic replacements for comments'), Label::INSIDE_TEXT_AFTER))),
+                            ]),
+                        (new Note('trackbacks'))
+                            ->class('form-note')
+                            ->text(__('Excluding trackbacks')),
+                        (new Para())
+                            ->items([
+                                (new Checkbox('categories', $categories))
+                                    ->value(1)
+                                    ->label((new Label(__('Enable typographic replacements for categories'), Label::INSIDE_TEXT_AFTER))),
+                            ]),
+                    ]),
+                (new Fieldset())
+                    ->legend(new Legend(__('Dashes replacement mode')))
+                    ->fields($modes),
+                (new Para())
+                    ->items([
+                        (new Submit(['saveconfig'], __('Save configuration')))
+                            ->accesskey('s'),
+                        ... My::hiddenFields(),
+                    ]),
 
-        ])
+            ])
         ->render();
 
         App::backend()->page()->closeModule();

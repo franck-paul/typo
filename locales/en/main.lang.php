@@ -26,5 +26,4 @@ L10n::$locales['Enable typographic replacements for entries'] = '';
 L10n::$locales['Enable typographic replacements for comments'] = '';
 L10n::$locales['Excluding trackbacks'] = '';
 L10n::$locales['Enable typographic replacements for categories'] = '';
-L10n::$locales['Dotclear 2.34+ only'] = '';
 L10n::$locales['Dashes replacement mode'] = '';
