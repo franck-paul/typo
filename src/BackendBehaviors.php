@@ -40,108 +40,89 @@ class BackendBehaviors
         $items = [];
 
         if ($settings->entries_titles) {
-            array_push(
-                $items,
-                // Entries (posts, pages)
-                [
-                    'url'       => App::backend()->url()->get('admin.post', separator:'&'),
-                    'id'        => '',
-                    'selectors' => [
-                        '#post_title',  // Post title
-                    ],
+            // Entries (posts, pages)
+            $items[] = [
+                'url'       => App::backend()->url()->get('admin.post', separator:'&'),
+                'id'        => '',
+                'selectors' => [
+                    '#post_title',  // Post title
                 ],
-                [
-                    'url'       => App::backend()->url()->get('admin.plugin.pages', ['act' => 'page'], separator:'&'),
-                    'id'        => '',
-                    'selectors' => [
-                        '#post_title',  // Page title
-                    ],
-                ]
-            );
+            ];
+            $items[] = [
+                'url'       => App::backend()->url()->get('admin.plugin.pages', ['act' => 'page'], separator:'&'),
+                'id'        => '',
+                'selectors' => [
+                    '#post_title',  // Page title
+                ],
+            ];
         }
 
         if ($settings->categories_titles) {
-            array_push(
-                $items,
-                // Categories
-                [
-                    'url'       => App::backend()->url()->get('admin.category', separator:'&'),
-                    'id'        => '',
-                    'selectors' => [
-                        '#cat_title',   // Category title
-                    ],
+            // Categories
+            $items[] = [
+                'url'       => App::backend()->url()->get('admin.category', separator:'&'),
+                'id'        => '',
+                'selectors' => [
+                    '#cat_title',   // Category title
                 ],
-            );
+            ];
         }
 
         if ($settings->medias) {
-            array_push(
-                $items,
-                // Medias
-                [
-                    'url'       => App::backend()->url()->get('admin.media.item', separator:'&'),
-                    'id'        => '',
-                    'selectors' => [
-                        '#media_title', // Media title
-                        '#media_alt',   // Media alternate text
-                        '#media_desc',  // Media description
-                    ],
+            // Medias
+            $items[] = [
+                'url'       => App::backend()->url()->get('admin.media.item', separator:'&'),
+                'id'        => '',
+                'selectors' => [
+                    '#media_title', // Media title
+                    '#media_alt',   // Media alternate text
+                    '#media_desc',  // Media description
                 ],
-            );
+            ];
         }
 
         if ($settings->widgets_titles) {
-            array_push(
-                $items,
-                // Widgets
-                [
-                    'url'       => App::backend()->url()->get('admin.plugin.widgets', separator:'&'),
-                    'id'        => 'sidebarsWidgets',
-                    'selectors' => [
-                        '[name$="[title]"]',    // Widgets' title
-                    ],
+            // Widgets
+            $items[] = [
+                'url'       => App::backend()->url()->get('admin.plugin.widgets', separator:'&'),
+                'id'        => 'sidebarsWidgets',
+                'selectors' => [
+                    '[name$="[title]"]',    // Widgets' title
                 ],
-            );
+            ];
         }
 
         if ($settings->simplemenu) {
-            array_push(
-                $items,
-                // menuSimple
-
-                [
-                    'url'       => App::backend()->url()->get('admin.plugin.simpleMenu', separator:'&'),
-                    'id'        => 'menuitems',
-                    'selectors' => [
-                        '[name="items_label[]"]',   // Menu items' label
-                        '[name="items_descr[]"]',   // Menu items' description
-                    ],
+            // menuSimple
+            $items[] = [
+                'url'       => App::backend()->url()->get('admin.plugin.simpleMenu', separator:'&'),
+                'id'        => 'menuitems',
+                'selectors' => [
+                    '[name="items_label[]"]',   // Menu items' label
+                    '[name="items_descr[]"]',   // Menu items' description
                 ],
-                [
-                    'url'       => App::backend()->url()->get('admin.plugin.simpleMenu', separator:'&'),
-                    'id'        => 'additem',
-                    'selectors' => [
-                        '#item_label',  // Menu item label
-                        '#item_descr',  // Menu item descripion
-                    ],
+            ];
+            $items[] = [
+                'url'       => App::backend()->url()->get('admin.plugin.simpleMenu', separator:'&'),
+                'id'        => 'additem',
+                'selectors' => [
+                    '#item_label',  // Menu item label
+                    '#item_descr',  // Menu item descripion
                 ],
-            );
+            ];
         }
 
         if ($settings->blogroll) {
-            array_push(
-                $items,
-                // Blogroll
-                [
-                    'url'       => App::backend()->url()->get('admin.plugin.blogroll', separator:'&'),
-                    'id'        => 'add-link-form',
-                    'selectors' => [
-                        '#link_title',  // Link title
-                        '#link_desc',   // Link description
-                        '#cat_title',   // Category title
-                    ],
-                ]
-            );
+            // Blogroll
+            $items[] = [
+                'url'       => App::backend()->url()->get('admin.plugin.blogroll', separator:'&'),
+                'id'        => 'add-link-form',
+                'selectors' => [
+                    '#link_title',  // Link title
+                    '#link_desc',   // Link description
+                    '#cat_title',   // Category title
+                ],
+            ];
         }
 
         echo
