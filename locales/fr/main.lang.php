@@ -25,6 +25,7 @@ L10n::$locales['Enable typographic replacements for this blog'] = 'Activer les r
 L10n::$locales['Enable typographic replacements for'] = 'Activer les remplacements typographiques pour';
 L10n::$locales['Entry titles'] = 'Les titres des entrées';
 L10n::$locales['Entry contents'] = 'Les contenus des entrées';
+L10n::$locales['Comment contents'] = 'Les contenus des commentaires';
 L10n::$locales['Excluding trackbacks'] = 'Rétroliens exclus';
 L10n::$locales['Category titles'] = 'Les titres des catégories';
 L10n::$locales['Category descriptions'] = 'Les descriptions des catégories';
