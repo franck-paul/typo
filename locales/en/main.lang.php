@@ -10,9 +10,10 @@
 
 use Dotclear\Helper\L10n;
 
-L10n::$locales['Typo'] = '';
+L10n::$locales['Typography'] = '';
 L10n::$locales['Brings smart typographic replacements for your blog entries and comments'] = '';
 L10n::$locales['Typographic replacements'] = '';
+L10n::$locales['Typo'] = '';
 L10n::$locales['Pages'] = '';
 L10n::$locales['Entries'] = '';
 L10n::$locales['Warning! These replacements will not be undoable.'] = '';
