@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Dotclear 2 typo module\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-15 15:16+0100\n"
+"POT-Creation-Date: 2025-12-15 15:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,19 +76,15 @@ msgid "Enable typographic replacements for this blog"
 msgstr ""
 
 #: ../git-plugins/typo/src/Manage.php:153
-msgid "Options"
+msgid "Enable typographic replacements for"
 msgstr ""
 
 #: ../git-plugins/typo/src/Manage.php:159
-msgid "Enable typographic replacements for entry titles"
+msgid "Entry titles"
 msgstr ""
 
 #: ../git-plugins/typo/src/Manage.php:165
-msgid "Enable typographic replacements for entry contents"
-msgstr ""
-
-#: ../git-plugins/typo/src/Manage.php:171
-msgid "Enable typographic replacements for comments"
+msgid "Entry contents"
 msgstr ""
 
 #: ../git-plugins/typo/src/Manage.php:175
@@ -96,19 +92,19 @@ msgid "Excluding trackbacks"
 msgstr ""
 
 #: ../git-plugins/typo/src/Manage.php:180
-msgid "Enable typographic replacements for category titles"
+msgid "Category titles"
 msgstr ""
 
 #: ../git-plugins/typo/src/Manage.php:186
-msgid "Enable typographic replacements for category descriptions"
+msgid "Category descriptions"
 msgstr ""
 
 #: ../git-plugins/typo/src/Manage.php:192
-msgid "Enable typographic replacements for simpleMenu labels and descriptions"
+msgid "Simple menu item labels and descriptions"
 msgstr ""
 
 #: ../git-plugins/typo/src/Manage.php:198
-msgid "Enable typographic replacements for blogroll titles, descriptions and categories"
+msgid "Blogroll titles, descriptions and categories"
 msgstr ""
 
 #: ../git-plugins/typo/src/Manage.php:202

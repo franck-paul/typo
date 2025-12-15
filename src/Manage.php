@@ -150,25 +150,25 @@ class Manage
                     ->class('multicolumns')
                     ->items([
                         (new Fieldset())
-                            ->legend((new Legend(__('Options'))))
+                            ->legend((new Legend(__('Enable typographic replacements for'))))
                             ->fields([
                                 (new Para())
                                     ->items([
                                         (new Checkbox('typo_entries_titles', $entries_titles))
                                             ->value(1)
-                                            ->label((new Label(__('Enable typographic replacements for entry titles'), Label::INSIDE_TEXT_AFTER))),
+                                            ->label((new Label(__('Entry titles'), Label::INSIDE_TEXT_AFTER))),
                                     ]),
                                 (new Para())
                                     ->items([
                                         (new Checkbox('typo_entries', $entries))
                                             ->value(1)
-                                            ->label((new Label(__('Enable typographic replacements for entry contents'), Label::INSIDE_TEXT_AFTER))),
+                                            ->label((new Label(__('Entry contents'), Label::INSIDE_TEXT_AFTER))),
                                     ]),
                                 (new Para())
                                     ->items([
                                         (new Checkbox('typo_comments', $comments))
                                             ->value(1)
-                                            ->label((new Label(__('Enable typographic replacements for comments'), Label::INSIDE_TEXT_AFTER))),
+                                            ->label((new Label(__('Comments'), Label::INSIDE_TEXT_AFTER))),
                                     ]),
                                 (new Note())
                                     ->class('form-note')
@@ -177,25 +177,25 @@ class Manage
                                     ->items([
                                         (new Checkbox('typo_categories_titles', $categories_titles))
                                             ->value(1)
-                                            ->label((new Label(__('Enable typographic replacements for category titles'), Label::INSIDE_TEXT_AFTER))),
+                                            ->label((new Label(__('Category titles'), Label::INSIDE_TEXT_AFTER))),
                                     ]),
                                 (new Para())
                                     ->items([
                                         (new Checkbox('typo_categories', $categories))
                                             ->value(1)
-                                            ->label((new Label(__('Enable typographic replacements for category descriptions'), Label::INSIDE_TEXT_AFTER))),
+                                            ->label((new Label(__('Category descriptions'), Label::INSIDE_TEXT_AFTER))),
                                     ]),
                                 (new Para())
                                     ->items([
                                         (new Checkbox('typo_simplemenu', $simplemenu))
                                             ->value(1)
-                                            ->label((new Label(__('Enable typographic replacements for simpleMenu labels and descriptions'), Label::INSIDE_TEXT_AFTER))),
+                                            ->label((new Label(__('Simple menu item labels and descriptions'), Label::INSIDE_TEXT_AFTER))),
                                     ]),
                                 (new Para())
                                     ->items([
                                         (new Checkbox('typo_blogroll', $blogroll))
                                             ->value(1)
-                                            ->label((new Label(__('Enable typographic replacements for blogroll titles, descriptions and categories'), Label::INSIDE_TEXT_AFTER))),
+                                            ->label((new Label(__('Blogroll titles, descriptions and categories'), Label::INSIDE_TEXT_AFTER))),
                                     ]),
                             ]),
                         (new Fieldset())
