@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Dotclear 2 typo module\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-15 08:54+0100\n"
+"POT-Creation-Date: 2025-12-15 15:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,9 +17,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../git-plugins/typo/src/Backend.php:28
-#: ../git-plugins/typo/src/BackendBehaviors.php:55
-#: ../git-plugins/typo/src/BackendBehaviors.php:70
-#: ../git-plugins/typo/src/BackendBehaviors.php:185
+#: ../git-plugins/typo/src/BackendBehaviors.php:180
+#: ../git-plugins/typo/src/BackendBehaviors.php:198
+#: ../git-plugins/typo/src/BackendBehaviors.php:319
 msgid "Typo"
 msgstr ""
 
@@ -27,71 +27,87 @@ msgstr ""
 msgid "Brings smart typographic replacements for your blog entries and comments"
 msgstr ""
 
-#: ../git-plugins/typo/src/BackendBehaviors.php:36
-#: ../git-plugins/typo/src/BackendBehaviors.php:55
-#: ../git-plugins/typo/src/BackendBehaviors.php:70
-#: ../git-plugins/typo/src/BackendBehaviors.php:138
-#: ../git-plugins/typo/src/BackendBehaviors.php:148
-#: ../git-plugins/typo/src/BackendBehaviors.php:185
-#: ../git-plugins/typo/src/BackendBehaviors.php:223
-#: ../git-plugins/typo/src/Manage.php:118
+#: ../git-plugins/typo/src/BackendBehaviors.php:159
+#: ../git-plugins/typo/src/BackendBehaviors.php:180
+#: ../git-plugins/typo/src/BackendBehaviors.php:198
+#: ../git-plugins/typo/src/BackendBehaviors.php:270
+#: ../git-plugins/typo/src/BackendBehaviors.php:280
+#: ../git-plugins/typo/src/BackendBehaviors.php:319
+#: ../git-plugins/typo/src/BackendBehaviors.php:358
+#: ../git-plugins/typo/src/Manage.php:134
 msgid "Typographic replacements"
 msgstr ""
 
-#: ../git-plugins/typo/src/BackendBehaviors.php:137
+#: ../git-plugins/typo/src/BackendBehaviors.php:269
 msgid "Pages"
 msgstr ""
 
-#: ../git-plugins/typo/src/BackendBehaviors.php:147
+#: ../git-plugins/typo/src/BackendBehaviors.php:279
 msgid "Entries"
 msgstr ""
 
-#: ../git-plugins/typo/src/BackendBehaviors.php:154
-#: ../git-plugins/typo/src/BackendBehaviors.php:228
+#: ../git-plugins/typo/src/BackendBehaviors.php:286
+#: ../git-plugins/typo/src/BackendBehaviors.php:363
 msgid "Warning! These replacements will not be undoable."
 msgstr ""
 
-#: ../git-plugins/typo/src/BackendBehaviors.php:163
-#: ../git-plugins/typo/src/BackendBehaviors.php:237
+#: ../git-plugins/typo/src/BackendBehaviors.php:295
+#: ../git-plugins/typo/src/BackendBehaviors.php:372
 msgid "Save"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:98
+#: ../git-plugins/typo/src/Manage.php:111
 msgid "\"--\" for em-dashes; no en-dash support (default)"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:99
+#: ../git-plugins/typo/src/Manage.php:112
 msgid "\"---\" for em-dashes; \"--\" for en-dashes"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:100
+#: ../git-plugins/typo/src/Manage.php:113
 msgid "\"--\" for em-dashes; \"---\" for en-dashes"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:131
+#: ../git-plugins/typo/src/Manage.php:147
 msgid "Enable typographic replacements for this blog"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:134
+#: ../git-plugins/typo/src/Manage.php:153
 msgid "Options"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:140
-msgid "Enable typographic replacements for entries"
+#: ../git-plugins/typo/src/Manage.php:159
+msgid "Enable typographic replacements for entry titles"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:146
+#: ../git-plugins/typo/src/Manage.php:165
+msgid "Enable typographic replacements for entry contents"
+msgstr ""
+
+#: ../git-plugins/typo/src/Manage.php:171
 msgid "Enable typographic replacements for comments"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:150
+#: ../git-plugins/typo/src/Manage.php:175
 msgid "Excluding trackbacks"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:155
-msgid "Enable typographic replacements for categories"
+#: ../git-plugins/typo/src/Manage.php:180
+msgid "Enable typographic replacements for category titles"
 msgstr ""
 
-#: ../git-plugins/typo/src/Manage.php:159
+#: ../git-plugins/typo/src/Manage.php:186
+msgid "Enable typographic replacements for category descriptions"
+msgstr ""
+
+#: ../git-plugins/typo/src/Manage.php:192
+msgid "Enable typographic replacements for simpleMenu labels and descriptions"
+msgstr ""
+
+#: ../git-plugins/typo/src/Manage.php:198
+msgid "Enable typographic replacements for blogroll titles, descriptions and categories"
+msgstr ""
+
+#: ../git-plugins/typo/src/Manage.php:202
 msgid "Dashes replacement mode"
 msgstr ""

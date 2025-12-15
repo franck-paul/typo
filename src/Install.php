@@ -57,8 +57,13 @@ class Install
             // Default state is active for entries content and inactive for comments
             $settings = My::settings();
             $settings->put('active', true, 'boolean', 'Active', false, true);
-            $settings->put('entries', true, 'boolean', 'Apply on entries', false, true);
+            $settings->put('entries', true, 'boolean', 'Apply on entry contents', false, true);
+            $settings->put('entries_titles', true, 'boolean', 'Apply on entry titles', false, true);
             $settings->put('comments', false, 'boolean', 'Apply on comments', false, true);
+            $settings->put('categories', false, 'boolean', 'Apply on category descriptions', false, true);
+            $settings->put('categories_titles', false, 'boolean', 'Apply on category titles', false, true);
+            $settings->put('simplemenu', false, 'boolean', 'Apply on simpleMenu labels and descriptions', false, true);
+            $settings->put('blogroll', false, 'boolean', 'Apply on blogroll titles, descriptions and categories', false, true);
             $settings->put('dashes_mode', (int) SmartyPants::SMARTYPANTS_ATTR, 'integer', 'Dashes replacement mode', false, true);
         } catch (Exception $exception) {
             App::error()->add($exception->getMessage());

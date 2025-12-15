@@ -17,6 +17,7 @@ namespace Dotclear\Plugin\typo;
 
 use Dotclear\App;
 use Dotclear\Helper\Html\Form\Checkbox;
+use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Fieldset;
 use Dotclear\Helper\Html\Form\Form;
 use Dotclear\Helper\Html\Form\Label;
@@ -54,17 +55,25 @@ class Manage
         // Saving new configuration
         if (!empty($_POST['saveconfig'])) {
             try {
-                $typo_active      = !empty($_POST['active']);
-                $typo_entries     = !empty($_POST['entries']);
-                $typo_comments    = !empty($_POST['comments']);
-                $typo_categories  = !empty($_POST['categories']);
-                $typo_dashes_mode = (int) $_POST['dashes_mode'];
+                $typo_active            = !empty($_POST['typo_active']);
+                $typo_entries           = !empty($_POST['typo_entries']);
+                $typo_entries_titles    = !empty($_POST['typo_entries_titles']);
+                $typo_comments          = !empty($_POST['typo_comments']);
+                $typo_categories        = !empty($_POST['typo_categories']);
+                $typo_categories_titles = !empty($_POST['typo_categories_titles']);
+                $typo_simplemenu        = !empty($_POST['typo_simplemenu']);
+                $typo_blogroll          = !empty($_POST['typo_blogroll']);
+                $typo_dashes_mode       = (int) $_POST['typo_dashes_mode'];
 
                 $settings = My::settings();
                 $settings->put('active', $typo_active, 'boolean');
                 $settings->put('entries', $typo_entries, 'boolean');
+                $settings->put('entries_titles', $typo_entries_titles, 'boolean');
                 $settings->put('comments', $typo_comments, 'boolean');
                 $settings->put('categories', $typo_categories, 'boolean');
+                $settings->put('categories_titles', $typo_categories_titles, 'boolean');
+                $settings->put('simplemenu', $typo_simplemenu, 'boolean');
+                $settings->put('blogroll', $typo_blogroll, 'boolean');
                 $settings->put('dashes_mode', $typo_dashes_mode, 'integer');
                 App::blog()->triggerBlog();
                 App::backend()->notices()->addSuccessNotice(__('Configuration successfully updated.'));
@@ -87,12 +96,16 @@ class Manage
         }
 
         // Getting current parameters
-        $settings    = My::settings();
-        $active      = (bool) $settings->active;
-        $entries     = (bool) $settings->entries;
-        $comments    = (bool) $settings->comments;
-        $categories  = (bool) $settings->categories;
-        $dashes_mode = (int) $settings->dashes_mode;
+        $settings          = My::settings();
+        $active            = (bool) $settings->active;
+        $entries           = (bool) $settings->entries;
+        $entries_titles    = (bool) $settings->entries_titles;
+        $comments          = (bool) $settings->comments;
+        $categories        = (bool) $settings->categories;
+        $categories_titles = (bool) $settings->categories_titles;
+        $simplemenu        = (bool) $settings->simplemenu;
+        $blogroll          = (bool) $settings->blogroll;
+        $dashes_mode       = (int) $settings->dashes_mode;
 
         $dashes_mode_options = [
             (int) SmartyPants::SMARTYPANTS_ATTR_EM2_EN0 => __('"--" for em-dashes; no en-dash support (default)'),
@@ -103,14 +116,17 @@ class Manage
         $i     = 0;
         foreach ($dashes_mode_options as $k => $v) {
             $modes[] = (new Para())->items([
-                (new Radio(['dashes_mode', 'dashes_mode-' . $i], $dashes_mode === $k))
+                (new Radio(['typo_dashes_mode', 'dashes_mode-' . $i], $dashes_mode === $k))
                     ->value($k)
                     ->label((new Label($v, Label::INSIDE_TEXT_AFTER))),
             ]);
             ++$i;
         }
 
-        App::backend()->page()->openModule(My::name());
+        App::backend()->page()->openModule(
+            My::name(),
+            My::cssLoad('admin.css')
+        );
 
         echo App::backend()->page()->breadcrumb(
             [
@@ -126,38 +142,66 @@ class Manage
             ->fields([
                 (new Para())
                     ->items([
-                        (new Checkbox('active', $active))
+                        (new Checkbox('typo_active', $active))
                             ->value(1)
                             ->label((new Label(__('Enable typographic replacements for this blog'), Label::INSIDE_TEXT_AFTER))),
                     ]),
-                (new Fieldset())
-                    ->legend((new Legend(__('Options'))))
-                    ->fields([
-                        (new Para())
-                            ->items([
-                                (new Checkbox('entries', $entries))
-                                    ->value(1)
-                                    ->label((new Label(__('Enable typographic replacements for entries'), Label::INSIDE_TEXT_AFTER))),
+                (new Div())
+                    ->class('multicolumns')
+                    ->items([
+                        (new Fieldset())
+                            ->legend((new Legend(__('Options'))))
+                            ->fields([
+                                (new Para())
+                                    ->items([
+                                        (new Checkbox('typo_entries_titles', $entries_titles))
+                                            ->value(1)
+                                            ->label((new Label(__('Enable typographic replacements for entry titles'), Label::INSIDE_TEXT_AFTER))),
+                                    ]),
+                                (new Para())
+                                    ->items([
+                                        (new Checkbox('typo_entries', $entries))
+                                            ->value(1)
+                                            ->label((new Label(__('Enable typographic replacements for entry contents'), Label::INSIDE_TEXT_AFTER))),
+                                    ]),
+                                (new Para())
+                                    ->items([
+                                        (new Checkbox('typo_comments', $comments))
+                                            ->value(1)
+                                            ->label((new Label(__('Enable typographic replacements for comments'), Label::INSIDE_TEXT_AFTER))),
+                                    ]),
+                                (new Note())
+                                    ->class('form-note')
+                                    ->text(__('Excluding trackbacks')),
+                                (new Para())
+                                    ->items([
+                                        (new Checkbox('typo_categories_titles', $categories_titles))
+                                            ->value(1)
+                                            ->label((new Label(__('Enable typographic replacements for category titles'), Label::INSIDE_TEXT_AFTER))),
+                                    ]),
+                                (new Para())
+                                    ->items([
+                                        (new Checkbox('typo_categories', $categories))
+                                            ->value(1)
+                                            ->label((new Label(__('Enable typographic replacements for category descriptions'), Label::INSIDE_TEXT_AFTER))),
+                                    ]),
+                                (new Para())
+                                    ->items([
+                                        (new Checkbox('typo_simplemenu', $simplemenu))
+                                            ->value(1)
+                                            ->label((new Label(__('Enable typographic replacements for simpleMenu labels and descriptions'), Label::INSIDE_TEXT_AFTER))),
+                                    ]),
+                                (new Para())
+                                    ->items([
+                                        (new Checkbox('typo_blogroll', $blogroll))
+                                            ->value(1)
+                                            ->label((new Label(__('Enable typographic replacements for blogroll titles, descriptions and categories'), Label::INSIDE_TEXT_AFTER))),
+                                    ]),
                             ]),
-                        (new Para())
-                            ->items([
-                                (new Checkbox('comments', $comments))
-                                    ->value(1)
-                                    ->label((new Label(__('Enable typographic replacements for comments'), Label::INSIDE_TEXT_AFTER))),
-                            ]),
-                        (new Note('trackbacks'))
-                            ->class('form-note')
-                            ->text(__('Excluding trackbacks')),
-                        (new Para())
-                            ->items([
-                                (new Checkbox('categories', $categories))
-                                    ->value(1)
-                                    ->label((new Label(__('Enable typographic replacements for categories'), Label::INSIDE_TEXT_AFTER))),
-                            ]),
+                        (new Fieldset())
+                            ->legend(new Legend(__('Dashes replacement mode')))
+                            ->fields($modes),
                     ]),
-                (new Fieldset())
-                    ->legend(new Legend(__('Dashes replacement mode')))
-                    ->fields($modes),
                 (new Para())
                     ->items([
                         (new Submit(['saveconfig'], __('Save configuration')))

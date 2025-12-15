@@ -1,0 +1,1 @@
+.multicolumns{grid-template-columns:repeat(auto-fit,minmax(min(42em,100% - 2em),1fr));gap:1em;margin:1em .5em 1em 0;display:grid}

@@ -30,6 +30,129 @@ use Dotclear\Plugin\pages\BackendActions as PagesBackendActions;
 
 class BackendBehaviors
 {
+    public static function adminPageHTMLHead(bool $main = false): string
+    {
+        $settings = My::settings();
+        if (!$settings->active) {
+            return '';
+        }
+
+        $items = [];
+
+        if ($settings->entries_title) {
+            array_push(
+                $items,
+                // Entries (posts, pages)
+                [
+                    'url'       => App::backend()->url()->get('admin.post', separator:'&'),
+                    'id'        => '',
+                    'selectors' => [
+                        '#post_title',  // Post title
+                    ],
+                ],
+                [
+                    'url'       => App::backend()->url()->get('admin.plugin.pages', ['act' => 'page'], separator:'&'),
+                    'id'        => '',
+                    'selectors' => [
+                        '#post_title',  // Page title
+                    ],
+                ]
+            );
+        }
+
+        if ($settings->categories_title) {
+            array_push(
+                $items,
+                // Categories
+                [
+                    'url'       => App::backend()->url()->get('admin.category', separator:'&'),
+                    'id'        => '',
+                    'selectors' => [
+                        '#cat_title',   // Category title
+                    ],
+                ],
+            );
+        }
+
+        if ($settings->medias) {
+            array_push(
+                $items,
+                // Medias
+                [
+                    'url'       => App::backend()->url()->get('admin.media.item', separator:'&'),
+                    'id'        => '',
+                    'selectors' => [
+                        '#media_title', // Media title
+                        '#media_alt',   // Media alternate text
+                        '#media_desc',  // Media description
+                    ],
+                ],
+            );
+        }
+
+        if ($settings->widgets_titles) {
+            array_push(
+                $items,
+                // Widgets
+                [
+                    'url'       => App::backend()->url()->get('admin.plugin.widgets', separator:'&'),
+                    'id'        => 'sidebarsWidgets',
+                    'selectors' => [
+                        '[name$="[title]"]',    // Widgets' title
+                    ],
+                ],
+            );
+        }
+
+        if ($settings->simplemenu) {
+            array_push(
+                $items,
+                // menuSimple
+
+                [
+                    'url'       => App::backend()->url()->get('admin.plugin.simpleMenu', separator:'&'),
+                    'id'        => 'menuitems',
+                    'selectors' => [
+                        '[name="items_label[]"]',   // Menu items' label
+                        '[name="items_descr[]"]',   // Menu items' description
+                    ],
+                ],
+                [
+                    'url'       => App::backend()->url()->get('admin.plugin.simpleMenu', separator:'&'),
+                    'id'        => 'additem',
+                    'selectors' => [
+                        '#item_label',  // Menu item label
+                        '#item_descr',  // Menu item descripion
+                    ],
+                ],
+            );
+        }
+
+        if ($settings->blogroll) {
+            array_push(
+                $items,
+                // Blogroll
+                [
+                    'url'       => App::backend()->url()->get('admin.plugin.blogroll', separator:'&'),
+                    'id'        => 'add-link-form',
+                    'selectors' => [
+                        '#link_title',  // Link title
+                        '#link_desc',   // Link description
+                        '#cat_title',   // Category title
+                    ],
+                ]
+            );
+        }
+
+        echo
+        Html::jsJson('typo', [
+            'items' => $items,
+        ]) .
+        My::jsLoad('typo.js');
+
+        return '';
+    }
+
     public static function adminDashboardFavorites(Favorites $favs): string
     {
         $favs->register('Typo', [
@@ -51,10 +174,13 @@ class BackendBehaviors
         if (App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_CONTENT_ADMIN,
         ]), App::blog()->id())) {
-            $ap->addAction(
-                [__('Typo') => [__('Typographic replacements') => 'typo']],
-                self::adminPostsDoReplacements(...)
-            );
+            $settings = My::settings();
+            if ($settings->active && ($settings->entries || $settings->entries_titles)) {
+                $ap->addAction(
+                    [__('Typo') => [__('Typographic replacements') => 'typo']],
+                    self::adminPostsDoReplacements(...)
+                );
+            }
         }
 
         return '';
@@ -66,10 +192,13 @@ class BackendBehaviors
         if (App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_CONTENT_ADMIN,
         ]), App::blog()->id())) {
-            $ap->addAction(
-                [__('Typo') => [__('Typographic replacements') => 'typo']],
-                self::adminPagesDoReplacements(...)
-            );
+            $settings = My::settings();
+            if ($settings->active && ($settings->entries || $settings->entries_titles)) {
+                $ap->addAction(
+                    [__('Typo') => [__('Typographic replacements') => 'typo']],
+                    self::adminPagesDoReplacements(...)
+                );
+            }
         }
 
         return '';
@@ -107,10 +236,10 @@ class BackendBehaviors
                 $settings    = My::settings();
                 $dashes_mode = $settings->dashes_mode;
                 while ($posts->fetch()) {
-                    if (($posts->post_excerpt_xhtml) || ($posts->post_content_xhtml)) {
-                        # Apply typo features to entry
-                        $cur = App::db()->con()->openCursor(App::db()->con()->prefix() . App::blog()::POST_TABLE_NAME);
+                    // Apply typo features to entry
+                    $cur = App::db()->con()->openCursor(App::db()->con()->prefix() . App::blog()::POST_TABLE_NAME);
 
+                    if ($settings->entries && (($posts->post_excerpt_xhtml) || ($posts->post_content_xhtml))) {
                         if ($posts->post_excerpt_xhtml) {
                             $cur->post_excerpt_xhtml = SmartyPants::transform($posts->post_excerpt_xhtml, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                         }
@@ -118,9 +247,12 @@ class BackendBehaviors
                         if ($posts->post_content_xhtml) {
                             $cur->post_content_xhtml = SmartyPants::transform($posts->post_content_xhtml, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                         }
-
-                        $cur->update('WHERE post_id = ' . (int) $posts->post_id);
                     }
+                    if ($settings->entries_titles && $posts->post_title) {
+                        $cur->post_title = SmartyPants::transform($posts->post_title, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
+                    }
+
+                    $cur->update('WHERE post_id = ' . (int) $posts->post_id);
                 }
 
                 $ap->redirect(true, ['upd' => 1]);
@@ -181,10 +313,13 @@ class BackendBehaviors
         if (App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_CONTENT_ADMIN,
         ]), App::blog()->id())) {
-            $ap->addAction(
-                [__('Typo') => [__('Typographic replacements') => 'typo']],
-                self::adminCommentsDoReplacements(...)
-            );
+            $settings = My::settings();
+            if ($settings->active && $settings->comments) {
+                $ap->addAction(
+                    [__('Typo') => [__('Typographic replacements') => 'typo']],
+                    self::adminCommentsDoReplacements(...)
+                );
+            }
         }
     }
 

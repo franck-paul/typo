@@ -12,7 +12,7 @@
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 $this->registerModule(
-    'Typo',
+    'Typography',
     'Brings smart typographic replacements for your blog entries and comments',
     'Franck Paul and contributors',
     '8.4',

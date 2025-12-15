@@ -58,7 +58,12 @@ class Backend
 
             // Add behavior callbacks for comments actions
             'adminCommentsActions' => BackendBehaviors::adminCommentsActions(...),
+
+            // Add behavoir callbacks for other direct fields
+            'adminPageHTMLHead' => BackendBehaviors::adminPageHTMLHead(...),
         ]);
+
+        App::rest()->addFunction('typoTransform', BackendRest::typoTransform(...));
 
         return true;
     }
