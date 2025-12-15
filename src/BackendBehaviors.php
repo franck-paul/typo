@@ -39,7 +39,7 @@ class BackendBehaviors
 
         $items = [];
 
-        if ($settings->entries_title) {
+        if ($settings->entries_titles) {
             array_push(
                 $items,
                 // Entries (posts, pages)
@@ -60,7 +60,7 @@ class BackendBehaviors
             );
         }
 
-        if ($settings->categories_title) {
+        if ($settings->categories_titles) {
             array_push(
                 $items,
                 // Categories
