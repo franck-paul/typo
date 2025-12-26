@@ -18,7 +18,7 @@ dotclear.ready(() => {
         for (const input of elements)
           if (input && !input.readOnly && !input.disabled) {
             // Element is not readonly or disabled
-            input.onblur = () => {
+            input.addEventListener('blur', () => {
               const buffer = input.value;
               if (buffer !== '')
                 dotclear.jsonServicesGet(
@@ -30,7 +30,7 @@ dotclear.ready(() => {
                   },
                   { buffer },
                 );
-            };
+            });
           }
       }
     }
