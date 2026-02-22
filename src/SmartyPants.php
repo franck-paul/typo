@@ -32,8 +32,11 @@ class SmartyPants
     #  3  ->  "--" for em-dashes; "---" for en-dashes
     #
     public const SMARTYPANTS_ATTR_EM0_EN0 = '0';
+
     public const SMARTYPANTS_ATTR_EM2_EN0 = '1';
+
     public const SMARTYPANTS_ATTR_EM3_EN2 = '2';
+
     public const SMARTYPANTS_ATTR_EM2_EN3 = '3';
 
     public const SMARTYPANTS_ATTR = self::SMARTYPANTS_ATTR_EM2_EN0;

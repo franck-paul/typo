@@ -205,7 +205,7 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
             $t = $this->spaceThousandSeparator($t);
         }
         if ($this->do_space_unit !== 0) {
-            $t = $this->spaceUnit($t);
+            return $this->spaceUnit($t);
         }
 
         return $t;

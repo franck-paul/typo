@@ -229,6 +229,7 @@ class BackendBehaviors
                             $cur->post_content_xhtml = SmartyPants::transform($posts->post_content_xhtml, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                         }
                     }
+
                     if ($settings->entries_titles && $posts->post_title) {
                         $cur->post_title = SmartyPants::transform($posts->post_title, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                     }
@@ -381,9 +382,14 @@ class BackendBehaviors
             $supported_syntaxes = ['html', 'xhtml'];
 
             foreach ($contents as $content) {
-                if (!is_array($content) || count($content) < 2) {   // @phpstan-ignore-line PHPDoc should be certain but maybe…
+                if (!is_array($content)) { // @phpstan-ignore-line PHPDoc should be certain but maybe…
                     continue;
                 }
+
+                if (count($content) < 2) { // @phpstan-ignore-line PHPDoc should be certain but maybe…
+                    continue;
+                }
+
                 if ($content[0] !== '' && in_array($content[1], $supported_syntaxes)) {
                     $pointer    = (string) $content[0];
                     $pointer    = SmartyPants::transform($pointer, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));

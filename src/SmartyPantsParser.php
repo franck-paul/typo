@@ -186,7 +186,7 @@ class SmartyPantsParser
         }
 
         if ($this->do_stupefy !== 0) {
-            $t = $this->stupefyEntities($t);
+            return $this->stupefyEntities($t);
         }
 
         return $t;
