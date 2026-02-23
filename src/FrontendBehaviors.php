@@ -32,8 +32,10 @@ class FrontendBehaviors
         $settings = My::settings();
         if ($settings->active && $settings->comments && !(bool) $cur->comment_trackback && $cur->comment_content != null) {
             /* Transform typo for comment content (HTML) */
-            $dashes_mode          = (int) $settings->dashes_mode;
-            $cur->comment_content = SmartyPants::transform($cur->comment_content, ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
+            $dashes_mode = is_numeric($dashes_mode = $settings->dashes_mode) ? (int) $dashes_mode : (int) SmartyPants::SMARTYPANTS_ATTR;
+            $content     = is_string($content = $cur->comment_content) ? $content : '';
+
+            $cur->comment_content = SmartyPants::transform($content, ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
         }
 
         return '';
@@ -49,7 +51,8 @@ class FrontendBehaviors
         $settings = My::settings();
         if ($settings->active && $settings->comments && $prv['content'] != null) {
             /* Transform typo for comment content (HTML) */
-            $dashes_mode    = (int) $settings->dashes_mode;
+            $dashes_mode = is_numeric($dashes_mode = $settings->dashes_mode) ? (int) $dashes_mode : (int) SmartyPants::SMARTYPANTS_ATTR;
+
             $prv['content'] = SmartyPants::transform($prv['content'], ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
         }
 

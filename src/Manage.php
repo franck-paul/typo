@@ -55,28 +55,29 @@ class Manage
         // Saving new configuration
         if (!empty($_POST['saveconfig'])) {
             try {
-                $typo_active            = !empty($_POST['typo_active']);
-                $typo_entries           = !empty($_POST['typo_entries']);
-                $typo_entries_titles    = !empty($_POST['typo_entries_titles']);
-                $typo_comments          = !empty($_POST['typo_comments']);
-                $typo_categories        = !empty($_POST['typo_categories']);
-                $typo_categories_titles = !empty($_POST['typo_categories_titles']);
-                $typo_medias            = !empty($_POST['typo_medias']);
-                $typo_simplemenu        = !empty($_POST['typo_simplemenu']);
-                $typo_blogroll          = !empty($_POST['typo_blogroll']);
-                $typo_dashes_mode       = (int) $_POST['typo_dashes_mode'];
+                $active            = !empty($_POST['typo_active']);
+                $entries           = !empty($_POST['typo_entries']);
+                $entries_titles    = !empty($_POST['typo_entries_titles']);
+                $comments          = !empty($_POST['typo_comments']);
+                $categories        = !empty($_POST['typo_categories']);
+                $categories_titles = !empty($_POST['typo_categories_titles']);
+                $medias            = !empty($_POST['typo_medias']);
+                $simplemenu        = !empty($_POST['typo_simplemenu']);
+                $blogroll          = !empty($_POST['typo_blogroll']);
+
+                $dashes_mode = is_numeric($dashes_mode = $_POST['typo_dashes_mode']) ? (int) $dashes_mode : (int) SmartyPants::SMARTYPANTS_ATTR;
 
                 $settings = My::settings();
-                $settings->put('active', $typo_active, 'boolean');
-                $settings->put('entries', $typo_entries, 'boolean');
-                $settings->put('entries_titles', $typo_entries_titles, 'boolean');
-                $settings->put('comments', $typo_comments, 'boolean');
-                $settings->put('categories', $typo_categories, 'boolean');
-                $settings->put('categories_titles', $typo_categories_titles, 'boolean');
-                $settings->put('medias', $typo_medias, 'boolean');
-                $settings->put('simplemenu', $typo_simplemenu, 'boolean');
-                $settings->put('blogroll', $typo_blogroll, 'boolean');
-                $settings->put('dashes_mode', $typo_dashes_mode, 'integer');
+                $settings->put('active', $active, 'boolean');
+                $settings->put('entries', $entries, 'boolean');
+                $settings->put('entries_titles', $entries_titles, 'boolean');
+                $settings->put('comments', $comments, 'boolean');
+                $settings->put('categories', $categories, 'boolean');
+                $settings->put('categories_titles', $categories_titles, 'boolean');
+                $settings->put('medias', $medias, 'boolean');
+                $settings->put('simplemenu', $simplemenu, 'boolean');
+                $settings->put('blogroll', $blogroll, 'boolean');
+                $settings->put('dashes_mode', $dashes_mode, 'integer');
                 App::blog()->triggerBlog();
                 App::backend()->notices()->addSuccessNotice(__('Configuration successfully updated.'));
                 My::redirect();
@@ -108,7 +109,8 @@ class Manage
         $medias            = (bool) $settings->medias;
         $simplemenu        = (bool) $settings->simplemenu;
         $blogroll          = (bool) $settings->blogroll;
-        $dashes_mode       = (int) $settings->dashes_mode;
+
+        $dashes_mode = is_numeric($dashes_mode = $settings->dashes_mode) ? (int) $dashes_mode : (int) SmartyPants::SMARTYPANTS_ATTR;
 
         $dashes_mode_options = [
             (int) SmartyPants::SMARTYPANTS_ATTR_EM2_EN0 => __('"--" for em-dashes; no en-dash support (default)'),

@@ -32,13 +32,14 @@ class CoreBehaviors
             default    => true,
         };
         if ($do) {
-            $dashes_mode = $settings->dashes_mode;
+            $dashes_mode = is_numeric($dashes_mode = $settings->dashes_mode) ? (int) $dashes_mode : (int) SmartyPants::SMARTYPANTS_ATTR;
+
             foreach ($ref as $content) {
                 if (isset($content[1]) && $content[1] === 'html') {
                     /* Transform typo for HTML content */
                     $buffer = &$content[0];
                     if ($buffer !== '') {
-                        $buffer = SmartyPants::transform($buffer, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
+                        $buffer = SmartyPants::transform($buffer, ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                     }
                 }
             }

@@ -27,9 +27,10 @@ class BackendRest
         $buffer = $get['buffer'] ?? '';
 
         $settings    = My::settings();
-        $dashes_mode = $settings->dashes_mode;
-        $str         = SmartyPants::transform($buffer, ($dashes_mode ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
-        $str         = html_entity_decode($str, ENT_QUOTES, 'UTF-8');
+        $dashes_mode = is_numeric($dashes_mode = $settings->dashes_mode) ? (int) $dashes_mode : (int) SmartyPants::SMARTYPANTS_ATTR;
+
+        $str = SmartyPants::transform($buffer, ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
+        $str = html_entity_decode($str, ENT_QUOTES, 'UTF-8');
 
         return [
             'ret'    => ($buffer !== $str),
