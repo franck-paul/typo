@@ -123,6 +123,21 @@ class BackendBehaviors
                     '#cat_title',   // Category title
                 ],
             ];
+            $items[] = [
+                'url'       => App::backend()->url()->get('admin.plugin.blogroll', separator:'&'),
+                'id'        => 'blogroll_link',
+                'selectors' => [
+                    '#link_title',  // Link title
+                    '#link_desc',   // Link description
+                ],
+            ];
+            $items[] = [
+                'url'       => App::backend()->url()->get('admin.plugin.blogroll', separator:'&'),
+                'id'        => 'blogroll_cat',
+                'selectors' => [
+                    '#link_desc',   // Category title
+                ],
+            ];
         }
 
         echo
