@@ -9,7 +9,7 @@ dotclear.ready(() => {
     // Look for each given forms
     const forms = document.querySelectorAll(`form[action^="${item.url}"]`);
     for (const form of forms) {
-      if (item.id !== '' && form.id !== item.id) continue; // Looking for a specifif form ID
+      if (item.id !== '' && form.getAttribute('id') !== item.id) continue; // Looking for a specifif form ID
 
       // Form found
       for (const selector of item.selectors) {
@@ -30,6 +30,9 @@ dotclear.ready(() => {
                   },
                   { buffer },
                 );
+            });
+            input.addEventListener('keypress', (/** @type {KeyboardEvent} */ event) => {
+              if (event?.key === 'Enter') input.blur();
             });
           }
       }
