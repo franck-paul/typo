@@ -15,9 +15,9 @@ $this->registerModule(
     'Typography',
     'Brings smart typographic replacements for your blog entries and comments',
     'Franck Paul and contributors',
-    '9.2',
+    '9.3',
     [
-        'date'        => '2026-02-23T18:32:30+0100',
+        'date'        => '2026-03-18T13:52:37+0100',
         'requires'    => [['core', '2.36']],
         'permissions' => 'My',
         'type'        => 'plugin',
