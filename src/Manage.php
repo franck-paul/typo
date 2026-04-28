@@ -68,16 +68,16 @@ class Manage
                 $dashes_mode = is_numeric($dashes_mode = $_POST['typo_dashes_mode']) ? (int) $dashes_mode : (int) SmartyPants::SMARTYPANTS_ATTR;
 
                 $settings = My::settings();
-                $settings->put('active', $active, 'boolean');
-                $settings->put('entries', $entries, 'boolean');
-                $settings->put('entries_titles', $entries_titles, 'boolean');
-                $settings->put('comments', $comments, 'boolean');
-                $settings->put('categories', $categories, 'boolean');
-                $settings->put('categories_titles', $categories_titles, 'boolean');
-                $settings->put('medias', $medias, 'boolean');
-                $settings->put('simplemenu', $simplemenu, 'boolean');
-                $settings->put('blogroll', $blogroll, 'boolean');
-                $settings->put('dashes_mode', $dashes_mode, 'integer');
+                $settings->put('active', $active, App::blogWorkspace()::NS_BOOL);
+                $settings->put('entries', $entries, App::blogWorkspace()::NS_BOOL);
+                $settings->put('entries_titles', $entries_titles, App::blogWorkspace()::NS_BOOL);
+                $settings->put('comments', $comments, App::blogWorkspace()::NS_BOOL);
+                $settings->put('categories', $categories, App::blogWorkspace()::NS_BOOL);
+                $settings->put('categories_titles', $categories_titles, App::blogWorkspace()::NS_BOOL);
+                $settings->put('medias', $medias, App::blogWorkspace()::NS_BOOL);
+                $settings->put('simplemenu', $simplemenu, App::blogWorkspace()::NS_BOOL);
+                $settings->put('blogroll', $blogroll, App::blogWorkspace()::NS_BOOL);
+                $settings->put('dashes_mode', $dashes_mode, App::blogWorkspace()::NS_INT);
                 App::blog()->triggerBlog();
                 App::backend()->notices()->addSuccessNotice(__('Configuration successfully updated.'));
                 My::redirect();
