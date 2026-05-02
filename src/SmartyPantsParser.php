@@ -20,12 +20,18 @@ namespace Dotclear\Plugin\typo;
 class SmartyPantsParser
 {
     # Options to specify which transformations to make:
-    public int $do_nothing   = 0;
-    public int $do_quotes    = 0;
+    public int $do_nothing = 0;
+
+    public int $do_quotes = 0;
+
     public int $do_backticks = 0;
-    public int $do_dashes    = 0;
-    public int $do_ellipses  = 0;
-    public int $do_stupefy   = 0;
+
+    public int $do_dashes = 0;
+
+    public int $do_ellipses = 0;
+
+    public int $do_stupefy = 0;
+
     public int $convert_quot = 0; # should we translate &quot; entities into normal quotes?
 
     # SmartyPants will not alter the content of these tags:
@@ -132,6 +138,7 @@ class SmartyPantsParser
                 if ($in_pre === 0) {
                     $t = $this->educate($t, $prev_token_last_char);
                 }
+
                 $prev_token_last_char = $last_char;
                 $result .= $t;
             }
@@ -152,9 +159,11 @@ class SmartyPantsParser
             if ($this->do_dashes === 1) {
                 $t = $this->educateDashes($t);
             }
+
             if ($this->do_dashes === 2) {
                 $t = $this->educateDashesOldSchool($t);
             }
+
             if ($this->do_dashes === 3) {
                 $t = $this->educateDashesOldSchoolInverted($t);
             }
@@ -208,7 +217,7 @@ class SmartyPantsParser
         # Special case if the very first character is a quote
         # followed by punctuation at a non-word-break. Close the quotes by brute force:
         $_ = (string) preg_replace(
-            ["/^'(?=$punct_class\\B)/", "/^\"(?=$punct_class\\B)/"],
+            [sprintf("/^'(?=%s\\B)/", $punct_class), sprintf('/^"(?=%s\B)/', $punct_class)],
             ['&#8217;',                 '&#8221;'],
             $_
         );
@@ -234,7 +243,7 @@ class SmartyPantsParser
 				&nbsp;      |   # a non-breaking space entity, or
 				--          |   # dashes, or
 				&[mn]dash;  |   # named dash entities
-				$dec_dashes |   # or decimal entities
+				{$dec_dashes} |   # or decimal entities
 				&\\#x201[34];    # or hex
 			)
 			'                   # the quote
@@ -242,7 +251,7 @@ class SmartyPantsParser
 			}x", '\1&#8216;', $_);
         # Single closing quotes:
         $_ = (string) preg_replace("{
-			($close_class)?
+			({$close_class})?
 			'
 			(?(1)|          # If $1 captured, then do nothing;
 			  (?=\\s | s\\b)  # otherwise, positive lookahead for a whitespace
@@ -261,7 +270,7 @@ class SmartyPantsParser
 				&nbsp;      |   # a non-breaking space entity, or
 				--          |   # dashes, or
 				&[mn]dash;  |   # named dash entities
-				$dec_dashes |   # or decimal entities
+				{$dec_dashes} |   # or decimal entities
 				&\\#x201[34];    # or hex
 			)
 			\"                   # the quote
@@ -270,7 +279,7 @@ class SmartyPantsParser
 
         # Double closing quotes:
         $_ = (string) preg_replace("{
-			($close_class)?
+			({$close_class})?
 			\"
 			(?(1)|(?=\\s))   # If $1 captured, then do nothing;
 							   # if not, then make sure the next char is whitespace.
@@ -482,7 +491,7 @@ class SmartyPantsParser
                                                 # regular tags
                  '(?:<[/!$]?[-a-zA-Z0-9:]+\b(?>[^"\'>]+|"[^"]*"|\'[^\']*\')*>)';
 
-        $parts = preg_split("{($match)}", $str, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $parts = preg_split(sprintf('{(%s)}', $match), $str, -1, PREG_SPLIT_DELIM_CAPTURE);
 
         if ($parts !== false) {
             foreach ($parts as $part) {

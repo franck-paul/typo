@@ -420,7 +420,7 @@ class BackendBehaviors
                 }
 
                 $pointer = is_string($pointer = $content[0]) ? $pointer : '';
-                if ($pointer !== '' && in_array($content[1], $supported_syntaxes)) {
+                if ($pointer !== '' && in_array($content[1], $supported_syntaxes, true)) {
                     $content[0] = SmartyPants::transform($pointer, ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                 }
             }

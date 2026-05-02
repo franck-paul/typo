@@ -20,7 +20,8 @@ namespace Dotclear\Plugin\typo;
 class SmartyPantsTypographerParser extends SmartyPantsParser
 {
     # Openning and closing smart double-quotes.
-    private const SMARTYPANTS_SMART_DOUBLEQUOTE_OPEN  = '&#8220;';
+    private const SMARTYPANTS_SMART_DOUBLEQUOTE_OPEN = '&#8220;';
+
     private const SMARTYPANTS_SMART_DOUBLEQUOTE_CLOSE = '&#8221;';
 
     # Space around em-dashes.  "He_—_or she_—_should change that."
@@ -48,32 +49,51 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
     private const SMARTYPANTS_SPACE_UNIT = '&#160;';
 
     # Options to specify which transformations to make:
-    public int $do_comma_quotes      = 0;
-    public int $do_guillemets        = 0;
-    public int $do_space_emdash      = 0;
-    public int $do_space_endash      = 0;
-    public int $do_space_colon       = 0;
-    public int $do_space_semicolon   = 0;
-    public int $do_space_marks       = 0;
+    public int $do_comma_quotes = 0;
+
+    public int $do_guillemets = 0;
+
+    public int $do_space_emdash = 0;
+
+    public int $do_space_endash = 0;
+
+    public int $do_space_colon = 0;
+
+    public int $do_space_semicolon = 0;
+
+    public int $do_space_marks = 0;
+
     public int $do_space_frenchquote = 0;
-    public int $do_space_thousand    = 0;
-    public int $do_space_unit        = 0;
+
+    public int $do_space_thousand = 0;
+
+    public int $do_space_unit = 0;
 
     # Smart quote characters:
-    public string $smart_doublequote_open  = self::SMARTYPANTS_SMART_DOUBLEQUOTE_OPEN;
+    public string $smart_doublequote_open = self::SMARTYPANTS_SMART_DOUBLEQUOTE_OPEN;
+
     public string $smart_doublequote_close = self::SMARTYPANTS_SMART_DOUBLEQUOTE_CLOSE;
-    public string $smart_singlequote_open  = '&#8216;';
+
+    public string $smart_singlequote_open = '&#8216;';
+
     public string $smart_singlequote_close = '&#8217;'; # Also apostrophe.
 
     # Space characters for different places:
-    public string $space_emdash      = self::SMARTYPANTS_SPACE_EMDASH;
-    public string $space_endash      = self::SMARTYPANTS_SPACE_ENDASH;
-    public string $space_colon       = self::SMARTYPANTS_SPACE_COLON;
-    public string $space_semicolon   = self::SMARTYPANTS_SPACE_SEMICOLON;
-    public string $space_marks       = self::SMARTYPANTS_SPACE_MARKS;
+    public string $space_emdash = self::SMARTYPANTS_SPACE_EMDASH;
+
+    public string $space_endash = self::SMARTYPANTS_SPACE_ENDASH;
+
+    public string $space_colon = self::SMARTYPANTS_SPACE_COLON;
+
+    public string $space_semicolon = self::SMARTYPANTS_SPACE_SEMICOLON;
+
+    public string $space_marks = self::SMARTYPANTS_SPACE_MARKS;
+
     public string $space_frenchquote = self::SMARTYPANTS_SPACE_FRENCHQUOTE;
-    public string $space_thousand    = self::SMARTYPANTS_SPACE_THOUSAND;
-    public string $space_unit        = self::SMARTYPANTS_SPACE_UNIT;
+
+    public string $space_thousand = self::SMARTYPANTS_SPACE_THOUSAND;
+
+    public string $space_unit = self::SMARTYPANTS_SPACE_UNIT;
 
     # Expression of a space (breakable or not):
     public string $space = '(?: | |&nbsp;|&#0*160;|&#x0*[aA]0;)';
@@ -179,6 +199,7 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         if ($this->do_comma_quotes !== 0) {
             $t = $this->educateCommaQuotes($t);
         }
+
         if ($this->do_guillemets !== 0) {
             $t = $this->educateGuillemets($t);
         }
@@ -186,24 +207,31 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         if ($this->do_space_emdash !== 0) {
             $t = $this->spaceEmDash($t);
         }
+
         if ($this->do_space_endash !== 0) {
             $t = $this->spaceEnDash($t);
         }
+
         if ($this->do_space_colon !== 0) {
             $t = $this->spaceColon($t);
         }
+
         if ($this->do_space_semicolon !== 0) {
             $t = $this->spaceSemicolon($t);
         }
+
         if ($this->do_space_marks !== 0) {
             $t = $this->spaceMarks($t);
         }
+
         if ($this->do_space_frenchquote !== 0) {
             $t = $this->spaceFrenchQuotes($t);
         }
+
         if ($this->do_space_thousand !== 0) {
             $t = $this->spaceThousandSeparator($t);
         }
+
         if ($this->do_space_unit !== 0) {
             return $this->spaceUnit($t);
         }
@@ -233,7 +261,7 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         # Special case if the very first character is a quote
         # followed by punctuation at a non-word-break. Close the quotes by brute force:
         $_ = (string) preg_replace(
-            ["/^'(?=$punct_class\\B)/", "/^\"(?=$punct_class\\B)/"],
+            [sprintf("/^'(?=%s\\B)/", $punct_class), sprintf('/^"(?=%s\B)/', $punct_class)],
             [$sq_close,                 $dq_close],
             $_
         );
@@ -259,7 +287,7 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
 				&nbsp;      |   # a non-breaking space entity, or
 				--          |   # dashes, or
 				&[mn]dash;  |   # named dash entities
-				$dec_dashes |   # or decimal entities
+				{$dec_dashes} |   # or decimal entities
 				&\\#x201[34];    # or hex
 			)
 			'                   # the quote
@@ -267,7 +295,7 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
 			}x", '\1' . $sq_open, $_);
         # Single closing quotes:
         $_ = (string) preg_replace("{
-			($close_class)?
+			({$close_class})?
 			'
 			(?(1)|          # If $1 captured, then do nothing;
 			  (?=\\s | s\\b)  # otherwise, positive lookahead for a whitespace
@@ -286,7 +314,7 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
 				&nbsp;      |   # a non-breaking space entity, or
 				--          |   # dashes, or
 				&[mn]dash;  |   # named dash entities
-				$dec_dashes |   # or decimal entities
+				{$dec_dashes} |   # or decimal entities
 				&\\#x201[34];    # or hex
 			)
 			\"                   # the quote
@@ -295,7 +323,7 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
 
         # Double closing quotes:
         $_ = (string) preg_replace("{
-			($close_class)?
+			({$close_class})?
 			\"
 			(?(1)|(?=\\s))   # If $1 captured, then do nothing;
 							   # if not, then make sure the next char is whitespace.
@@ -357,14 +385,14 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         $outside_char = $this->space . '|\s|[.,:;!?\[\](){}|@*~=+-]|¡|¿';
 
         $_ = (string) preg_replace(
-            "/(^|$outside_char)(&#171;|«|&#8250;|‹)$this->space$opt/",
-            "\\1\\2$chr",
+            sprintf('/(^|%s)(&#171;|«|&#8250;|‹)%s%s/', $outside_char, $this->space, $opt),
+            '\1\2' . $chr,
             $_
         );
 
         return (string) preg_replace(
-            "/$this->space$opt(&#187;|»|&#8249;|›)($outside_char|$)/",
-            "$chr\\1\\2",
+            sprintf('/%s%s(&#187;|»|&#8249;|›)(%s|$)/', $this->space, $opt, $outside_char),
+            $chr . '\1\2',
             $_
         );
     }
@@ -383,8 +411,8 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         $chr = ($this->do_space_colon !== -1 ? $this->space_colon : '');
 
         return (string) preg_replace(
-            "/$this->space$opt(:)(\\s|$)/m",
-            "$chr\\1\\2",
+            sprintf('/%s%s(:)(\s|$)/m', $this->space, $opt),
+            $chr . '\1\2',
             $_
         );
     }
@@ -403,15 +431,15 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         $chr = ($this->do_space_semicolon !== -1 ? $this->space_semicolon : '');
 
         $_ = (string) preg_replace(
-            "/$this->space(;)(?=\\s|$)/m",
+            sprintf('/%s(;)(?=\s|$)/m', $this->space),
             ' \\1',
             $_
         );
 
         return (string) preg_replace(
             '/((?:^|\\s)(?>[^&;\\s]+|&#?[a-zA-Z0-9]+;)*)' .
-                          " $opt(;)(?=\\s|$)/m",
-            "\\1$chr\\2",
+                          sprintf(' %s(;)(?=\s|$)/m', $opt),
+            sprintf('\1%s\2', $chr),
             $_
         );
     }
@@ -430,12 +458,12 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         $chr = ($this->do_space_marks !== -1 ? $this->space_marks : '');
 
         // Regular marks.
-        $_ = (string) preg_replace("/$this->space$opt([?!]+)/", "$chr\\1", $_);
+        $_ = (string) preg_replace(sprintf('/%s%s([?!]+)/', $this->space, $opt), $chr . '\1', $_);
 
         // Inverted marks.
         $imarks = '(?:¡|&iexcl;|&#161;|&#x[Aa]1;|¿|&iquest;|&#191;|&#x[Bb][Ff];)';
 
-        return (string) preg_replace("/($imarks+)$this->space$opt/", "\\1$chr", $_);
+        return (string) preg_replace(sprintf('/(%s+)%s%s/', $imarks, $this->space, $opt), '\1' . $chr, $_);
     }
 
     public function spaceEmDash(string $_): string
@@ -454,8 +482,8 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         $chr = ($this->do_space_emdash !== -1 ? $this->space_emdash : '');
 
         return (string) preg_replace(
-            "/$this->space$opt(&#8212;|—)$this->space$opt/",
-            "$chr\\1$chr",
+            sprintf('/%s%s(&#8212;|—)%s%s/', $this->space, $opt, $this->space, $opt),
+            sprintf('%s\1%s', $chr, $chr),
             $_
         );
     }
@@ -476,8 +504,8 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         $chr = ($this->do_space_endash !== -1 ? $this->space_endash : '');
 
         return (string) preg_replace(
-            "/$this->space$opt(&#8211;|–)$this->space$opt/",
-            "$chr\\1$chr",
+            sprintf('/%s%s(&#8211;|–)%s%s/', $this->space, $opt, $this->space, $opt),
+            sprintf('%s\1%s', $chr, $chr),
             $_
         );
     }
@@ -494,7 +522,7 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
         #
         $chr = ($this->do_space_thousand !== -1 ? $this->space_thousand : '');
 
-        return (string) preg_replace('/(\d) (\d)/', "\\1$chr\\2", $_);
+        return (string) preg_replace('/(\d) (\d)/', sprintf('\1%s\2', $chr), $_);
     }
 
     public string $units = '
@@ -543,7 +571,7 @@ class SmartyPantsTypographerParser extends SmartyPantsParser
 			(' . $this->units . ')     # Unit.
 			(?![a-zA-Z0-9])  # Negative lookahead for other unit characters.
 			/x',
-            "\\1$chr\\2",
+            sprintf('\1%s\2', $chr),
             $_
         );
     }
