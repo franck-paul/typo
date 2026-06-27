@@ -228,7 +228,7 @@ class BackendBehaviors
         if (!empty($post['full_content'])) {
             // Do replacements
             $posts = $ap->getRS();
-            if ($posts->rows()) {
+            if ($posts->rows() !== []) {
                 $settings    = My::settings();
                 $dashes_mode = is_numeric($dashes_mode = $settings->dashes_mode) ? (int) $dashes_mode : (int) SmartyPants::SMARTYPANTS_ATTR;
 
@@ -337,7 +337,7 @@ class BackendBehaviors
         if (!empty($post['full_content'])) {
             // Do replacements
             $co = $ap->getRS();
-            if ($co->rows()) {
+            if ($co->rows() !== []) {
                 $settings    = My::settings();
                 $dashes_mode = is_numeric($dashes_mode = $settings->dashes_mode) ? (int) $dashes_mode : (int) SmartyPants::SMARTYPANTS_ATTR;
 
@@ -411,11 +411,11 @@ class BackendBehaviors
             $supported_syntaxes = ['html', 'xhtml'];
 
             foreach ($contents as $content) {
-                if (!is_array($content)) { // @phpstan-ignore-line PHPDoc should be certain but maybe…
+                if (!is_array($content)) { // @phpstan-ignore function.alreadyNarrowedType (PHPDoc should be certain but maybe…)
                     continue;
                 }
 
-                if (count($content) < 2) { // @phpstan-ignore-line PHPDoc should be certain but maybe…
+                if (count($content) < 2) { // @phpstan-ignore smaller.alwaysFalse (PHPDoc should be certain but maybe…)
                     continue;
                 }
 

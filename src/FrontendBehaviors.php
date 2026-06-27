@@ -30,7 +30,11 @@ class FrontendBehaviors
     public static function updateTypoComments(BlogInterface $blog, Cursor $cur): string
     {
         $settings = My::settings();
-        if ($settings->active && $settings->comments && !(bool) $cur->comment_trackback && $cur->comment_content != null) {
+        if ($settings->active
+            && $settings->comments
+            && !(bool) $cur->comment_trackback
+            && $cur->comment_content != null
+        ) {
             /* Transform typo for comment content (HTML) */
             $dashes_mode = is_numeric($dashes_mode = $settings->dashes_mode) ? (int) $dashes_mode : (int) SmartyPants::SMARTYPANTS_ATTR;
             $content     = is_string($content = $cur->comment_content) ? $content : '';
@@ -49,7 +53,10 @@ class FrontendBehaviors
     public static function previewTypoComments(array|ArrayObject $prv): string
     {
         $settings = My::settings();
-        if ($settings->active && $settings->comments && $prv['content'] != null) {
+        if ($settings->active
+            && $settings->comments
+            && $prv['content'] != null
+        ) {
             /* Transform typo for comment content (HTML) */
             $dashes_mode = is_numeric($dashes_mode = $settings->dashes_mode) ? (int) $dashes_mode : (int) SmartyPants::SMARTYPANTS_ATTR;
 
