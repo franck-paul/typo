@@ -236,27 +236,26 @@ class BackendBehaviors
                     // Apply typo features to entry
                     $cur = App::db()->con()->openCursor(App::db()->con()->prefix() . App::blog()::POST_TABLE_NAME);
 
-                    if ($settings->entries && (($posts->post_excerpt_xhtml) || ($posts->post_content_xhtml))) {
-                        if ($posts->post_excerpt_xhtml) {
-                            $excerpt = is_string($excerpt = $posts->post_excerpt_xhtml) ? $excerpt : '';
-
+                    if ($settings->entries) {
+                        $excerpt = $posts->strField('post_excerpt_xhtml');
+                        if ($excerpt !== '') {
                             $cur->post_excerpt_xhtml = SmartyPants::transform($excerpt, ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                         }
 
-                        if ($posts->post_content_xhtml) {
-                            $content = is_string($content = $posts->post_content_xhtml) ? $content : '';
-
+                        $content = $posts->strField('post_content_xhtml');
+                        if ($content !== '') {
                             $cur->post_content_xhtml = SmartyPants::transform($content, ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
                         }
                     }
 
-                    if ($settings->entries_titles && $posts->post_title) {
-                        $title = is_string($title = $posts->post_title) ? $title : '';
-
-                        $cur->post_title = SmartyPants::transform($title, ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
+                    if ($settings->entries_titles) {
+                        $title = $posts->strField('post_title');
+                        if ($title !== '') {
+                            $cur->post_title = SmartyPants::transform($title, ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
+                        }
                     }
 
-                    $post_id = is_numeric($post_id = $posts->post_id) ? (int) $post_id : 0;
+                    $post_id = $posts->intField('post_id');
                     $cur->update('WHERE post_id = ' . $post_id);
                 }
 
@@ -345,11 +344,11 @@ class BackendBehaviors
                     if ($co->comment_content) {
                         # Apply typo features to comment
                         $cur     = App::db()->con()->openCursor(App::db()->con()->prefix() . App::blog()::COMMENT_TABLE_NAME);
-                        $content = is_string($content = $co->comment_content) ? $content : '';
+                        $content = $co->strField('comment_content');
 
                         $cur->comment_content = SmartyPants::transform($content, ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
 
-                        $comment_id = is_numeric($comment_id = $co->comment_id) ? (int) $comment_id : 0;
+                        $comment_id = $co->intField('comment_id');
                         $cur->update('WHERE comment_id = ' . $comment_id);
                     }
                 }
