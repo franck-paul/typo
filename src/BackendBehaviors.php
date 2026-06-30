@@ -152,11 +152,11 @@ class BackendBehaviors
     public static function adminDashboardFavorites(Favorites $favs): string
     {
         $favs->register('Typo', [
-            'title'       => __('Typographic replacements'),
-            'url'         => My::manageUrl(),
-            'small-icon'  => My::icons(),
-            'large-icon'  => My::icons(),
-            'permissions' => App::auth()->makePermissions([
+            'title'          => __('Typographic replacements'),
+            'url'            => My::manageUrl(),
+            'menu-icon'      => My::icon(),
+            'dashboard-icon' => My::icon(),
+            'permissions'    => App::auth()->makePermissions([
                 App::auth()::PERMISSION_ADMIN,
             ]),
         ]);
