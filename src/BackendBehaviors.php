@@ -33,13 +33,13 @@ class BackendBehaviors
     public static function adminPageHTMLHead(bool $main = false): string
     {
         $settings = My::settings();
-        if (!$settings->active) {
+        if (!$settings->getBool('active')) {
             return '';
         }
 
         $items = [];
 
-        if ($settings->entries_titles) {
+        if ($settings->getBool('entries_titles')) {
             // Entries (posts, pages)
             $items[] = [
                 'url'       => App::backend()->url()->get('admin.post', separator:'&'),
@@ -57,7 +57,7 @@ class BackendBehaviors
             ];
         }
 
-        if ($settings->categories_titles) {
+        if ($settings->getBool('categories_titles')) {
             // Categories
             $items[] = [
                 'url'       => App::backend()->url()->get('admin.category', separator:'&'),
@@ -68,7 +68,7 @@ class BackendBehaviors
             ];
         }
 
-        if ($settings->medias) {
+        if ($settings->getBool('medias')) {
             // Medias
             $items[] = [
                 'url'       => App::backend()->url()->get('admin.media.item', separator:'&'),
@@ -81,7 +81,7 @@ class BackendBehaviors
             ];
         }
 
-        if ($settings->widgets_titles) {
+        if ($settings->getBool('widgets_titles')) {
             // Widgets
             $items[] = [
                 'url'       => App::backend()->url()->get('admin.plugin.widgets', separator:'&'),
@@ -92,7 +92,7 @@ class BackendBehaviors
             ];
         }
 
-        if ($settings->simplemenu) {
+        if ($settings->getBool('simplemenu')) {
             // menuSimple
             $items[] = [
                 'url'       => App::backend()->url()->get('admin.plugin.simpleMenu', separator:'&'),
@@ -112,7 +112,7 @@ class BackendBehaviors
             ];
         }
 
-        if ($settings->blogroll) {
+        if ($settings->getBool('blogroll')) {
             // Blogroll
             $items[] = [
                 'url'       => App::backend()->url()->get('admin.plugin.blogroll', separator:'&'),
@@ -171,7 +171,7 @@ class BackendBehaviors
             App::auth()::PERMISSION_CONTENT_ADMIN,
         ]), App::blog()->id())) {
             $settings = My::settings();
-            if ($settings->active && ($settings->entries || $settings->entries_titles)) {
+            if ($settings->getBool('active') && ($settings->getBool('entries') || $settings->getBool('entries_titles'))) {
                 $ap->addAction(
                     [__('Typo') => [__('Typographic replacements') => 'typo']],
                     self::adminPostsDoReplacements(...)
@@ -189,7 +189,7 @@ class BackendBehaviors
             App::auth()::PERMISSION_CONTENT_ADMIN,
         ]), App::blog()->id())) {
             $settings = My::settings();
-            if ($settings->active && ($settings->entries || $settings->entries_titles)) {
+            if ($settings->getBool('active') && ($settings->getBool('entries') || $settings->getBool('entries_titles'))) {
                 $ap->addAction(
                     [__('Typo') => [__('Typographic replacements') => 'typo']],
                     self::adminPagesDoReplacements(...)
@@ -230,28 +230,28 @@ class BackendBehaviors
             $posts = $ap->getRS();
             if ($posts->rows() !== []) {
                 $settings    = My::settings();
-                $dashes_mode = is_numeric($dashes_mode = $settings->dashes_mode) ? (int) $dashes_mode : (int) SmartyPants::SMARTYPANTS_ATTR;
+                $dashes_mode = $settings->getInt('dashes_mode', false) ?: (int) SmartyPants::SMARTYPANTS_ATTR;
 
                 while ($posts->fetch()) {
                     // Apply typo features to entry
                     $cur = App::db()->con()->openCursor(App::db()->con()->prefix() . App::blog()::POST_TABLE_NAME);
 
-                    if ($settings->entries) {
+                    if ($settings->getBool('entries')) {
                         $excerpt = $posts->strField('post_excerpt_xhtml');
                         if ($excerpt !== '') {
-                            $cur->post_excerpt_xhtml = SmartyPants::transform($excerpt, ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
+                            $cur->post_excerpt_xhtml = SmartyPants::transform($excerpt, (string) $dashes_mode);
                         }
 
                         $content = $posts->strField('post_content_xhtml');
                         if ($content !== '') {
-                            $cur->post_content_xhtml = SmartyPants::transform($content, ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
+                            $cur->post_content_xhtml = SmartyPants::transform($content, (string) $dashes_mode);
                         }
                     }
 
-                    if ($settings->entries_titles) {
+                    if ($settings->getBool('entries_titles')) {
                         $title = $posts->strField('post_title');
                         if ($title !== '') {
-                            $cur->post_title = SmartyPants::transform($title, ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
+                            $cur->post_title = SmartyPants::transform($title, (string) $dashes_mode);
                         }
                     }
 
@@ -318,7 +318,7 @@ class BackendBehaviors
             App::auth()::PERMISSION_CONTENT_ADMIN,
         ]), App::blog()->id())) {
             $settings = My::settings();
-            if ($settings->active && $settings->comments) {
+            if ($settings->getBool('active') && $settings->getBool('comments')) {
                 $ap->addAction(
                     [__('Typo') => [__('Typographic replacements') => 'typo']],
                     self::adminCommentsDoReplacements(...)
@@ -338,7 +338,7 @@ class BackendBehaviors
             $co = $ap->getRS();
             if ($co->rows() !== []) {
                 $settings    = My::settings();
-                $dashes_mode = is_numeric($dashes_mode = $settings->dashes_mode) ? (int) $dashes_mode : (int) SmartyPants::SMARTYPANTS_ATTR;
+                $dashes_mode = $settings->getInt('dashes_mode', false) ?: (int) SmartyPants::SMARTYPANTS_ATTR;
 
                 while ($co->fetch()) {
                     if ($co->comment_content) {
@@ -346,7 +346,7 @@ class BackendBehaviors
                         $cur     = App::db()->con()->openCursor(App::db()->con()->prefix() . App::blog()::COMMENT_TABLE_NAME);
                         $content = $co->strField('comment_content');
 
-                        $cur->comment_content = SmartyPants::transform($content, ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
+                        $cur->comment_content = SmartyPants::transform($content, (string) $dashes_mode);
 
                         $comment_id = $co->intField('comment_id');
                         $cur->update('WHERE comment_id = ' . $comment_id);
@@ -404,8 +404,8 @@ class BackendBehaviors
     public static function coreContentFilter(string $type, array|ArrayObject $contents): string
     {
         $settings = My::settings();
-        if ($settings->active && $settings->entries) {
-            $dashes_mode = is_numeric($dashes_mode = $settings->dashes_mode) ? (int) $dashes_mode : (int) SmartyPants::SMARTYPANTS_ATTR;
+        if ($settings->getBool('active') && $settings->getBool('entries')) {
+            $dashes_mode = $settings->getInt('dashes_mode', false) ?: (int) SmartyPants::SMARTYPANTS_ATTR;
 
             $supported_syntaxes = ['html', 'xhtml'];
 
@@ -420,7 +420,7 @@ class BackendBehaviors
 
                 $pointer = is_string($pointer = $content[0]) ? $pointer : '';
                 if ($pointer !== '' && in_array($content[1], $supported_syntaxes, true)) {
-                    $content[0] = SmartyPants::transform($pointer, ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
+                    $content[0] = SmartyPants::transform($pointer, (string) $dashes_mode);
                 }
             }
         }

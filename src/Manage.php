@@ -100,17 +100,17 @@ class Manage
 
         // Getting current parameters
         $settings          = My::settings();
-        $active            = (bool) $settings->active;
-        $entries           = (bool) $settings->entries;
-        $entries_titles    = (bool) $settings->entries_titles;
-        $comments          = (bool) $settings->comments;
-        $categories        = (bool) $settings->categories;
-        $categories_titles = (bool) $settings->categories_titles;
-        $medias            = (bool) $settings->medias;
-        $simplemenu        = (bool) $settings->simplemenu;
-        $blogroll          = (bool) $settings->blogroll;
+        $active            = $settings->getBool('active', false);
+        $entries           = $settings->getBool('entries', false);
+        $entries_titles    = $settings->getBool('entries_titles', false);
+        $comments          = $settings->getBool('comments', false);
+        $categories        = $settings->getBool('categories', false);
+        $categories_titles = $settings->getBool('categories_titles', false);
+        $medias            = $settings->getBool('medias', false);
+        $simplemenu        = $settings->getBool('simplemenu', false);
+        $blogroll          = $settings->getBool('blogroll', false);
 
-        $dashes_mode = is_numeric($dashes_mode = $settings->dashes_mode) ? (int) $dashes_mode : (int) SmartyPants::SMARTYPANTS_ATTR;
+        $dashes_mode = $settings->getInt('dashes_mode', false) ?: (int) SmartyPants::SMARTYPANTS_ATTR;
 
         $dashes_mode_options = [
             (int) SmartyPants::SMARTYPANTS_ATTR_EM2_EN0 => __('"--" for em-dashes; no en-dash support (default)'),

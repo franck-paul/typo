@@ -30,16 +30,16 @@ class FrontendBehaviors
     public static function updateTypoComments(BlogInterface $blog, Cursor $cur): string
     {
         $settings = My::settings();
-        if ($settings->active
-            && $settings->comments
+        if ($settings->getBool('active')
+            && $settings->getBool('comments')
             && !(bool) $cur->comment_trackback
             && $cur->comment_content != null
         ) {
             /* Transform typo for comment content (HTML) */
-            $dashes_mode = is_numeric($dashes_mode = $settings->dashes_mode) ? (int) $dashes_mode : (int) SmartyPants::SMARTYPANTS_ATTR;
+            $dashes_mode = $settings->getInt('dashes_mode', false) ?: (int) SmartyPants::SMARTYPANTS_ATTR;
             $content     = is_string($content = $cur->comment_content) ? $content : '';
 
-            $cur->comment_content = SmartyPants::transform($content, ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
+            $cur->comment_content = SmartyPants::transform($content, (string) $dashes_mode);
         }
 
         return '';
@@ -53,14 +53,14 @@ class FrontendBehaviors
     public static function previewTypoComments(array|ArrayObject $prv): string
     {
         $settings = My::settings();
-        if ($settings->active
-            && $settings->comments
+        if ($settings->getBool('active')
+            && $settings->getBool('comments')
             && $prv['content'] != null
         ) {
             /* Transform typo for comment content (HTML) */
-            $dashes_mode = is_numeric($dashes_mode = $settings->dashes_mode) ? (int) $dashes_mode : (int) SmartyPants::SMARTYPANTS_ATTR;
+            $dashes_mode = $settings->getInt('dashes_mode', false) ?: (int) SmartyPants::SMARTYPANTS_ATTR;
 
-            $prv['content'] = SmartyPants::transform($prv['content'], ($dashes_mode !== 0 ? (string) $dashes_mode : SmartyPants::SMARTYPANTS_ATTR));
+            $prv['content'] = SmartyPants::transform($prv['content'], (string) $dashes_mode);
         }
 
         return '';
