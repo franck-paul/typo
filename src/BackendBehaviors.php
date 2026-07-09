@@ -341,7 +341,7 @@ class BackendBehaviors
                 $dashes_mode = $settings->getInt('dashes_mode', false) ?: (int) SmartyPants::SMARTYPANTS_ATTR;
 
                 while ($co->fetch()) {
-                    if ($co->comment_content) {
+                    if ($co->strField('comment_content') !== '') {
                         # Apply typo features to comment
                         $cur     = App::db()->con()->openCursor(App::db()->con()->prefix() . App::blog()::COMMENT_TABLE_NAME);
                         $content = $co->strField('comment_content');
