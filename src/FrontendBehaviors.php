@@ -32,14 +32,12 @@ class FrontendBehaviors
         $settings = My::settings();
         if ($settings->getBool('active')
             && $settings->getBool('comments')
-            && !(bool) $cur->comment_trackback
-            && $cur->comment_content != null
+            && !$cur->boolField('comment_trackback')
+            && $cur->strField('comment_content') !== ''
         ) {
             /* Transform typo for comment content (HTML) */
             $dashes_mode = $settings->getInt('dashes_mode', false) ?: (int) SmartyPants::SMARTYPANTS_ATTR;
-            $content     = is_string($content = $cur->comment_content) ? $content : '';
-
-            $cur->comment_content = SmartyPants::transform($content, (string) $dashes_mode);
+            $cur->setStrField('comment_content', SmartyPants::transform($cur->strField('comment_content'), (string) $dashes_mode));
         }
 
         return '';

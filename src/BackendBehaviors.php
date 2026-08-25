@@ -239,19 +239,19 @@ class BackendBehaviors
                     if ($settings->getBool('entries')) {
                         $excerpt = $posts->strField('post_excerpt_xhtml');
                         if ($excerpt !== '') {
-                            $cur->post_excerpt_xhtml = SmartyPants::transform($excerpt, (string) $dashes_mode);
+                            $cur->setStrField('post_excerpt_xhtml', SmartyPants::transform($excerpt, (string) $dashes_mode));
                         }
 
                         $content = $posts->strField('post_content_xhtml');
                         if ($content !== '') {
-                            $cur->post_content_xhtml = SmartyPants::transform($content, (string) $dashes_mode);
+                            $cur->setStrField('post_content_xhtml', SmartyPants::transform($content, (string) $dashes_mode));
                         }
                     }
 
                     if ($settings->getBool('entries_titles')) {
                         $title = $posts->strField('post_title');
                         if ($title !== '') {
-                            $cur->post_title = SmartyPants::transform($title, (string) $dashes_mode);
+                            $cur->setStrField('post_title', SmartyPants::transform($title, (string) $dashes_mode));
                         }
                     }
 
@@ -346,7 +346,7 @@ class BackendBehaviors
                         $cur     = App::db()->con()->openCursor(App::db()->con()->prefix() . App::blog()::COMMENT_TABLE_NAME);
                         $content = $co->strField('comment_content');
 
-                        $cur->comment_content = SmartyPants::transform($content, (string) $dashes_mode);
+                        $cur->setStrField('comment_content', SmartyPants::transform($content, (string) $dashes_mode));
 
                         $comment_id = $co->intField('comment_id');
                         $cur->update('WHERE comment_id = ' . $comment_id);
