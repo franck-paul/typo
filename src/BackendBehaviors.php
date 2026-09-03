@@ -149,9 +149,9 @@ class BackendBehaviors
         return '';
     }
 
-    public static function adminDashboardFavorites(Favorites $favs): string
+    public static function adminDashboardFavorites(Favorites $favorites): string
     {
-        $favs->register('Typo', [
+        $favorites->register('Typo', [
             'title'          => __('Typographic replacements'),
             'url'            => My::manageUrl(),
             'menu-icon'      => My::icon(),
@@ -164,7 +164,7 @@ class BackendBehaviors
         return '';
     }
 
-    public static function adminPostsActions(ActionsPosts $ap): string
+    public static function adminPostsActions(ActionsPosts $actionsPosts): string
     {
         // Add menuitem in actions dropdown list
         if (App::auth()->check(App::auth()->makePermissions([
@@ -172,7 +172,7 @@ class BackendBehaviors
         ]), App::blog()->id())) {
             $settings = My::settings();
             if ($settings->getBool('active') && ($settings->getBool('entries') || $settings->getBool('entries_titles'))) {
-                $ap->addAction(
+                $actionsPosts->addAction(
                     [__('Typo') => [__('Typographic replacements') => 'typo']],
                     self::adminPostsDoReplacements(...)
                 );
@@ -182,7 +182,7 @@ class BackendBehaviors
         return '';
     }
 
-    public static function adminPagesActions(PagesBackendActions $ap): string
+    public static function adminPagesActions(PagesBackendActions $pagesBackendActions): string
     {
         // Add menuitem in actions dropdown list
         if (App::auth()->check(App::auth()->makePermissions([
@@ -190,7 +190,7 @@ class BackendBehaviors
         ]), App::blog()->id())) {
             $settings = My::settings();
             if ($settings->getBool('active') && ($settings->getBool('entries') || $settings->getBool('entries_titles'))) {
-                $ap->addAction(
+                $pagesBackendActions->addAction(
                     [__('Typo') => [__('Typographic replacements') => 'typo']],
                     self::adminPagesDoReplacements(...)
                 );
@@ -201,33 +201,33 @@ class BackendBehaviors
     }
 
     /**
-     * @param      ActionsPosts                 $ap     Actions
-     * @param      ArrayObject<string, mixed>   $post   The post
+     * @param      ActionsPosts                 $actionsPosts     Actions
+     * @param      ArrayObject<string, mixed>   $arrayObject      The post
      */
-    public static function adminPostsDoReplacements(ActionsPosts $ap, ArrayObject $post): void
+    public static function adminPostsDoReplacements(ActionsPosts $actionsPosts, ArrayObject $arrayObject): void
     {
-        self::adminEntriesDoReplacements($ap, $post, 'post');
+        self::adminEntriesDoReplacements($actionsPosts, $arrayObject, 'post');
     }
 
     /**
-     * @param      PagesBackendActions          $ap     Actions
-     * @param      ArrayObject<string, mixed>   $post   The post
+     * @param      PagesBackendActions          $pagesBackendActions    Actions
+     * @param      ArrayObject<string, mixed>   $arrayObject            The post
      */
-    public static function adminPagesDoReplacements(PagesBackendActions $ap, ArrayObject $post): void
+    public static function adminPagesDoReplacements(PagesBackendActions $pagesBackendActions, ArrayObject $arrayObject): void
     {
-        self::adminEntriesDoReplacements($ap, $post, 'page');
+        self::adminEntriesDoReplacements($pagesBackendActions, $arrayObject, 'page');
     }
 
     /**
-     * @param      ActionsPosts|PagesBackendActions     $ap     Actions
-     * @param      ArrayObject<string, mixed>           $post   The post
-     * @param      string                               $type   The type
+     * @param      ActionsPosts|PagesBackendActions     $actionsPostsPages      Actions
+     * @param      ArrayObject<string, mixed>           $arrayObject            The post
+     * @param      string                               $type                   The type
      */
-    public static function adminEntriesDoReplacements(ActionsPosts|PagesBackendActions $ap, ArrayObject $post, string $type = 'post'): void
+    public static function adminEntriesDoReplacements(ActionsPosts|PagesBackendActions $actionsPostsPages, ArrayObject $arrayObject, string $type = 'post'): void
     {
-        if (!empty($post['full_content'])) {
+        if (!empty($arrayObject['full_content'])) {
             // Do replacements
-            $posts = $ap->getRS();
+            $posts = $actionsPostsPages->getRS();
             if ($posts->rows() !== []) {
                 $settings    = My::settings();
                 $dashes_mode = $settings->getInt('dashes_mode', false) ?: (int) SmartyPants::SMARTYPANTS_ATTR;
@@ -259,14 +259,14 @@ class BackendBehaviors
                     $cur->update('WHERE post_id = ' . $post_id);
                 }
 
-                $ap->redirect(true, ['upd' => 1]);
+                $actionsPostsPages->redirect(true, ['upd' => 1]);
             } else {
-                $ap->redirect();
+                $actionsPostsPages->redirect();
             }
         } else {
             // Ask confirmation for replacements
             if ($type === 'page') {
-                $ap->beginPage(
+                $actionsPostsPages->beginPage(
                     App::backend()->page()->breadcrumb(
                         [
                             Html::escapeHTML(App::blog()->name()) => '',
@@ -276,7 +276,7 @@ class BackendBehaviors
                     )
                 );
             } else {
-                $ap->beginPage(
+                $actionsPostsPages->beginPage(
                     App::backend()->page()->breadcrumb(
                         [
                             Html::escapeHTML(App::blog()->name()) => '',
@@ -291,14 +291,14 @@ class BackendBehaviors
 
             echo
             (new Form('ap-entries-typo'))
-            ->action($ap->getURI())
+            ->action($actionsPostsPages->getURI())
             ->method('post')
             ->fields([
-                (new Text(null, $ap->getCheckboxes())),
+                (new Text(null, $actionsPostsPages->getCheckboxes())),
                 (new Para())->items([
                     (new Submit('ap-typo-do', __('Save'))),
                     App::nonce()->formNonce(),
-                    ... $ap->hiddenFields(),
+                    ... $actionsPostsPages->hiddenFields(),
                     (new Hidden('full_content', 'true')),
                     (new Hidden('action', 'typo')),
                     (new Hidden(['process'], ($type === 'post' ? 'Posts' : 'Plugin'))),
@@ -307,11 +307,11 @@ class BackendBehaviors
             ])
             ->render();
 
-            $ap->endPage();
+            $actionsPostsPages->endPage();
         }
     }
 
-    public static function adminCommentsActions(ActionsComments $ap): void
+    public static function adminCommentsActions(ActionsComments $actionsComments): void
     {
         // Add menuitem in actions dropdown list
         if (App::auth()->check(App::auth()->makePermissions([
@@ -319,7 +319,7 @@ class BackendBehaviors
         ]), App::blog()->id())) {
             $settings = My::settings();
             if ($settings->getBool('active') && $settings->getBool('comments')) {
-                $ap->addAction(
+                $actionsComments->addAction(
                     [__('Typo') => [__('Typographic replacements') => 'typo']],
                     self::adminCommentsDoReplacements(...)
                 );
@@ -328,14 +328,14 @@ class BackendBehaviors
     }
 
     /**
-     * @param      ActionsComments              $ap     Actions
-     * @param      ArrayObject<string, mixed>   $post   The post
+     * @param      ActionsComments              $actionsComments    Actions
+     * @param      ArrayObject<string, mixed>   $arrayObject        The post
      */
-    public static function adminCommentsDoReplacements(ActionsComments $ap, ArrayObject $post): void
+    public static function adminCommentsDoReplacements(ActionsComments $actionsComments, ArrayObject $arrayObject): void
     {
-        if (!empty($post['full_content'])) {
+        if (!empty($arrayObject['full_content'])) {
             // Do replacements
-            $co = $ap->getRS();
+            $co = $actionsComments->getRS();
             if ($co->rows() !== []) {
                 $settings    = My::settings();
                 $dashes_mode = $settings->getInt('dashes_mode', false) ?: (int) SmartyPants::SMARTYPANTS_ATTR;
@@ -353,13 +353,13 @@ class BackendBehaviors
                     }
                 }
 
-                $ap->redirect(true, ['upd' => 1]);
+                $actionsComments->redirect(true, ['upd' => 1]);
             } else {
-                $ap->redirect();
+                $actionsComments->redirect();
             }
         } else {
             // Ask confirmation for replacements
-            $ap->beginPage(
+            $actionsComments->beginPage(
                 App::backend()->page()->breadcrumb(
                     [
                         Html::escapeHTML(App::blog()->name()) => '',
@@ -373,14 +373,14 @@ class BackendBehaviors
 
             echo
             (new Form('ap-comments-typo'))
-            ->action($ap->getURI())
+            ->action($actionsComments->getURI())
             ->method('post')
             ->fields([
-                (new Text(null, $ap->getCheckboxes())),
+                (new Text(null, $actionsComments->getCheckboxes())),
                 (new Para())->items([
                     (new Submit('ap-typo-do', __('Save'))),
                     App::nonce()->formNonce(),
-                    ...$ap->hiddenFields(),
+                    ...$actionsComments->hiddenFields(),
                     (new Hidden('full_content', 'true')),
                     (new Hidden('action', 'typo')),
                     (new Hidden(['process'], 'Comments')),
@@ -388,7 +388,7 @@ class BackendBehaviors
             ])
             ->render();
 
-            $ap->endPage();
+            $actionsComments->endPage();
         }
     }
 

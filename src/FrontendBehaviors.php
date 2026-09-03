@@ -23,21 +23,21 @@ class FrontendBehaviors
 {
     /**
      * @param      BlogInterface    $blog   The blog
-     * @param      Cursor           $cur    The current
+     * @param      Cursor           $cursor    The current
      *
      * @deprecated since 2.34
      */
-    public static function updateTypoComments(BlogInterface $blog, Cursor $cur): string
+    public static function updateTypoComments(BlogInterface $blog, Cursor $cursor): string
     {
         $settings = My::settings();
         if ($settings->getBool('active')
             && $settings->getBool('comments')
-            && !$cur->boolField('comment_trackback')
-            && $cur->strField('comment_content') !== ''
+            && !$cursor->boolField('comment_trackback')
+            && $cursor->strField('comment_content') !== ''
         ) {
             /* Transform typo for comment content (HTML) */
             $dashes_mode = $settings->getInt('dashes_mode', false) ?: (int) SmartyPants::SMARTYPANTS_ATTR;
-            $cur->setStrField('comment_content', SmartyPants::transform($cur->strField('comment_content'), (string) $dashes_mode));
+            $cursor->setStrField('comment_content', SmartyPants::transform($cursor->strField('comment_content'), (string) $dashes_mode));
         }
 
         return '';

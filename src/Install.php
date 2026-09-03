@@ -39,9 +39,9 @@ class Install
             $old_version = App::version()->getVersion(My::id());
             if (version_compare((string) $old_version, '3.1', '<')) {
                 // Change settings names (remove wc_ prefix in them)
-                $rename = static function (string $name, BlogWorkspaceInterface $settings): void {
-                    if ($settings->settingExists('typo_' . $name, true)) {
-                        $settings->rename('typo_' . $name, $name);
+                $rename = static function (string $name, BlogWorkspaceInterface $blogWorkspace): void {
+                    if ($blogWorkspace->settingExists('typo_' . $name, true)) {
+                        $blogWorkspace->rename('typo_' . $name, $name);
                     }
                 };
 
