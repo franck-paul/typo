@@ -420,7 +420,7 @@ class BackendBehaviors
 
                 $pointer = is_string($pointer = $content[0]) ? $pointer : '';
                 if ($pointer !== '' && in_array($content[1], $supported_syntaxes, true)) {
-                    // @phpstan-ignore assign.unused (if $content is an ArrayObject, it will modify it)
+                    // @phpstan-ignore assign.overwritten, assign.unused (if $content is an ArrayObject, it will modify it)
                     $content[0] = SmartyPants::transform($pointer, (string) $dashes_mode);
                 }
             }
