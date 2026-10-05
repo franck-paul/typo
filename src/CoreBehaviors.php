@@ -15,14 +15,16 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\typo;
 
+use Dotclear\Core\Content;
+
 class CoreBehaviors
 {
     /**
-     * @param      array<int, array<int, string>>  $ref    The content to filter
+     * @param      Content[]  $contents The content data
      *
-     * @since   2.34
+     * @since 2.34 then 2.40 for new behavior V2
      */
-    public static function coreContentFilter(string $context, array $ref): string
+    public static function coreContentFilter(string $context, array $contents): string
     {
         $settings = My::settings();
         $do       = match ($context) {
@@ -34,12 +36,13 @@ class CoreBehaviors
         if ($do) {
             $dashes_mode = $settings->getInt('dashes_mode', false) ?: (int) SmartyPants::SMARTYPANTS_ATTR;
 
-            foreach ($ref as $content) {
-                if (isset($content[1]) && $content[1] === 'html') {
+            foreach ($contents as $content) {
+                if ($content->getFormat() === 'html') {
                     /* Transform typo for HTML content */
-                    $buffer = &$content[0];
+                    $buffer = $content->getContent();
                     if ($buffer !== '') {
                         $buffer = SmartyPants::transform($buffer, (string) $dashes_mode);
+                        $content->setContent($buffer);
                     }
                 }
             }

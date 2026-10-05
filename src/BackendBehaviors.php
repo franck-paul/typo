@@ -20,6 +20,7 @@ use Dotclear\App;
 use Dotclear\Core\Backend\Action\ActionsComments;
 use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Core\Backend\Favorites;
+use Dotclear\Core\Content;
 use Dotclear\Helper\Html\Form\Form;
 use Dotclear\Helper\Html\Form\Hidden;
 use Dotclear\Helper\Html\Form\Para;
@@ -393,15 +394,11 @@ class BackendBehaviors
     }
 
     /**
-     * @param      array<int, list{0:mixed, 1:string}>|ArrayObject<int, list{0:mixed, 1:string}>  $contents The content data
+     * @param      Content[]  $contents The content data
      *
-     * Each item of $contents should be as:
-     *  $content[0]: current HTML content
-     *  $content[1]: content format (html, text, …)
-     *
-     * @since 2.34
+     * @since 2.34 then 2.40 for new behavior V2
      */
-    public static function coreContentFilter(string $type, array|ArrayObject $contents): string
+    public static function coreContentFilter(string $type, array $contents): string
     {
         $settings = My::settings();
         if ($settings->getBool('active') && $settings->getBool('entries')) {
@@ -410,18 +407,10 @@ class BackendBehaviors
             $supported_syntaxes = ['html', 'xhtml'];
 
             foreach ($contents as $content) {
-                if (!is_array($content)) { // @phpstan-ignore function.alreadyNarrowedType (PHPDoc should be certain but maybe…)
-                    continue;
-                }
-
-                if (count($content) < 2) { // @phpstan-ignore smaller.alwaysFalse (PHPDoc should be certain but maybe…)
-                    continue;
-                }
-
-                $pointer = is_string($pointer = $content[0]) ? $pointer : '';
-                if ($pointer !== '' && in_array($content[1], $supported_syntaxes, true)) {
-                    // @phpstan-ignore assign.overwritten, assign.unused (if $content is an ArrayObject, it will modify it)
-                    $content[0] = SmartyPants::transform($pointer, (string) $dashes_mode);
+                $buffer = $content->getContent();
+                if ($buffer !== '' && in_array($content->getFormat(), $supported_syntaxes, true)) {
+                    $buffer = SmartyPants::transform($buffer, (string) $dashes_mode);
+                    $content->setContent($buffer);
                 }
             }
         }

@@ -51,7 +51,7 @@ class Backend
         App::behavior()->addBehaviors([
             // Add behavior callback, will be used for all types of posts (standard, page, galery item, ...)
             // 'coreAfterPostContentFormat' => BackendBehaviors::updateTypoEntries(...),
-            'coreContentFilter' => BackendBehaviors::coreContentFilter(...),
+            'coreContentFilterV2' => BackendBehaviors::coreContentFilter(...),
 
             // Add behavior callbacks for posts actions
             'adminPostsActions' => BackendBehaviors::adminPostsActions(...),
