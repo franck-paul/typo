@@ -53,7 +53,7 @@ class FrontendBehaviors
         $settings = My::settings();
         if ($settings->getBool('active')
             && $settings->getBool('comments')
-            && $prv['content'] != null
+            && $prv['content'] !== null
         ) {
             /* Transform typo for comment content (HTML) */
             $dashes_mode = $settings->getInt('dashes_mode', false) ?: (int) SmartyPants::SMARTYPANTS_ATTR;

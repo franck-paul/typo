@@ -126,7 +126,7 @@ class SmartyPantsParser
         # character quote tokens correctly.
 
         foreach ($tokens as $cur_token) {
-            if ($cur_token[0] == 'tag') {
+            if ($cur_token[0] === 'tag') {
                 # Don't mess with quotes inside tags.
                 $result .= $cur_token[1];
                 if (preg_match('@<(/?)(?:' . self::SMARTYPANTS_TAGS_TO_SKIP . ')[\s>]@', $cur_token[1], $matches)) {
@@ -182,10 +182,10 @@ class SmartyPantsParser
         }
 
         if ($this->do_quotes !== 0) {
-            if ($t == "'") {
+            if ($t === "'") {
                 # Special case: single-character ' token
                 $t = preg_match('/\S/', $prev_token_last_char) ? '&#8217;' : '&#8216;';
-            } elseif ($t == '"') {
+            } elseif ($t === '"') {
                 # Special case: single-character " token
                 $t = preg_match('/\S/', $prev_token_last_char) ? '&#8221;' : '&#8220;';
             } else {
