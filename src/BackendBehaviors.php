@@ -34,13 +34,13 @@ class BackendBehaviors
     public static function adminPageHTMLHead(bool $main = false): string
     {
         $settings = My::settings();
-        if (!$settings->getBool('active')) {
+        if (!$settings->getBool('active', false)) {
             return '';
         }
 
         $items = [];
 
-        if ($settings->getBool('entries_titles')) {
+        if ($settings->getBool('entries_titles', false)) {
             // Entries (posts, pages)
             $items[] = [
                 'url'       => App::backend()->url()->get('admin.post', separator:'&'),
@@ -58,7 +58,7 @@ class BackendBehaviors
             ];
         }
 
-        if ($settings->getBool('categories_titles')) {
+        if ($settings->getBool('categories_titles', false)) {
             // Categories
             $items[] = [
                 'url'       => App::backend()->url()->get('admin.category', separator:'&'),
@@ -69,7 +69,7 @@ class BackendBehaviors
             ];
         }
 
-        if ($settings->getBool('medias')) {
+        if ($settings->getBool('medias', false)) {
             // Medias
             $items[] = [
                 'url'       => App::backend()->url()->get('admin.media.item', separator:'&'),
@@ -82,7 +82,7 @@ class BackendBehaviors
             ];
         }
 
-        if ($settings->getBool('widgets_titles')) {
+        if ($settings->getBool('widgets_titles', false)) {
             // Widgets
             $items[] = [
                 'url'       => App::backend()->url()->get('admin.plugin.widgets', separator:'&'),
@@ -93,7 +93,7 @@ class BackendBehaviors
             ];
         }
 
-        if ($settings->getBool('simplemenu')) {
+        if ($settings->getBool('simplemenu', false)) {
             // menuSimple
             $items[] = [
                 'url'       => App::backend()->url()->get('admin.plugin.simpleMenu', separator:'&'),
@@ -113,7 +113,7 @@ class BackendBehaviors
             ];
         }
 
-        if ($settings->getBool('blogroll')) {
+        if ($settings->getBool('blogroll', false)) {
             // Blogroll
             $items[] = [
                 'url'       => App::backend()->url()->get('admin.plugin.blogroll', separator:'&'),
@@ -172,7 +172,7 @@ class BackendBehaviors
             App::auth()::PERMISSION_CONTENT_ADMIN,
         ]), App::blog()->id())) {
             $settings = My::settings();
-            if ($settings->getBool('active') && ($settings->getBool('entries') || $settings->getBool('entries_titles'))) {
+            if ($settings->getBool('active', false) && ($settings->getBool('entries', false) || $settings->getBool('entries_titles', false))) {
                 $actionsPosts->addAction(
                     [__('Typo') => [__('Typographic replacements') => 'typo']],
                     self::adminPostsDoReplacements(...)
@@ -190,7 +190,7 @@ class BackendBehaviors
             App::auth()::PERMISSION_CONTENT_ADMIN,
         ]), App::blog()->id())) {
             $settings = My::settings();
-            if ($settings->getBool('active') && ($settings->getBool('entries') || $settings->getBool('entries_titles'))) {
+            if ($settings->getBool('active', false) && ($settings->getBool('entries', false) || $settings->getBool('entries_titles', false))) {
                 $pagesBackendActions->addAction(
                     [__('Typo') => [__('Typographic replacements') => 'typo']],
                     self::adminPagesDoReplacements(...)
@@ -237,7 +237,7 @@ class BackendBehaviors
                     // Apply typo features to entry
                     $cur = App::db()->con()->openCursor(App::db()->con()->prefix() . App::blog()::POST_TABLE_NAME);
 
-                    if ($settings->getBool('entries')) {
+                    if ($settings->getBool('entries', false)) {
                         $excerpt = $posts->strField('post_excerpt_xhtml');
                         if ($excerpt !== '') {
                             $cur->setStrField('post_excerpt_xhtml', SmartyPants::transform($excerpt, (string) $dashes_mode));
@@ -249,7 +249,7 @@ class BackendBehaviors
                         }
                     }
 
-                    if ($settings->getBool('entries_titles')) {
+                    if ($settings->getBool('entries_titles', false)) {
                         $title = $posts->strField('post_title');
                         if ($title !== '') {
                             $cur->setStrField('post_title', SmartyPants::transform($title, (string) $dashes_mode));
@@ -319,7 +319,7 @@ class BackendBehaviors
             App::auth()::PERMISSION_CONTENT_ADMIN,
         ]), App::blog()->id())) {
             $settings = My::settings();
-            if ($settings->getBool('active') && $settings->getBool('comments')) {
+            if ($settings->getBool('active', false) && $settings->getBool('comments', false)) {
                 $actionsComments->addAction(
                     [__('Typo') => [__('Typographic replacements') => 'typo']],
                     self::adminCommentsDoReplacements(...)
@@ -401,7 +401,7 @@ class BackendBehaviors
     public static function coreContentFilter(string $type, array $contents): string
     {
         $settings = My::settings();
-        if ($settings->getBool('active') && $settings->getBool('entries')) {
+        if ($settings->getBool('active', false) && $settings->getBool('entries', false)) {
             $dashes_mode = $settings->getInt('dashes_mode', false) ?: (int) SmartyPants::SMARTYPANTS_ATTR;
 
             $supported_syntaxes = ['html', 'xhtml'];

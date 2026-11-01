@@ -30,9 +30,9 @@ class FrontendBehaviors
     public static function updateTypoComments(BlogInterface $blog, Cursor $cursor): string
     {
         $settings = My::settings();
-        if ($settings->getBool('active')
-            && $settings->getBool('comments')
-            && !$cursor->boolField('comment_trackback')
+        if ($settings->getBool('active', false)
+            && $settings->getBool('comments', false)
+            && !$cursor->boolField('comment_trackback', false)
             && $cursor->strField('comment_content') !== ''
         ) {
             /* Transform typo for comment content (HTML) */
@@ -51,8 +51,8 @@ class FrontendBehaviors
     public static function previewTypoComments(array|ArrayObject $prv): string
     {
         $settings = My::settings();
-        if ($settings->getBool('active')
-            && $settings->getBool('comments')
+        if ($settings->getBool('active', false)
+            && $settings->getBool('comments', false)
             && $prv['content'] !== null
         ) {
             /* Transform typo for comment content (HTML) */

@@ -129,7 +129,7 @@ class SmartyPantsParser
             if ($cur_token[0] === 'tag') {
                 # Don't mess with quotes inside tags.
                 $result .= $cur_token[1];
-                if (preg_match('@<(/?)(?:' . self::SMARTYPANTS_TAGS_TO_SKIP . ')[\s>]@', $cur_token[1], $matches)) {
+                if ((bool) preg_match('@<(/?)(?:' . self::SMARTYPANTS_TAGS_TO_SKIP . ')[\s>]@', $cur_token[1], $matches)) {
                     $in_pre = $matches[1] === '/' ? 0 : 1;
                 }
             } else {
@@ -184,10 +184,10 @@ class SmartyPantsParser
         if ($this->do_quotes !== 0) {
             if ($t === "'") {
                 # Special case: single-character ' token
-                $t = preg_match('/\S/', $prev_token_last_char) ? '&#8217;' : '&#8216;';
+                $t = (bool) preg_match('/\S/', $prev_token_last_char) ? '&#8217;' : '&#8216;';
             } elseif ($t === '"') {
                 # Special case: single-character " token
-                $t = preg_match('/\S/', $prev_token_last_char) ? '&#8221;' : '&#8220;';
+                $t = (bool) preg_match('/\S/', $prev_token_last_char) ? '&#8221;' : '&#8220;';
             } else {
                 # Normal case:
                 $t = $this->educateQuotes($t);
@@ -495,7 +495,7 @@ class SmartyPantsParser
 
         if ($parts !== false) {
             foreach ($parts as $part) {
-                $tokens[] = ++$index % 2 && $part !== '' ? ['text', $part] : ['tag', $part];
+                $tokens[] = (++$index % 2 !== 0) && $part !== '' ? ['text', $part] : ['tag', $part];
             }
         }
 

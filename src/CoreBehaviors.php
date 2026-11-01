@@ -28,9 +28,9 @@ class CoreBehaviors
     {
         $settings = My::settings();
         $do       = match ($context) {
-            'post'     => $settings->getBool('entries'),
-            'comment'  => $settings->getBool('comments'),
-            'category' => $settings->getBool('categories'),
+            'post'     => $settings->getBool('entries', false),
+            'comment'  => $settings->getBool('comments', false),
+            'category' => $settings->getBool('categories', false),
             default    => true,
         };
         if ($do) {

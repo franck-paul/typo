@@ -34,7 +34,7 @@ class Prepend
         }
 
         $settings = My::settings();
-        if ($settings->getBool('active')) {
+        if ($settings->getBool('active', false)) {
             App::behavior()->addBehaviors([
                 'coreContentFilterV2' => CoreBehaviors::coreContentFilter(...),
             ]);
