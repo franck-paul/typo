@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\typo;
 
 use ArrayObject;
+use Dotclear\App;
 use Dotclear\Database\Cursor;
 use Dotclear\Interface\Core\BlogInterface;
 
@@ -29,6 +30,8 @@ class FrontendBehaviors
      */
     public static function updateTypoComments(BlogInterface $blog, Cursor $cursor): string
     {
+        App::deprecated()->set('', '2.34');
+
         $settings = My::settings();
         if ($settings->getBool('active', false)
             && $settings->getBool('comments', false)
@@ -50,6 +53,8 @@ class FrontendBehaviors
      */
     public static function previewTypoComments(array|ArrayObject $prv): string
     {
+        App::deprecated()->set('', '2.34');
+
         $settings = My::settings();
         if ($settings->getBool('active', false)
             && $settings->getBool('comments', false)
