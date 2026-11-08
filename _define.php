@@ -18,9 +18,9 @@ if (isset($this) && is_object($this) && method_exists($this, 'registerModule') &
         'Typography',
         'Brings smart typographic replacements for your blog entries and comments',
         'Franck Paul and contributors',
-        '10.0',
+        '11.0',
         [
-            'date'        => '2026-08-03T10:15:20+0200',
+            'date'        => '2026-11-08T10:26:55+0100',
             'requires'    => [['core', '2.40']],
             'permissions' => 'My',
             'type'        => 'plugin',
